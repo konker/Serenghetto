@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VVBTest</string>
+    <string name="hello">I am Konker. Hear my ROAR!</string>
+    <string name="scan_code">Scan code</string>
+    <string name="game">Game</string>
+    <string name="codes">Codes</string>
+</resources>
