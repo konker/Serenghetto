@@ -43,19 +43,6 @@ public class VVBTestCodes extends Activity implements OnClickListener
     public void onClick(View view) {
         if (view == findViewById(R.id.scan_code)) {
             AlertDialog ad = IntentIntegrator.initiateScan(this);
-            /*
-            if (ad == null) {
-                alert("Say \"Code be scanned\". Say it. Say \"Code be scanned\".: " + ad);
-            }
-            */
-
-            /*
-            Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-            intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
-            intent.putExtra("SCAN_WIDTH", 800);
-            intent.putExtra("SCAN_HEIGHT", 200);
-            startActivityForResult(intent, 0);
-            */
         }
     }
     
@@ -65,27 +52,6 @@ public class VVBTestCodes extends Activity implements OnClickListener
         if (scanResult != null) {
             alert("Format: " + scanResult.getFormatName() + "\nContents: " + scanResult.getContents());
         }
-        
-        /*
-        alert("resultCode: " + resultCode);
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-                String contents = intent.getStringExtra("SCAN_RESULT");
-                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-                alert("Format: " + format + "\nContents: " + contents);
-
-                try {
-                    send(format, contents);
-                }
-                catch(IOException e) {
-                    alert("send failed: " + e);
-                }
-            }
-            else if (resultCode == RESULT_CANCELED) {
-                alert("failed");
-            }
-        }
-        */
     }
     
     private void send(String format, String code) throws IOException {
@@ -116,21 +82,5 @@ public class VVBTestCodes extends Activity implements OnClickListener
         builder.setPositiveButton("OK", null);
         builder.show();
     }
-    
-    /*
-    public void alert(String s) {
-        AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
-        alertbox.setMessage(s);
-
-        // add a neutral button to the alert box and assign a click listener
-        alertbox.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface arg0, int arg1) {
-                arg0.cancel();
-            }
-        });
-
-        alertbox.show();
-    }
-    */
 }
 
