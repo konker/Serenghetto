@@ -1,12 +1,18 @@
 package org.hiit.vvb;
 
+import android.util.Log;
 import android.app.Activity;
 import android.os.Bundle;
+import android.content.Intent;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.Menu;
 
-import android.app.AlertDialog;
 
 public class VVBTestGame extends Activity
 {
+    private static final String TAG = "VVBTestGame";
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -14,10 +20,26 @@ public class VVBTestGame extends Activity
         setContentView(R.layout.game);
     }
 
-    private void alert(CharSequence message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(message);
-        builder.setPositiveButton("OK", null);
-        builder.show();
+    @Override 
+    public boolean onCreateOptionsMenu(Menu menu) { 
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override 
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.itemGame:
+                startActivity(new Intent(this, VVBTestGame.class));
+                break;
+            case R.id.itemCodes:
+                startActivity(new Intent(this, VVBTestCodes.class));
+                break;
+            case R.id.itemPrefs:
+                startActivity(new Intent(this, VVBTestPreferences.class));
+                break;
+        }
+        return true;
     }
 }

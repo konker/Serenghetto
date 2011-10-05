@@ -5,4 +5,12 @@
     <string name="scan_code">Scan code</string>
     <string name="game">Game</string>
     <string name="codes">Codes</string>
+    <string name="preferences">Preferences</string>
+    <string name="titleUsername">Username</string>
+    <string name="summaryUsername">Your VVB username</string>
+    <string name="titlePassword">Password</string>
+    <string name="summaryPassword">Your VVD password</string>
+    <string name="titleGame">Game</string>
+    <string name="titleCodes">Codes</string>
+    <string name="titlePrefs">Preferences</string>
 </resources>

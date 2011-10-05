@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <item type="id" name="scan_code"/>
+  <item type="id" name="buttonScanCode"/>
+  <item type="id" name="itemGame"/>
+  <item type="id" name="itemCodes"/>
+  <item type="id" name="itemPrefs"/>
 </resources>
 

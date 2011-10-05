@@ -20,18 +20,36 @@ public final class R {
         public static final int tab_game_white=0x7f020006;
     }
     public static final class id {
-        public static final int scan_code=0x7f040000;
+        public static final int buttonScanCode=0x7f050000;
+        public static final int itemCodes=0x7f050002;
+        public static final int itemGame=0x7f050001;
+        public static final int itemPrefs=0x7f050003;
     }
     public static final class layout {
         public static final int codes=0x7f030000;
         public static final int game=0x7f030001;
         public static final int main=0x7f030002;
+        public static final int preferences=0x7f030003;
+    }
+    public static final class menu {
+        public static final int menu=0x7f070000;
     }
     public static final class string {
-        public static final int app_name=0x7f050000;
-        public static final int codes=0x7f050004;
-        public static final int game=0x7f050003;
-        public static final int hello=0x7f050001;
-        public static final int scan_code=0x7f050002;
+        public static final int app_name=0x7f060000;
+        public static final int codes=0x7f060004;
+        public static final int game=0x7f060003;
+        public static final int hello=0x7f060001;
+        public static final int preferences=0x7f060005;
+        public static final int scan_code=0x7f060002;
+        public static final int summaryPassword=0x7f060009;
+        public static final int summaryUsername=0x7f060007;
+        public static final int titleCodes=0x7f06000b;
+        public static final int titleGame=0x7f06000a;
+        public static final int titlePassword=0x7f060008;
+        public static final int titlePrefs=0x7f06000c;
+        public static final int titleUsername=0x7f060006;
+    }
+    public static final class xml {
+        public static final int prefs=0x7f040000;
     }
 }
