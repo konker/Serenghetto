@@ -17,7 +17,8 @@ import android.os.AsyncTask;
 
 public class VVBTestPreferences extends PreferenceActivity implements OnSharedPreferenceChangeListener
 {
-    private static final String TAG = "VVBTestPreferences";
+    public static final String TAG = "VVBTestPreferences";
+    public static final String PREFS_NAME = "_PREFS_";
 
     /** Called when the activity is first created. */
     @Override
@@ -26,7 +27,7 @@ public class VVBTestPreferences extends PreferenceActivity implements OnSharedPr
         addPreferencesFromResource(R.xml.prefs);
 
         // Setup preferences 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences prefs = getSharedPreferences(VVBTestPreferences.PREFS_NAME, 0);
         prefs.registerOnSharedPreferenceChangeListener(this);
     }
     
@@ -69,7 +70,13 @@ public class VVBTestPreferences extends PreferenceActivity implements OnSharedPr
         }
 
         protected void onPostExecute(String result) {
-            Toast.makeText(VVBTestPreferences.this, result, Toast.LENGTH_LONG).show();
+            //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(VVBTestPreferences.this);
+            SharedPreferences prefs = getSharedPreferences(VVBTestPreferences.PREFS_NAME, 0);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("authToken", result);
+            editor.commit();
+
+            Toast.makeText(VVBTestPreferences.this, prefs.getString("authToken", "NULL"), Toast.LENGTH_LONG).show();
             return;
         }
     }

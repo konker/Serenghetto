@@ -6,6 +6,8 @@
     <string name="game">Game</string>
     <string name="codes">Codes</string>
     <string name="preferences">Preferences</string>
+    <string name="titleEmail">Email</string>
+    <string name="summaryEmail">Your VVB email</string>
     <string name="titleUsername">Username</string>
     <string name="summaryUsername">Your VVB username</string>
     <string name="titlePassword">Password</string>

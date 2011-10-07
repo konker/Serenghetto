@@ -34,7 +34,7 @@ public class VVBTestCodes extends Activity implements OnClickListener
         Button scan_code = (Button)findViewById(R.id.buttonScanCode);
         scan_code.setOnClickListener(this);
 
-        new VVBServerTaskGetCodes().execute();
+        //new VVBServerTaskGetCodes().execute();
     }
 
     @Override 
