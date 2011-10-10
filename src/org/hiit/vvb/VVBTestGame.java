@@ -11,7 +11,7 @@ import android.view.Menu;
 
 public class VVBTestGame extends Activity
 {
-    private static final String TAG = "VVBTestGame";
+    private static final String TAG = "VVB";
 
     /** Called when the activity is first created. */
     @Override

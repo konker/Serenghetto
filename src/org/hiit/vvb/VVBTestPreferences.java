@@ -17,7 +17,7 @@ import android.os.AsyncTask;
 
 public class VVBTestPreferences extends PreferenceActivity implements OnSharedPreferenceChangeListener
 {
-    public static final String TAG = "VVBTestPreferences";
+    public static final String TAG = "VVB";
     public static final String PREFS_NAME = "_PREFS_";
 
     /** Called when the activity is first created. */

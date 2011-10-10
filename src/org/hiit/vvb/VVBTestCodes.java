@@ -16,13 +16,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import android.location.Location; 
+import android.location.LocationListener; 
+import android.location.LocationManager; 
+
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 
-public class VVBTestCodes extends Activity implements OnClickListener
+public class VVBTestCodes extends Activity implements OnClickListener, LocationListener
 {
-    private static final String TAG = "VVBTestCodes";
+    private static final String TAG = "VVB";
+    
+    LocationManager locationManager;
+    Location lastLocation;
 
     /** Called when the activity is first created. */
     @Override
@@ -35,6 +42,20 @@ public class VVBTestCodes extends Activity implements OnClickListener
         scan_code.setOnClickListener(this);
 
         //new VVBServerTaskGetCodes().execute();
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        lastLocation = null;
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onRestart();
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationManager.removeUpdates(this);
     }
 
     @Override 
@@ -71,8 +92,26 @@ public class VVBTestCodes extends Activity implements OnClickListener
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
             Log.d(TAG, "Format: " + scanResult.getFormatName() + "\nContents: " + scanResult.getContents());
-            new VVBServerTaskPostCode().execute(scanResult.getContents());
+            if (lastLocation != null) {
+                Log.d(TAG, String.format("%f", lastLocation.getLatitude()) + ", " + String.format("%f", lastLocation.getLongitude()) + ", " + String.format("%f", lastLocation.getAccuracy()));
+                new VVBServerTaskPostCode().execute(scanResult.getContents(), String.format("%f", lastLocation.getLatitude()), String.format("%f", lastLocation.getLongitude()), String.format("%f", lastLocation.getAccuracy()));
+            }
+            else {
+                Log.d(TAG, "NO LOCATION");
+            }
         }
+    }
+
+    // Methods required by LocationListener 
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, location.toString());
+        lastLocation = location;
+    }
+    public void onProviderDisabled(String provider) {
+    }
+    public void onProviderEnabled(String provider) {
+    }
+    public void onStatusChanged(String provider, int status, Bundle extras) {
     }
 
     /**
@@ -80,7 +119,7 @@ public class VVBTestCodes extends Activity implements OnClickListener
     public class VVBServerTaskPostCode extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... code) {
-            return new VVBServer("http://vvb.a-z.fi").postCode(code[0], "LOC");
+            return new VVBServer("http://vvb.a-z.fi").postCode(code[0], code[1], code[2], code[3]);
         }
 
         protected void onPostExecute(String result) {

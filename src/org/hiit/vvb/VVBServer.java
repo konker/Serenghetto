@@ -66,14 +66,16 @@ public class VVBServer {
         return json.toString();
     }
 
-    public String postCode(String code, String location) {
+    public String postCode(String code, String latitude, String longitude, String accuracy) {
         //[FIXME: needs real location]
         HttpPost req = new HttpPost(getResourceURL("barcode", null));
         req.setHeader("Accept", "text/json");
 
         List nameValuePairs = new ArrayList(1);
         nameValuePairs.add(new BasicNameValuePair("code", code));
-        nameValuePairs.add(new BasicNameValuePair("location", location));
+        nameValuePairs.add(new BasicNameValuePair("latitude", latitude));
+        nameValuePairs.add(new BasicNameValuePair("longitude", longitude));
+        nameValuePairs.add(new BasicNameValuePair("accuracy", accuracy));
         nameValuePairs.add(new BasicNameValuePair("_token", "TOKEN"));
 
         try {

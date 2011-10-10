@@ -3,6 +3,7 @@
 *.class
 *.ap_
 *.dex
+gen/
 
 # OS generated files #
 ######################
