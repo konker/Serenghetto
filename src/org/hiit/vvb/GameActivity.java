@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import android.view.Menu;
 
 
-public class VVBTestGame extends Activity
+public class GameActivity extends Activity
 {
     private static final String TAG = "VVB";
 
@@ -31,13 +31,13 @@ public class VVBTestGame extends Activity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.itemGame:
-                startActivity(new Intent(this, VVBTestGame.class));
+                startActivity(new Intent(this, GameActivity.class));
                 break;
             case R.id.itemCodes:
-                startActivity(new Intent(this, VVBTestCodes.class));
+                startActivity(new Intent(this, CodesActivity.class));
                 break;
             case R.id.itemPrefs:
-                startActivity(new Intent(this, VVBTestPreferences.class));
+                startActivity(new Intent(this, PreferencesActivity.class));
                 break;
         }
         return true;

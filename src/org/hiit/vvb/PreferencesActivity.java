@@ -16,7 +16,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 
 
-public class VVBTestPreferences extends PreferenceActivity implements OnSharedPreferenceChangeListener
+public class PreferencesActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener
 {
     public static final String TAG = "VVB";
     public static final String PREFS_NAME = "_PREFS_";
@@ -30,7 +30,7 @@ public class VVBTestPreferences extends PreferenceActivity implements OnSharedPr
         addPreferencesFromResource(R.xml.prefs);
 
         // Setup preferences 
-        //SharedPreferences prefs = getSharedPreferences(VVBTestPreferences.PREFS_NAME, 0);
+        //SharedPreferences prefs = getSharedPreferences(PreferencesActivity.PREFS_NAME, 0);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
         Log.d(TAG, "Prefs: " + prefs.getString("email", null) + "/" + prefs.getString("password", null) + "/" + prefs.getString("authToken", "NOO"));
@@ -38,7 +38,7 @@ public class VVBTestPreferences extends PreferenceActivity implements OnSharedPr
     
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) { 
         if (key != "authToken") {
-            progress = ProgressDialog.show(VVBTestPreferences.this, "", "Authenticating...", true);
+            progress = ProgressDialog.show(PreferencesActivity.this, "", "Authenticating...", true);
             Log.d(TAG, "Prefs: " + prefs.getString("email", null) + "/" + prefs.getString("password", null));
             new VVBServerTaskGetToken().execute(prefs.getString("email", null), prefs.getString("password", null));
         }
@@ -57,13 +57,13 @@ public class VVBTestPreferences extends PreferenceActivity implements OnSharedPr
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.itemGame:
-                startActivity(new Intent(this, VVBTestGame.class));
+                startActivity(new Intent(this, GameActivity.class));
                 break;
             case R.id.itemCodes:
-                startActivity(new Intent(this, VVBTestCodes.class));
+                startActivity(new Intent(this, CodesActivity.class));
                 break;
             case R.id.itemPrefs:
-                startActivity(new Intent(this, VVBTestPreferences.class));
+                startActivity(new Intent(this, PreferencesActivity.class));
                 break;
         }
         return true;
@@ -74,19 +74,19 @@ public class VVBTestPreferences extends PreferenceActivity implements OnSharedPr
     public class VVBServerTaskGetToken extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... code) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(VVBTestPreferences.this);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(PreferencesActivity.this);
             return new VVBServer("http://vvb.a-z.fi", prefs.getString("authToken", null)).getToken(code[0], code[1]);
         }
 
         protected void onPostExecute(String result) {
-            //SharedPreferences prefs = getSharedPreferences(VVBTestPreferences.PREFS_NAME, 0);
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(VVBTestPreferences.this);
+            //SharedPreferences prefs = getSharedPreferences(PreferencesActivity.PREFS_NAME, 0);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(PreferencesActivity.this);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("authToken", result);
             editor.commit();
 
-            VVBTestPreferences.this.progress.dismiss();
-            Toast.makeText(VVBTestPreferences.this, prefs.getString("authToken", "NULL"), Toast.LENGTH_LONG).show();
+            PreferencesActivity.this.progress.dismiss();
+            Toast.makeText(PreferencesActivity.this, prefs.getString("authToken", "NULL"), Toast.LENGTH_LONG).show();
             return;
         }
     }

@@ -28,7 +28,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 
-public class VVBTestCodes extends Activity implements OnClickListener, LocationListener
+public class CodesActivity extends Activity implements OnClickListener, LocationListener
 {
     private static final String TAG = "VVB";
     
@@ -51,7 +51,7 @@ public class VVBTestCodes extends Activity implements OnClickListener, LocationL
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         lastLocation = null;
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(VVBTestCodes.this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CodesActivity.this);
         Log.d(TAG, "PREF:" + prefs.getString("authCode", "NO"));
     }
     
@@ -60,7 +60,7 @@ public class VVBTestCodes extends Activity implements OnClickListener, LocationL
         super.onRestart();
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
         if (lastLocation == null) {
-            progress = ProgressDialog.show(VVBTestCodes.this, "", "Getting location...", true);
+            progress = ProgressDialog.show(CodesActivity.this, "", "Getting location...", true);
         }
     }
     
@@ -81,13 +81,13 @@ public class VVBTestCodes extends Activity implements OnClickListener, LocationL
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.itemGame:
-                startActivity(new Intent(this, VVBTestGame.class));
+                startActivity(new Intent(this, GameActivity.class));
                 break;
             case R.id.itemCodes:
-                startActivity(new Intent(this, VVBTestCodes.class));
+                startActivity(new Intent(this, CodesActivity.class));
                 break;
             case R.id.itemPrefs:
-                startActivity(new Intent(this, VVBTestPreferences.class));
+                startActivity(new Intent(this, PreferencesActivity.class));
                 break;
         }
         return true;
@@ -106,7 +106,7 @@ public class VVBTestCodes extends Activity implements OnClickListener, LocationL
             Log.d(TAG, "Format: " + scanResult.getFormatName() + "\nContents: " + scanResult.getContents());
             if (lastLocation != null) {
                 Log.d(TAG, String.format("%f", lastLocation.getLatitude()) + ", " + String.format("%f", lastLocation.getLongitude()) + ", " + String.format("%f", lastLocation.getAccuracy()));
-                progress = ProgressDialog.show(VVBTestCodes.this, "", "Sending...", true);
+                progress = ProgressDialog.show(CodesActivity.this, "", "Sending...", true);
                 new VVBServerTaskPostCode().execute(scanResult.getContents(), String.format("%f", lastLocation.getLatitude()), String.format("%f", lastLocation.getLongitude()), String.format("%f", lastLocation.getAccuracy()));
             }
             else {
@@ -133,12 +133,12 @@ public class VVBTestCodes extends Activity implements OnClickListener, LocationL
     public class VVBServerTaskPostCode extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... code) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(VVBTestCodes.this);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CodesActivity.this);
             return new VVBServer("http://vvb.a-z.fi", prefs.getString("authCode", null)).postCode(code[0], code[1], code[2], code[3]);
         }
 
         protected void onPostExecute(String result) {
-            Toast.makeText(VVBTestCodes.this, result, Toast.LENGTH_LONG).show();
+            Toast.makeText(CodesActivity.this, result, Toast.LENGTH_LONG).show();
             return;
         }
     }
@@ -148,14 +148,14 @@ public class VVBTestCodes extends Activity implements OnClickListener, LocationL
     public class VVBServerTaskGetCodes extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(VVBTestCodes.this);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CodesActivity.this);
             return new VVBServer("http://vvb.a-z.fi", prefs.getString("authCode", null)).getCodes();
         }
 
         protected void onPostExecute(String result) {
-            Log.d(TAG, VVBTestCodes.this.progress.toString());
-            VVBTestCodes.this.progress.dismiss();
-            Toast.makeText(VVBTestCodes.this, result, Toast.LENGTH_LONG).show();
+            Log.d(TAG, CodesActivity.this.progress.toString());
+            CodesActivity.this.progress.dismiss();
+            Toast.makeText(CodesActivity.this, result, Toast.LENGTH_LONG).show();
             return;
         }
     }
