@@ -9,7 +9,11 @@ import android.view.MenuItem;
 import android.view.Menu;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
+
+import android.preference.PreferenceManager;
+import android.content.SharedPreferences;
 
 import android.view.View.OnClickListener;
 import android.view.View;
@@ -31,6 +35,8 @@ public class VVBTestCodes extends Activity implements OnClickListener, LocationL
     LocationManager locationManager;
     Location lastLocation;
 
+    ProgressDialog progress;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,12 +50,18 @@ public class VVBTestCodes extends Activity implements OnClickListener, LocationL
         //new VVBServerTaskGetCodes().execute();
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         lastLocation = null;
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(VVBTestCodes.this);
+        Log.d(TAG, "PREF:" + prefs.getString("authCode", "NO"));
     }
     
     @Override
     protected void onResume() {
         super.onRestart();
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
+        if (lastLocation == null) {
+            progress = ProgressDialog.show(VVBTestCodes.this, "", "Getting location...", true);
+        }
     }
     
     @Override
@@ -94,6 +106,7 @@ public class VVBTestCodes extends Activity implements OnClickListener, LocationL
             Log.d(TAG, "Format: " + scanResult.getFormatName() + "\nContents: " + scanResult.getContents());
             if (lastLocation != null) {
                 Log.d(TAG, String.format("%f", lastLocation.getLatitude()) + ", " + String.format("%f", lastLocation.getLongitude()) + ", " + String.format("%f", lastLocation.getAccuracy()));
+                progress = ProgressDialog.show(VVBTestCodes.this, "", "Sending...", true);
                 new VVBServerTaskPostCode().execute(scanResult.getContents(), String.format("%f", lastLocation.getLatitude()), String.format("%f", lastLocation.getLongitude()), String.format("%f", lastLocation.getAccuracy()));
             }
             else {
@@ -106,6 +119,7 @@ public class VVBTestCodes extends Activity implements OnClickListener, LocationL
     public void onLocationChanged(Location location) {
         Log.d(TAG, location.toString());
         lastLocation = location;
+        progress.dismiss();
     }
     public void onProviderDisabled(String provider) {
     }
@@ -119,7 +133,8 @@ public class VVBTestCodes extends Activity implements OnClickListener, LocationL
     public class VVBServerTaskPostCode extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... code) {
-            return new VVBServer("http://vvb.a-z.fi").postCode(code[0], code[1], code[2], code[3]);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(VVBTestCodes.this);
+            return new VVBServer("http://vvb.a-z.fi", prefs.getString("authCode", null)).postCode(code[0], code[1], code[2], code[3]);
         }
 
         protected void onPostExecute(String result) {
@@ -133,10 +148,13 @@ public class VVBTestCodes extends Activity implements OnClickListener, LocationL
     public class VVBServerTaskGetCodes extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... params) {
-            return new VVBServer("http://vvb.a-z.fi").getCodes();
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(VVBTestCodes.this);
+            return new VVBServer("http://vvb.a-z.fi", prefs.getString("authCode", null)).getCodes();
         }
 
         protected void onPostExecute(String result) {
+            Log.d(TAG, VVBTestCodes.this.progress.toString());
+            VVBTestCodes.this.progress.dismiss();
             Toast.makeText(VVBTestCodes.this, result, Toast.LENGTH_LONG).show();
             return;
         }

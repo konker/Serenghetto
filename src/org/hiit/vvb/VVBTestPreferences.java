@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Menu;
 
+import android.app.ProgressDialog;
 import android.widget.Toast;
 import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
@@ -20,6 +21,8 @@ public class VVBTestPreferences extends PreferenceActivity implements OnSharedPr
     public static final String TAG = "VVB";
     public static final String PREFS_NAME = "_PREFS_";
 
+    ProgressDialog progress;
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,25 +30,30 @@ public class VVBTestPreferences extends PreferenceActivity implements OnSharedPr
         addPreferencesFromResource(R.xml.prefs);
 
         // Setup preferences 
-        SharedPreferences prefs = getSharedPreferences(VVBTestPreferences.PREFS_NAME, 0);
+        //SharedPreferences prefs = getSharedPreferences(VVBTestPreferences.PREFS_NAME, 0);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
+        Log.d(TAG, "Prefs: " + prefs.getString("email", null) + "/" + prefs.getString("password", null) + "/" + prefs.getString("authToken", "NOO"));
     }
     
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) { 
-        Log.d(TAG, "Prefs: " + prefs.getString("username", null) + "/" + prefs.getString("password", null));
-        new VVBServerTaskGetToken().execute(prefs.getString("username", null), prefs.getString("password", null));
+        if (key != "authToken") {
+            progress = ProgressDialog.show(VVBTestPreferences.this, "", "Authenticating...", true);
+            Log.d(TAG, "Prefs: " + prefs.getString("email", null) + "/" + prefs.getString("password", null));
+            new VVBServerTaskGetToken().execute(prefs.getString("email", null), prefs.getString("password", null));
+        }
         return;    
     } 
     
 
-    @Override 
-    public boolean onCreateOptionsMenu(Menu menu) { 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
 
-    @Override 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.itemGame:
@@ -66,16 +74,18 @@ public class VVBTestPreferences extends PreferenceActivity implements OnSharedPr
     public class VVBServerTaskGetToken extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... code) {
-            return new VVBServer("http://vvb.a-z.fi").getToken(code[0], code[1]);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(VVBTestPreferences.this);
+            return new VVBServer("http://vvb.a-z.fi", prefs.getString("authToken", null)).getToken(code[0], code[1]);
         }
 
         protected void onPostExecute(String result) {
-            //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(VVBTestPreferences.this);
-            SharedPreferences prefs = getSharedPreferences(VVBTestPreferences.PREFS_NAME, 0);
+            //SharedPreferences prefs = getSharedPreferences(VVBTestPreferences.PREFS_NAME, 0);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(VVBTestPreferences.this);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("authToken", result);
             editor.commit();
 
+            VVBTestPreferences.this.progress.dismiss();
             Toast.makeText(VVBTestPreferences.this, prefs.getString("authToken", "NULL"), Toast.LENGTH_LONG).show();
             return;
         }

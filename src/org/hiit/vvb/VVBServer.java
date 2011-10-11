@@ -29,19 +29,20 @@ public class VVBServer {
     //[FIXME: better ua]
     public static String CLIENT_USER_AGENT = "Android VVB...";
 
-    private String serverURL;
-    //private AndroidHttpClient httpClient;
-    private DefaultHttpClient httpClient;
+    String serverURL;
+    DefaultHttpClient httpClient;
+    String authToken;
 
-    public VVBServer(String url) {
+
+    public VVBServer(String url, String authToken) {
         serverURL = url;
-        //httpClient = AndroidHttpClient.newInstance(VVBServer.CLIENT_USER_AGENT);
+        authToken = authToken;
         httpClient = new DefaultHttpClient();
     }
 
     public String getCodes() {
         BasicHttpParams params = new BasicHttpParams();
-        params.setParameter("_token", "TOKEN");
+        params.setParameter("_token", authToken);
 
         HttpGet req = new HttpGet(getResourceURL("barcode", null));
         req.setHeader("Accept", "text/json");
@@ -76,7 +77,7 @@ public class VVBServer {
         nameValuePairs.add(new BasicNameValuePair("latitude", latitude));
         nameValuePairs.add(new BasicNameValuePair("longitude", longitude));
         nameValuePairs.add(new BasicNameValuePair("accuracy", accuracy));
-        nameValuePairs.add(new BasicNameValuePair("_token", "TOKEN"));
+        nameValuePairs.add(new BasicNameValuePair("_token", authToken));
 
         try {
             req.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -140,7 +141,7 @@ public class VVBServer {
     }
 
     public String getResourceURL(String controller, String action) {
-        String url = serverURL + "/" + controller;
+        String url = serverURL + "/api/" + controller;
         if (action != null) {
             url += action;
         }
