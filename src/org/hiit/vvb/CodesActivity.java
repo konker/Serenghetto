@@ -28,14 +28,11 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 
-public class CodesActivity extends BaseActivity implements LocationListener, OnClickListener
+public class CodesActivity extends BaseActivity implements OnClickListener
 {
     private static final String TAG = "VVB";
     
-    LocationManager locationManager;
-    Location lastLocation;
-
-    //ProgressDialog progress;
+    ProgressDialog progress;
 
     /** Called when the activity is first created. */
     @Override
@@ -82,21 +79,37 @@ public class CodesActivity extends BaseActivity implements LocationListener, OnC
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult != null) {
+        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult.getContents() != null) {
             Log.d(TAG, "Format: " + scanResult.getFormatName() + "\nContents: " + scanResult.getContents());
-            if (lastLocation != null) {
-                Log.d(TAG, String.format("%f", lastLocation.getLatitude()) + ", " + String.format("%f", lastLocation.getLongitude()) + ", " + String.format("%f", lastLocation.getAccuracy()));
-                //progress = ProgressDialog.show(CodesActivity.this, "", "Sending...", true);
-                new VVBServerTaskPostCode().execute(scanResult.getContents(), String.format("%f", lastLocation.getLatitude()), String.format("%f", lastLocation.getLongitude()), String.format("%f", lastLocation.getAccuracy()));
-            }
-            else {
-                Log.d(TAG, "NO LOCATION");
-            }
+
+            // get name from the user
+            PromptDialog dlg = new PromptDialog(CodesActivity.this, R.string.titlePrompt, R.string.summaryPrompt) {
+                @Override
+                public boolean onOkClicked(String input) {
+                    Log.d(TAG, input);
+
+                    /*[FIXME: is location mandatory? If so enable/disable scan button?]*/
+                    progress = ProgressDialog.show(CodesActivity.this, "", "Sending...", true);
+                    String lat = "";
+                    String lng = "";
+                    String accuracy = "";
+                    if (app.getLastLocation() != null) {
+                        lat = String.format("%f", app.getLastLocation().getLatitude());
+                        lng = String.format("%f", app.getLastLocation().getLongitude());
+                        accuracy = String.format("%f", app.getLastLocation().getAccuracy());
+                    }
+                    new VVBServerTaskPostCode().execute(scanResult.getContents(), input, lat, lng, accuracy);
+
+                    return true;
+                }
+            };
+            dlg.show();
         }
     }
 
     // Methods required by LocationListener 
+    /*
     public void onLocationChanged(Location location) {
         Log.d(TAG, location.toString());
         lastLocation = location;
@@ -108,34 +121,40 @@ public class CodesActivity extends BaseActivity implements LocationListener, OnC
     }
     public void onStatusChanged(String provider, int status, Bundle extras) {
     }
+    */
 
     /**
     */
-    public class VVBServerTaskPostCode extends AsyncTask<String, Void, String> {
+    public class VVBServerTaskPostCode extends VVBServerTask
+    {
         @Override
-        protected String doInBackground(String... code) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CodesActivity.this);
-            return new VVBServer("http://vvb.a-z.fi", prefs.getString("authCode", null)).postCode(code[0], code[1], code[2], code[3]);
+        protected Response doInBackground(String... args) {
+            return new VVBServer("http://vvb.a-z.fi", CodesActivity.this.app.getToken()).postCode(args[0], args[1], args[2], args[3], args[4]);
         }
 
-        protected void onPostExecute(String result) {
-            Toast.makeText(CodesActivity.this, result, Toast.LENGTH_LONG).show();
+        @Override
+        protected void handleResult() {
+            /*[TODO: add to local list of code when OK]*/
+            CodesActivity.this.progress.dismiss();
+            Toast.makeText(CodesActivity.this, response.getMessage(), Toast.LENGTH_LONG).show();
             return;
         }
     }
 
     /**
     */
-    public class VVBServerTaskGetCodes extends AsyncTask<String, Void, String> {
+    public class VVBServerTaskGetCodes extends VVBServerTask
+    {
         @Override
-        protected String doInBackground(String... params) {
+        protected Response doInBackground(String... params) {
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CodesActivity.this);
             return new VVBServer("http://vvb.a-z.fi", prefs.getString("authCode", null)).getCodes();
         }
 
-        protected void onPostExecute(String result) {
-            //CodesActivity.this.progress.dismiss();
-            Toast.makeText(CodesActivity.this, result, Toast.LENGTH_LONG).show();
+        @Override
+        protected void handleResult() {
+            CodesActivity.this.progress.dismiss();
+            Toast.makeText(CodesActivity.this, response.getMessage(), Toast.LENGTH_LONG).show();
             return;
         }
     }

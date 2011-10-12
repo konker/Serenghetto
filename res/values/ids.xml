@@ -6,5 +6,7 @@
   <item type="id" name="itemGame"/>
   <item type="id" name="itemCodes"/>
   <item type="id" name="itemPrefs"/>
+  <item type="id" name="itemToggleService"/>
+  <item type="id" name="codesList"/>
 </resources>
 

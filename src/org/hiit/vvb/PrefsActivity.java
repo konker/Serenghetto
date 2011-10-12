@@ -53,28 +53,23 @@ public class PrefsActivity extends PreferenceActivity implements OnClickListener
 
     /**
     */
-    public class VVBServerTaskGetToken extends AsyncTask<String, Void, String> {
+    public class VVBServerTaskGetToken extends VVBServerTask
+    {
         @Override
-        protected String doInBackground(String... code) {
+        protected Response doInBackground(String... code) {
             /*[FIXME: hardcoded server base url]*/
-            return new VVBServer("http://vvb.a-z.fi", null).getToken(code[0], code[1]);
+            return PrefsActivity.this.app.getServer().getToken(code[0], code[1]);
         }
 
-        protected void onPostExecute(String json) {
+        @Override
+        protected void handleResult() {
             PrefsActivity.this.progress.dismiss();
-
-            JSONObject result = (JSONObject)JSONValue.parse(json);
-            String msg = (String)result.get("msg");
-            JSONObject body = (JSONObject)result.get("body");
-            if (msg.equals("OK")) {
-                PrefsActivity.this.app.getPrefsEditor().putString(VVBApplication.PREF_KEY_AUTH_TOKEN, (String)body.get("token"));
-                PrefsActivity.this.app.getPrefsEditor().commit();
-                Log.d(TAG, "TOKEN:" + PrefsActivity.this.app.getPrefs().getString(VVBApplication.PREF_KEY_AUTH_TOKEN, "NADA"));
+            if (response.getHttpCode() == 200) {
+                PrefsActivity.this.app.setToken((String)response.getBody().get("token"));
             }
-            Toast.makeText(PrefsActivity.this, msg, Toast.LENGTH_LONG).show();
+            Toast.makeText(PrefsActivity.this, response.getMessage(), Toast.LENGTH_LONG).show();
             return;
         }
     }
 }
-
 

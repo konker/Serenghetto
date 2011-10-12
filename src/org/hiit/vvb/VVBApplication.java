@@ -23,11 +23,14 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
     public static final String PREF_KEY_PASSWORD = "password";
     public static final String PREF_KEY_PASSWORD_DIRTY = "passwordDirty";
 
+    private VVBServer server;
+    private boolean serviceRunning;
+
     private SharedPreferences prefs;
     private SharedPreferences.Editor editor;
+
     private LocationManager locationManager;
     private Location lastLocation;
-    private String token;
 
     @Override
     public void onCreate() {
@@ -37,7 +40,8 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
         this.editor = prefs.edit();
         this.prefs.registerOnSharedPreferenceChangeListener(this);
 
-        this.token = prefs.getString(PREF_KEY_AUTH_TOKEN, null);
+        String token = prefs.getString(PREF_KEY_AUTH_TOKEN, null);
+        this.server = new VVBServer("http://vvb.a-z.fi", token);
 
         this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         this.lastLocation = null;
@@ -53,10 +57,30 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
     }
 
     public boolean hasToken() {
-        return (token != null);
+        return (server.getToken() != null);
     }
     public String getToken() {
-        return token;
+        return server.getToken();
+    }
+    public void setToken(String token) {
+        editor.putString(PREF_KEY_AUTH_TOKEN, token);
+        editor.commit();
+        server.setToken(token);
+    }
+
+    public VVBServer getServer() {
+        return server;
+    }
+
+    public Location getLastLocation() {
+        return lastLocation;
+    }
+
+    public boolean isServiceRunning() {
+        return serviceRunning;
+    }
+    public void setServiceRunning(boolean serviceRunning) {
+        this.serviceRunning = serviceRunning;
     }
 
     @Override
@@ -67,7 +91,7 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
 
     public synchronized void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         if (key.equals(PREF_KEY_AUTH_TOKEN)) {
-            token = prefs.getString(PREF_KEY_AUTH_TOKEN, null);
+            server.setToken(prefs.getString(PREF_KEY_AUTH_TOKEN, null));
         }
         return;
     }

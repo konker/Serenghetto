@@ -29,20 +29,27 @@ public class VVBServer {
     //[FIXME: better ua]
     public static String CLIENT_USER_AGENT = "Android VVB...";
 
-    String serverURL;
-    DefaultHttpClient httpClient;
-    String authToken;
+    private String serverURL;
+    private DefaultHttpClient httpClient;
+    private String token;
 
 
-    public VVBServer(String url, String authToken) {
-        serverURL = url;
-        authToken = authToken;
-        httpClient = new DefaultHttpClient();
+    public VVBServer(String url, String token) {
+        this.serverURL = url;
+        this.token = token;
+        this.httpClient = new DefaultHttpClient();
     }
 
-    public String getCodes() {
+    public String getToken() {
+        return token;
+    }
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Response getCodes() {
         BasicHttpParams params = new BasicHttpParams();
-        params.setParameter("_token", authToken);
+        params.setParameter("_token", token);
 
         HttpGet req = new HttpGet(getResourceURL("barcode", null));
         req.setHeader("Accept", "text/json");
@@ -54,59 +61,68 @@ public class VVBServer {
             
             //return res.getEntity().getContent().read();
             //return IOUtils.toString(myInputStream, "UTF-8");
-            BufferedReader r = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
+            Response response = new Response(res.getStatusLine().getStatusCode(), reader);
+            /*
             String line;
             while ((line = r.readLine()) != null) {
                 json.append(line);
             }
+            */
+            //return json.toString();
+            return response;
         }
         catch (IOException ex) {
             Log.d(TAG, ex.toString());
-            return ex.toString();
+            return new Response(500, "Error", null);
         }
-        return json.toString();
     }
 
-    public String postCode(String code, String latitude, String longitude, String accuracy) {
+    public Response postCode(String code, String name, String latitude, String longitude, String accuracy) {
         //[FIXME: needs real location]
         HttpPost req = new HttpPost(getResourceURL("barcode", null));
         req.setHeader("Accept", "text/json");
 
         List nameValuePairs = new ArrayList(1);
         nameValuePairs.add(new BasicNameValuePair("code", code));
+        nameValuePairs.add(new BasicNameValuePair("name", name));
         nameValuePairs.add(new BasicNameValuePair("latitude", latitude));
         nameValuePairs.add(new BasicNameValuePair("longitude", longitude));
         nameValuePairs.add(new BasicNameValuePair("accuracy", accuracy));
-        nameValuePairs.add(new BasicNameValuePair("_token", authToken));
+        nameValuePairs.add(new BasicNameValuePair("_token", token));
 
         try {
             req.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         }
         catch (UnsupportedEncodingException ex) {
             Log.d(TAG, ex.toString());
-            return "ERR1";
+            return new Response(500, "Error", null);
         }
 
-        StringBuilder json = new StringBuilder();
+        //StringBuilder json = new StringBuilder();
         try {
             HttpResponse res = httpClient.execute(req);
             
             //return res.getEntity().getContent().read();
             //return IOUtils.toString(myInputStream, "UTF-8");
-            BufferedReader r = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
+            Response response = new Response(res.getStatusLine().getStatusCode(), reader);
+            /*
             String line;
             while ((line = r.readLine()) != null) {
                 json.append(line);
             }
+            */
+            //return json.toString();
+            return response;
         }
         catch (IOException ex) {
             Log.d(TAG, ex.toString());
-            return ex.toString();
+            return new Response(500, "Error", null);
         }
-        return json.toString();
     }
 
-    public String getToken(String username, String password) {
+    public Response getToken(String username, String password) {
         HttpPost req = new HttpPost(getResourceURL("session", null));
         req.setHeader("Accept", "text/json");
 
@@ -119,7 +135,7 @@ public class VVBServer {
         }
         catch (UnsupportedEncodingException ex) {
             Log.d(TAG, ex.toString());
-            return "ERR1";
+            return new Response(500, "Error", null);
         }
 
         StringBuilder json = new StringBuilder();
@@ -127,17 +143,21 @@ public class VVBServer {
             HttpResponse res = httpClient.execute(req);
 
             // read response into a StringBuilder
-            BufferedReader r = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
+            BufferedReader reader = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
+            Response response = new Response(res.getStatusLine().getStatusCode(), reader);
+            /*
             String line;
             while ((line = r.readLine()) != null) {
                 json.append(line);
             }
+            */
+            //return json.toString();
+            return response;
         }
         catch (IOException ex) {
             Log.d(TAG, ex.toString());
-            return ex.toString();
+            return new Response(500, "Error", null);
         }
-        return json.toString();
     }
 
     public String getResourceURL(String controller, String action) {

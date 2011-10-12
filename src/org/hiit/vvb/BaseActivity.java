@@ -12,12 +12,12 @@ import android.widget.Toast;
  * The base activity with common features shared by CodesActivity and GameActivity 
  */
 public class BaseActivity extends Activity {
-    VVBApplication app;
+    protected VVBApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        app = (VVBApplication) getApplication();
+        this.app = (VVBApplication) getApplication();
     }
 
     @Override
@@ -45,6 +45,30 @@ public class BaseActivity extends Activity {
                   .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                   .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
                 break;
+            case R.id.itemToggleService: 
+                if (app.isServiceRunning()) { 
+                    stopService(new Intent(this, UpdatesService.class)); 
+                }
+                else { 
+                    startService(new Intent(this, UpdatesService.class)); 
+                } 
+                break; 
+        }
+        return true;
+    }
+
+
+    // Called every time menu is opened
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        MenuItem toggleItem = menu.findItem(R.id.itemToggleService);
+        if (app.isServiceRunning()) {
+            toggleItem.setTitle(R.string.titleServiceStop);
+            toggleItem.setIcon(android.R.drawable.ic_media_pause);
+        }
+        else {
+            toggleItem.setTitle(R.string.titleServiceStart);
+            toggleItem.setIcon(android.R.drawable.ic_media_play);
         }
         return true;
     }
