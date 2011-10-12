@@ -28,14 +28,14 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 
-public class CodesActivity extends Activity implements OnClickListener, LocationListener
+public class CodesActivity extends BaseActivity implements LocationListener, OnClickListener
 {
     private static final String TAG = "VVB";
     
     LocationManager locationManager;
     Location lastLocation;
 
-    ProgressDialog progress;
+    //ProgressDialog progress;
 
     /** Called when the activity is first created. */
     @Override
@@ -44,17 +44,20 @@ public class CodesActivity extends Activity implements OnClickListener, Location
         setContentView(R.layout.codes);
 
         // set a click listener on the scan_code button
-        Button scan_code = (Button)findViewById(R.id.buttonScanCode);
-        scan_code.setOnClickListener(this);
+        Button buttonScanCode = (Button)findViewById(R.id.buttonScanCode);
+        buttonScanCode.setOnClickListener(this);
 
+        /*
         //new VVBServerTaskGetCodes().execute();
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         lastLocation = null;
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CodesActivity.this);
         Log.d(TAG, "PREF:" + prefs.getString("authCode", "NO"));
+        */
     }
     
+    /*
     @Override
     protected void onResume() {
         super.onRestart();
@@ -69,29 +72,7 @@ public class CodesActivity extends Activity implements OnClickListener, Location
         super.onPause();
         locationManager.removeUpdates(this);
     }
-
-    @Override 
-    public boolean onCreateOptionsMenu(Menu menu) { 
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.itemGame:
-                startActivity(new Intent(this, GameActivity.class));
-                break;
-            case R.id.itemCodes:
-                startActivity(new Intent(this, CodesActivity.class));
-                break;
-            case R.id.itemPrefs:
-                startActivity(new Intent(this, PreferencesActivity.class));
-                break;
-        }
-        return true;
-    }
+    */
 
     public void onClick(View view) {
         if (view == findViewById(R.id.buttonScanCode)) {
@@ -106,7 +87,7 @@ public class CodesActivity extends Activity implements OnClickListener, Location
             Log.d(TAG, "Format: " + scanResult.getFormatName() + "\nContents: " + scanResult.getContents());
             if (lastLocation != null) {
                 Log.d(TAG, String.format("%f", lastLocation.getLatitude()) + ", " + String.format("%f", lastLocation.getLongitude()) + ", " + String.format("%f", lastLocation.getAccuracy()));
-                progress = ProgressDialog.show(CodesActivity.this, "", "Sending...", true);
+                //progress = ProgressDialog.show(CodesActivity.this, "", "Sending...", true);
                 new VVBServerTaskPostCode().execute(scanResult.getContents(), String.format("%f", lastLocation.getLatitude()), String.format("%f", lastLocation.getLongitude()), String.format("%f", lastLocation.getAccuracy()));
             }
             else {
@@ -119,7 +100,7 @@ public class CodesActivity extends Activity implements OnClickListener, Location
     public void onLocationChanged(Location location) {
         Log.d(TAG, location.toString());
         lastLocation = location;
-        progress.dismiss();
+        //progress.dismiss();
     }
     public void onProviderDisabled(String provider) {
     }
@@ -153,8 +134,7 @@ public class CodesActivity extends Activity implements OnClickListener, Location
         }
 
         protected void onPostExecute(String result) {
-            Log.d(TAG, CodesActivity.this.progress.toString());
-            CodesActivity.this.progress.dismiss();
+            //CodesActivity.this.progress.dismiss();
             Toast.makeText(CodesActivity.this, result, Toast.LENGTH_LONG).show();
             return;
         }

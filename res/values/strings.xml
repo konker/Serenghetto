@@ -3,6 +3,9 @@
     <string name="app_name">VVBTest</string>
     <string name="hello">I am Konker. Hear my ROAR!</string>
     <string name="scan_code">Scan code</string>
+    <string name="update">Update</string>
+    <string name="logged_out">Please enter you email and password to continue</string>
+    <string name="go_to_preferences">Go to preferences</string>
     <string name="game">Game</string>
     <string name="codes">Codes</string>
     <string name="preferences">Preferences</string>

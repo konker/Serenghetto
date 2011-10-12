@@ -9,37 +9,13 @@ import android.view.MenuItem;
 import android.view.Menu;
 
 
-public class GameActivity extends Activity
+public class GameActivity extends BaseActivity
 {
     private static final String TAG = "VVB";
 
-    /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
-    }
-
-    @Override 
-    public boolean onCreateOptionsMenu(Menu menu) { 
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.itemGame:
-                startActivity(new Intent(this, GameActivity.class));
-                break;
-            case R.id.itemCodes:
-                startActivity(new Intent(this, CodesActivity.class));
-                break;
-            case R.id.itemPrefs:
-                startActivity(new Intent(this, PreferencesActivity.class));
-                break;
-        }
-        return true;
     }
 }

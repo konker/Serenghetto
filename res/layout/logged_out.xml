@@ -7,8 +7,13 @@
 <TextView  
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content" 
-    android:text="@string/preferences"
+    android:text="@string/logged_out"
+    />
+<Button  
+    android:id="@+id/buttonPrefs" 
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="@string/go_to_preferences"
     />
 </LinearLayout>
-
 
