@@ -43,6 +43,18 @@ public class PrefsActivity extends PreferenceActivity implements OnClickListener
         buttonUpdate.setOnClickListener(this);
     }
 
+    // Called every time user clicks on a menu item
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return this.app.onOptionsItemSelected(item);
+    }
+
+    // Called every time menu is opened
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        return app.onMenuOpened(featureId, menu);
+    }
+
     public void onClick(View view) {
         if (view == findViewById(R.id.buttonUpdate)) {
             progress = ProgressDialog.show(PrefsActivity.this, "", "Authenticating...", true);

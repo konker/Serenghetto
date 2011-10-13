@@ -8,5 +8,6 @@
   <item type="id" name="itemPrefs"/>
   <item type="id" name="itemToggleService"/>
   <item type="id" name="codesList"/>
+  <item type="id" name="scrollViewCodes"/>
 </resources>
 

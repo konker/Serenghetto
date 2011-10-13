@@ -108,28 +108,13 @@ public class CodesActivity extends BaseActivity implements OnClickListener
         }
     }
 
-    // Methods required by LocationListener 
-    /*
-    public void onLocationChanged(Location location) {
-        Log.d(TAG, location.toString());
-        lastLocation = location;
-        //progress.dismiss();
-    }
-    public void onProviderDisabled(String provider) {
-    }
-    public void onProviderEnabled(String provider) {
-    }
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-    */
-
     /**
     */
     public class VVBServerTaskPostCode extends VVBServerTask
     {
         @Override
         protected Response doInBackground(String... args) {
-            return new VVBServer("http://vvb.a-z.fi", CodesActivity.this.app.getToken()).postCode(args[0], args[1], args[2], args[3], args[4]);
+            return CodesActivity.this.app.getServer().postCode(args[0], args[1], args[2], args[3], args[4]);
         }
 
         @Override
@@ -147,8 +132,7 @@ public class CodesActivity extends BaseActivity implements OnClickListener
     {
         @Override
         protected Response doInBackground(String... params) {
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CodesActivity.this);
-            return new VVBServer("http://vvb.a-z.fi", prefs.getString("authCode", null)).getCodes();
+            return CodesActivity.this.app.getServer().getCodes();
         }
 
         @Override

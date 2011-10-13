@@ -5,9 +5,4 @@
   <EditTextPreference android:title="@string/titlePassword" 
     android:password="true" android:summary="@string/summaryPassword" 
     android:key="password"></EditTextPreference> 
-  <!--
-  <EditTextPreference android:title="TOKEN" 
-    android:password="false" android:summary="TOKEN TEMP" 
-    android:key="authToken"></EditTextPreference> 
-    -->
 </PreferenceScreen> 

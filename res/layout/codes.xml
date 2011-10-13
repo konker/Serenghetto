@@ -4,15 +4,28 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-    <Button  
-        android:id="@+id/buttonScanCode" 
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content" 
+    <Button
+        android:id="@+id/buttonScanCode"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:text="@string/scan_code"
         />
-    <ListView
-        android:id="@+id/codesList"
+    <ScrollView
+        android:id="@+id/scrollViewCodes"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="fill_parent"
+        >
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            >
+            <ListView
+                android:id="@+id/codesList"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
 
