@@ -22,7 +22,7 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
 {
     private static final String TAG = "VVB";
 
-    private static final String SERVER_BASE_URL = "http://vvb.a-z.fi";
+    private static final String SERVER_BASE_URL = "http://zebraz.herokuapp.com";
 
     public static final String PREF_KEY_AUTH_TOKEN = "authToken";
     public static final String PREF_KEY_EMAIL = "email";

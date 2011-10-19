@@ -1,5 +1,6 @@
 package org.hiit.vvb;
 
+import java.util.Map;
 import android.util.Log;
 import android.preference.PreferenceActivity;
 import android.os.Bundle;
@@ -69,16 +70,21 @@ public class PrefsActivity extends PreferenceActivity implements OnClickListener
     {
         @Override
         protected Response doInBackground(String... code) {
-            /*[FIXME: hardcoded server base url]*/
             return PrefsActivity.this.app.getServer().getToken(code[0], code[1]);
         }
 
         @Override
         protected void handleResult() {
             PrefsActivity.this.progress.dismiss();
-            if (response.getHttpCode() == 200) {
-                PrefsActivity.this.app.setToken((String)response.getBody().get("token"));
+            if (response.getHttpCode() == 201) {
+                Map body = (Map)response.getBody();
+                Map user = (Map)body.get("user");
+                PrefsActivity.this.app.setToken((String)user.get("token"));
             }
+            else {
+                Log.d(TAG, "http code: " + response.getHttpCode());
+            }
+            /*[FIXME: handle != 201 error?]*/
             Toast.makeText(PrefsActivity.this, response.getMessage(), Toast.LENGTH_LONG).show();
             return;
         }

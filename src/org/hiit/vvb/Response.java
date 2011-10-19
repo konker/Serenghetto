@@ -2,8 +2,10 @@ package org.hiit.vvb;
 
 import java.io.Reader;
 import java.util.Map;
+import java.util.HashMap;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONObject;
+import android.util.Log; 
 
 public class Response {
     private int httpCode;
@@ -12,9 +14,23 @@ public class Response {
 
     public Response(int httpCode, Reader in) {
         JSONObject response = (JSONObject)JSONValue.parse(in);
-        this.httpCode = httpCode;
-        this.message = (String)response.get("message");
-        this.body = (Map)response.get("body");
+        _initFromJSON(httpCode, response);
+    }
+    public Response(int httpCode, String in) {
+        JSONObject response = (JSONObject)JSONValue.parse(in);
+        _initFromJSON(httpCode, response);
+    }
+    private void _initFromJSON(int httpCode, JSONObject response) {
+        if (response != null) {
+            this.httpCode = httpCode;
+            this.message = (String)response.get("message");
+            this.body = (Map)response.get("body");
+        }
+        else {
+            this.httpCode = 500;
+            this.message = "An error has occurred.";
+            this.body = new HashMap();
+        }
     }
 
     public Response(int httpCode, String message, Map body) {

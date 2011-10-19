@@ -37,26 +37,27 @@ public class VVBServer {
     public VVBServer(String url, String token) {
         this.serverURL = url;
         this.token = token;
-        this.httpClient = new DefaultHttpClient();
     }
 
     public String getToken() {
         return token;
     }
     public void setToken(String token) {
+        Log.d(TAG, "token: " + token);
         this.token = token;
     }
 
     public Response getCodes() {
         BasicHttpParams params = new BasicHttpParams();
-        params.setParameter("_token", token);
+        params.setParameter("token", token);
 
         HttpGet req = new HttpGet(getResourceURL("barcode", null));
-        req.setHeader("Accept", "text/json");
+        req.setHeader("Accept", "application/json");
         req.setParams(params);
 
         StringBuilder json = new StringBuilder();
         try {
+            httpClient = new DefaultHttpClient();
             HttpResponse res = httpClient.execute(req);
             
             //return res.getEntity().getContent().read();
@@ -81,15 +82,15 @@ public class VVBServer {
     public Response postCode(String code, String name, String latitude, String longitude, String accuracy) {
         //[FIXME: needs real location]
         HttpPost req = new HttpPost(getResourceURL("barcode", null));
-        req.setHeader("Accept", "text/json");
+        req.setHeader("Accept", "application/json");
 
         List nameValuePairs = new ArrayList(1);
-        nameValuePairs.add(new BasicNameValuePair("code", code));
-        nameValuePairs.add(new BasicNameValuePair("name", name));
-        nameValuePairs.add(new BasicNameValuePair("latitude", latitude));
-        nameValuePairs.add(new BasicNameValuePair("longitude", longitude));
-        nameValuePairs.add(new BasicNameValuePair("accuracy", accuracy));
-        nameValuePairs.add(new BasicNameValuePair("_token", token));
+        nameValuePairs.add(new BasicNameValuePair("barcode[barcode]", code));
+        nameValuePairs.add(new BasicNameValuePair("barcode[name]", name));
+        //nameValuePairs.add(new BasicNameValuePair("latitude", latitude));
+        //nameValuePairs.add(new BasicNameValuePair("longitude", longitude));
+        //nameValuePairs.add(new BasicNameValuePair("accuracy", accuracy));
+        nameValuePairs.add(new BasicNameValuePair("token", token));
 
         try {
             req.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -99,21 +100,12 @@ public class VVBServer {
             return new Response(500, "Error", null);
         }
 
-        //StringBuilder json = new StringBuilder();
         try {
+            httpClient = new DefaultHttpClient();
             HttpResponse res = httpClient.execute(req);
             
-            //return res.getEntity().getContent().read();
-            //return IOUtils.toString(myInputStream, "UTF-8");
             BufferedReader reader = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
             Response response = new Response(res.getStatusLine().getStatusCode(), reader);
-            /*
-            String line;
-            while ((line = r.readLine()) != null) {
-                json.append(line);
-            }
-            */
-            //return json.toString();
             return response;
         }
         catch (IOException ex) {
@@ -122,13 +114,13 @@ public class VVBServer {
         }
     }
 
-    public Response getToken(String username, String password) {
+    public Response getToken(String email, String password) {
         HttpPost req = new HttpPost(getResourceURL("session", null));
-        req.setHeader("Accept", "text/json");
+        req.setHeader("Accept", "application/json");
 
         List nameValuePairs = new ArrayList(1);
-        nameValuePairs.add(new BasicNameValuePair("username", username));
-        nameValuePairs.add(new BasicNameValuePair("password", password));
+        nameValuePairs.add(new BasicNameValuePair("user[email]", email));
+        nameValuePairs.add(new BasicNameValuePair("user[password]", password));
 
         try {
             req.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -140,6 +132,7 @@ public class VVBServer {
 
         StringBuilder json = new StringBuilder();
         try {
+            httpClient = new DefaultHttpClient();
             HttpResponse res = httpClient.execute(req);
 
             // read response into a StringBuilder
