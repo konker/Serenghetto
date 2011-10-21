@@ -17,10 +17,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 
 
-
 public class VVBApplication extends Application implements OnSharedPreferenceChangeListener, LocationListener
 {
     private static final String TAG = "VVB";
+    private static final int TIME_DELTA_SIGNIFICANT_WINDOW_MS = 1000 * 60 * 2; // 2 minutes
 
     private static final String SERVER_BASE_URL = "http://zebraz.herokuapp.com";
 
@@ -37,7 +37,11 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
     private SharedPreferences.Editor editor;
 
     private LocationManager locationManager;
-    private Location lastLocation;
+    private Location bestLocationEstimate;
+    /*
+    private String lastNmeaString;
+    private long lastNmeaTimestamp;
+    */
 
     @Override
     public void onCreate() {
@@ -50,10 +54,15 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
         String token = prefs.getString(PREF_KEY_AUTH_TOKEN, null);
         this.server = new VVBServer(SERVER_BASE_URL, token);
 
-        this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        this.lastLocation = null;
+        this.bestLocationEstimate = null;
+        /*
+        this.lastNmeaString = null;
+        this.lastNmeaTimestamp = 0;
+        */
 
-        this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
+        this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        //this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        //this.locationManager.addNmeaListener(this);
         /*
         if (lastLocation == null) {
             progress = ProgressDialog.show(CodesActivity.this, "", "Getting location...", true);
@@ -61,7 +70,7 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
         */
         //START THE SERVICE HERE?
 
-        Log.i(TAG, "onCreated: " + hasToken());
+        Log.i(TAG, "App.onCreated: " + hasToken());
     }
 
     @Override
@@ -138,9 +147,19 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
         return server;
     }
 
-    public Location getLastLocation() {
-        return lastLocation;
+    public Location getBestLocationEstimate() {
+        return bestLocationEstimate;
     }
+
+    /*
+    public String getLastNmeaString() {
+        return lastNmeaString;
+    }
+
+    public long getLastNmeaTimestamp() {
+        return lastNmeaTimestamp;
+    }
+    */
 
     public boolean isServiceRunning() {
         return serviceRunning;
@@ -157,16 +176,76 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
         return;
     }
 
+    public void startLocationUpdates() {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+    }
+    public void stopLocationUpdates() {
+        locationManager.removeUpdates(this);
+    }
     // Methods required by LocationListener 
+    /*
+    public void onNmeaReceived(long timestamp, String nmea) {
+        Log.d(TAG, nmea);
+        lastNmeaString = nmea;
+        lastNmeaTimestamp = timestamp;
+    }
+    */
     public void onLocationChanged(Location location) {
-        Log.d(TAG, location.toString());
-        lastLocation = location;
+        Log.d(TAG, "LOC: " + location.toString());
+        if (isBetterLocation(location)) {
+            Log.d(TAG, "LOC better: " + location.toString());
+            bestLocationEstimate = location;
+        }
     }
     public void onProviderDisabled(String provider) {
     }
     public void onProviderEnabled(String provider) {
     }
     public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
+
+    public boolean isBetterLocation(Location location) {
+        if (bestLocationEstimate == null) {
+            return true;
+        }
+
+        // check whether the new location fix is newer
+        long timeDelta = location.getTime() - bestLocationEstimate.getTime();
+        boolean isSignificantlyNewer = timeDelta > TIME_DELTA_SIGNIFICANT_WINDOW_MS;
+        boolean isSignificantlyOlder = timeDelta < -TIME_DELTA_SIGNIFICANT_WINDOW_MS;
+        boolean isNewer = timeDelta > 0;
+
+        if (isSignificantlyNewer) {
+            return true;
+        }
+        else if (isSignificantlyOlder) {
+            return false;
+        }
+
+        // check accuracy
+        int accuracyDelta = (int)(location.getAccuracy() - bestLocationEstimate.getAccuracy());
+        boolean isLessAccurate = accuracyDelta > 0;
+        boolean isMoreAccurate = accuracyDelta < 0;
+        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
+
+        boolean isFromSameProvider = isSameProvider(location.getProvider(), bestLocationEstimate.getProvider());
+
+        if (isMoreAccurate) {
+            return true;
+        }
+        else if (isNewer && !isLessAccurate) {
+            return true;
+        }
+        else if (isNewer && !isSignificantlyLessAccurate && isFromSameProvider) {
+            return true;
+        }
+        return false;
+    }
+    private boolean isSameProvider(String p1, String p2) {
+        if (p1 == null) {
+            return (p2 == null);
+        }
+        return p1.equals(p2);
     }
 }
 

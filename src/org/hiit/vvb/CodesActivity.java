@@ -21,8 +21,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import android.location.Location; 
-import android.location.LocationListener; 
-import android.location.LocationManager; 
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -44,32 +42,30 @@ public class CodesActivity extends BaseActivity implements OnClickListener
         Button buttonScanCode = (Button)findViewById(R.id.buttonScanCode);
         buttonScanCode.setOnClickListener(this);
 
-        /*
-        //new VVBServerTaskGetCodes().execute();
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        lastLocation = null;
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(CodesActivity.this);
-        Log.d(TAG, "PREF:" + prefs.getString("authCode", "NO"));
-        */
+        // start listening for location
+        app.startLocationUpdates();
     }
     
-    /*
     @Override
     protected void onResume() {
         super.onRestart();
+        app.startLocationUpdates();
+        /*
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
         if (lastLocation == null) {
             progress = ProgressDialog.show(CodesActivity.this, "", "Getting location...", true);
         }
+        */
     }
     
     @Override
     protected void onPause() {
         super.onPause();
+        app.startLocationUpdates();
+        /*
         locationManager.removeUpdates(this);
+        */
     }
-    */
 
     public void onClick(View view) {
         if (view == findViewById(R.id.buttonScanCode)) {
@@ -91,15 +87,18 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 
                     /*[FIXME: is location mandatory? If so enable/disable scan button?]*/
                     progress = ProgressDialog.show(CodesActivity.this, "", "Sending...", true);
+                    Location bestLocationEstimate = app.getBestLocationEstimate();
                     String lat = "";
                     String lng = "";
                     String accuracy = "";
-                    if (app.getLastLocation() != null) {
-                        lat = String.format("%f", app.getLastLocation().getLatitude());
-                        lng = String.format("%f", app.getLastLocation().getLongitude());
-                        accuracy = String.format("%f", app.getLastLocation().getAccuracy());
+                    String timestamp = "";
+                    if (bestLocationEstimate != null) {
+                        lat = String.format("%f", bestLocationEstimate.getLatitude());
+                        lng = String.format("%f", bestLocationEstimate.getLongitude());
+                        accuracy = String.format("%f", bestLocationEstimate.getAccuracy());
+                        timestamp = String.format("%d", bestLocationEstimate.getTime());
                     }
-                    new VVBServerTaskPostCode().execute(scanResult.getContents(), input, lat, lng, accuracy);
+                    new VVBServerTaskPostCode().execute(scanResult.getContents(), input, lat, lng, accuracy, timestamp);
 
                     return true;
                 }
@@ -114,7 +113,7 @@ public class CodesActivity extends BaseActivity implements OnClickListener
     {
         @Override
         protected Response doInBackground(String... args) {
-            return CodesActivity.this.app.getServer().postCode(args[0], args[1], args[2], args[3], args[4]);
+            return CodesActivity.this.app.getServer().postCode(args[0], args[1], args[2], args[3], args[4], args[5]);
         }
 
         @Override

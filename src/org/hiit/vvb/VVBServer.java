@@ -79,17 +79,20 @@ public class VVBServer {
         }
     }
 
-    public Response postCode(String code, String name, String latitude, String longitude, String accuracy) {
+    public Response postCode(String code, String name, String latitude, String longitude, String accuracy, String timestamp) {
         //[FIXME: needs real location]
         HttpPost req = new HttpPost(getResourceURL("barcode", null));
         req.setHeader("Accept", "application/json");
 
         List nameValuePairs = new ArrayList(1);
-        nameValuePairs.add(new BasicNameValuePair("barcode[barcode]", code));
+        nameValuePairs.add(new BasicNameValuePair("barcode[code]", code));
         nameValuePairs.add(new BasicNameValuePair("barcode[name]", name));
-        //nameValuePairs.add(new BasicNameValuePair("latitude", latitude));
-        //nameValuePairs.add(new BasicNameValuePair("longitude", longitude));
-        //nameValuePairs.add(new BasicNameValuePair("accuracy", accuracy));
+        nameValuePairs.add(new BasicNameValuePair("location[latitude]", latitude));
+        nameValuePairs.add(new BasicNameValuePair("location[longitude]", longitude));
+        nameValuePairs.add(new BasicNameValuePair("location[accuracy]", accuracy));
+        nameValuePairs.add(new BasicNameValuePair("location[timestamp]", timestamp));
+        //nameValuePairs.add(new BasicNameValuePair("nmea[string]", nmeaString));
+        //nameValuePairs.add(new BasicNameValuePair("nmea[timestamp]", nmeaTimestamp));
         nameValuePairs.add(new BasicNameValuePair("token", token));
 
         try {
