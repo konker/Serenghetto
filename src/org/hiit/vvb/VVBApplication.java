@@ -182,7 +182,7 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
     public void stopLocationUpdates() {
         locationManager.removeUpdates(this);
     }
-    // Methods required by LocationListener 
+    // Methods required by LocationListener
     /*
     public void onNmeaReceived(long timestamp, String nmea) {
         Log.d(TAG, nmea);

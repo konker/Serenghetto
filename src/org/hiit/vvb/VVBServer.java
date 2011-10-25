@@ -91,8 +91,6 @@ public class VVBServer {
         nameValuePairs.add(new BasicNameValuePair("location[longitude]", longitude));
         nameValuePairs.add(new BasicNameValuePair("location[accuracy]", accuracy));
         nameValuePairs.add(new BasicNameValuePair("location[timestamp]", timestamp));
-        //nameValuePairs.add(new BasicNameValuePair("nmea[string]", nmeaString));
-        //nameValuePairs.add(new BasicNameValuePair("nmea[timestamp]", nmeaTimestamp));
         nameValuePairs.add(new BasicNameValuePair("token", token));
 
         try {

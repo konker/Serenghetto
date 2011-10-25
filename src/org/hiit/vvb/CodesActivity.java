@@ -45,27 +45,6 @@ public class CodesActivity extends BaseActivity implements OnClickListener
         // start listening for location
         app.startLocationUpdates();
     }
-    
-    @Override
-    protected void onResume() {
-        super.onRestart();
-        app.startLocationUpdates();
-        /*
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, this);
-        if (lastLocation == null) {
-            progress = ProgressDialog.show(CodesActivity.this, "", "Getting location...", true);
-        }
-        */
-    }
-    
-    @Override
-    protected void onPause() {
-        super.onPause();
-        app.startLocationUpdates();
-        /*
-        locationManager.removeUpdates(this);
-        */
-    }
 
     public void onClick(View view) {
         if (view == findViewById(R.id.buttonScanCode)) {

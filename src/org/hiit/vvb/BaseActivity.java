@@ -13,6 +13,8 @@ import android.widget.Toast;
  */
 public class BaseActivity extends Activity
 {
+    private static final String TAG = "VVB";
+
     protected VVBApplication app;
 
     @Override
@@ -38,5 +40,18 @@ public class BaseActivity extends Activity
     public boolean onMenuOpened(int featureId, Menu menu) {
         return app.onMenuOpened(featureId, menu);
     }
+    
+    @Override
+    protected void onResume() {
+        super.onRestart();
+        Log.d(TAG, "onResume");
+        app.startLocationUpdates();
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+        app.stopLocationUpdates();
+    }
 }
-
