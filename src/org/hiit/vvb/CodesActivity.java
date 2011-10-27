@@ -44,6 +44,8 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 
         // start listening for location
         app.startLocationUpdates();
+
+        Log.d(TAG, "CodesActivity: onCreate");
     }
 
     public void onClick(View view) {
@@ -77,7 +79,12 @@ public class CodesActivity extends BaseActivity implements OnClickListener
                         accuracy = String.format("%f", bestLocationEstimate.getAccuracy());
                         timestamp = String.format("%d", bestLocationEstimate.getTime());
                     }
+
+                    // send to the server
                     new VVBServerTaskPostCode().execute(scanResult.getContents(), input, lat, lng, accuracy, timestamp);
+
+                    // store in local db?
+
 
                     return true;
                 }

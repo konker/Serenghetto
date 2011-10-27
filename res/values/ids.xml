@@ -9,5 +9,8 @@
   <item type="id" name="itemToggleService"/>
   <item type="id" name="codesList"/>
   <item type="id" name="scrollViewCodes"/>
+  <item type="id" name="textBarcode"/>
+  <item type="id" name="textName"/>
+  <item type="id" name="textDate"/>
 </resources>
 

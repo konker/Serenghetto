@@ -25,7 +25,6 @@ import org.json.simple.JSONObject;
 public class PrefsActivity extends PreferenceActivity implements OnClickListener
 {
     public static final String TAG = "VVB";
-    public static final String AUTH_TOKEN_KEY = "authToken";
 
     VVBApplication app;
     ProgressDialog progress;
@@ -42,15 +41,21 @@ public class PrefsActivity extends PreferenceActivity implements OnClickListener
 
         Button buttonUpdate = (Button)findViewById(R.id.buttonUpdate);
         buttonUpdate.setOnClickListener(this);
+
+        Log.d(TAG, "PrefsActivity: onCreate");
     }
 
-    // Called every time user clicks on a menu item
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return this.app.onOptionsItemSelected(item);
     }
 
-    // Called every time menu is opened
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         return app.onMenuOpened(featureId, menu);
@@ -59,18 +64,18 @@ public class PrefsActivity extends PreferenceActivity implements OnClickListener
     public void onClick(View view) {
         if (view == findViewById(R.id.buttonUpdate)) {
             progress = ProgressDialog.show(PrefsActivity.this, "", "Authenticating...", true);
-            new VVBServerTaskGetToken().execute(app.getPrefs().getString("email", null), app.getPrefs().getString("password", null));
+            new VVBServerTaskAuthorize().execute(app.getPrefs().getString("email", null), app.getPrefs().getString("password", null));
         }
     }
     
 
     /**
     */
-    public class VVBServerTaskGetToken extends VVBServerTask
+    public class VVBServerTaskAuthorize extends VVBServerTask
     {
         @Override
         protected Response doInBackground(String... code) {
-            return PrefsActivity.this.app.getServer().getToken(code[0], code[1]);
+            return PrefsActivity.this.app.getServer().authorzie(code[0], code[1]);
         }
 
         @Override
@@ -80,6 +85,7 @@ public class PrefsActivity extends PreferenceActivity implements OnClickListener
                 Map body = (Map)response.getBody();
                 Map user = (Map)body.get("user");
                 PrefsActivity.this.app.setToken((String)user.get("token"));
+                PrefsActivity.this.app.setUserId((String)user.get("userId"));
             }
             else {
                 Log.d(TAG, "http code: " + response.getHttpCode());

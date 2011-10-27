@@ -22,14 +22,16 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
     private static final String TAG = "VVB";
     private static final int TIME_DELTA_SIGNIFICANT_WINDOW_MS = 1000 * 60 * 2; // 2 minutes
 
-    private static final String SERVER_BASE_URL = "http://zebraz.herokuapp.com";
+    private static final String SERVER_BASE_URL = "http://serenghetto.herokuapp.com";
 
     public static final String PREF_KEY_AUTH_TOKEN = "authToken";
+    public static final String PREF_KEY_USER_ID = "userId";
     public static final String PREF_KEY_EMAIL = "email";
     public static final String PREF_KEY_EMAIL_DIRTY = "emailDirty";
     public static final String PREF_KEY_PASSWORD = "password";
     public static final String PREF_KEY_PASSWORD_DIRTY = "passwordDirty";
 
+    private BarcodeData barcodeData;
     private VVBServer server;
     private boolean serviceRunning;
 
@@ -38,10 +40,6 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
 
     private LocationManager locationManager;
     private Location bestLocationEstimate;
-    /*
-    private String lastNmeaString;
-    private long lastNmeaTimestamp;
-    */
 
     @Override
     public void onCreate() {
@@ -52,23 +50,22 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
         this.prefs.registerOnSharedPreferenceChangeListener(this);
 
         String token = prefs.getString(PREF_KEY_AUTH_TOKEN, null);
-        this.server = new VVBServer(SERVER_BASE_URL, token);
+        String userId = prefs.getString(PREF_KEY_USER_ID, null);
+        this.server = new VVBServer(SERVER_BASE_URL, token, userId);
+
+        try {
+            this.barcodeData = new BarcodeData(this);
+        }
+        catch (Exception ex) {
+            /*[FIXME]*/
+            /* now what? */
+        }
 
         this.bestLocationEstimate = null;
-        /*
-        this.lastNmeaString = null;
-        this.lastNmeaTimestamp = 0;
-        */
 
         this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        //this.locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-        //this.locationManager.addNmeaListener(this);
-        /*
-        if (lastLocation == null) {
-            progress = ProgressDialog.show(CodesActivity.this, "", "Getting location...", true);
-        }
-        */
-        //START THE SERVICE HERE?
+
+        //[FIXME: START THE SERVICE HERE?]
 
         Log.i(TAG, "App.onCreated: " + hasToken());
     }
@@ -134,6 +131,15 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
     public boolean hasToken() {
         return (server.getToken() != null);
     }
+    public String getuserId() {
+        return server.getUserId();
+    }
+    public void setUserId(String userId) {
+        editor.putString(PREF_KEY_USER_ID, userId);
+        editor.commit();
+        server.setUserId(userId);
+    }
+
     public String getToken() {
         return server.getToken();
     }
@@ -151,21 +157,15 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
         return bestLocationEstimate;
     }
 
-    /*
-    public String getLastNmeaString() {
-        return lastNmeaString;
-    }
-
-    public long getLastNmeaTimestamp() {
-        return lastNmeaTimestamp;
-    }
-    */
-
     public boolean isServiceRunning() {
         return serviceRunning;
     }
     public void setServiceRunning(boolean serviceRunning) {
         this.serviceRunning = serviceRunning;
+    }
+
+    public BarcodeData getBarcodeData() {
+        return barcodeData;
     }
 
     /* methods required by OnSharedPreferenceChangeListener */
@@ -183,13 +183,6 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
         locationManager.removeUpdates(this);
     }
     // Methods required by LocationListener
-    /*
-    public void onNmeaReceived(long timestamp, String nmea) {
-        Log.d(TAG, nmea);
-        lastNmeaString = nmea;
-        lastNmeaTimestamp = timestamp;
-    }
-    */
     public void onLocationChanged(Location location) {
         Log.d(TAG, "LOC: " + location.toString());
         if (isBetterLocation(location)) {

@@ -13,13 +13,6 @@ public abstract class VVBServerTask extends AsyncTask<String, Void, Response> {
     protected abstract Response doInBackground(String... code);
 
     protected void onPostExecute(Response response) {
-        /*
-        JSONObject result = (JSONObject)JSONValue.parse(json);
-        if (result != null) {
-            this.msg = (String)result.get("msg");
-            this.body = (JSONObject)result.get("body");
-        }
-        */
         this.response = response;
         this.handleResult();
         return;

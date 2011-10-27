@@ -26,17 +26,21 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 
 public class VVBServer {
     private static final String TAG = "VVB";
+    private static final String TOKEN_NAME = "token";
+
     //[FIXME: better ua]
     public static String CLIENT_USER_AGENT = "Android VVB...";
 
     private String serverURL;
     private DefaultHttpClient httpClient;
     private String token;
+    private String userId;
 
 
-    public VVBServer(String url, String token) {
+    public VVBServer(String url, String token, String userId) {
         this.serverURL = url;
         this.token = token;
+        this.userId = userId;
     }
 
     public String getToken() {
@@ -47,44 +51,23 @@ public class VVBServer {
         this.token = token;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        Log.d(TAG, "userId: " + userId);
+        this.userId = userId;
+    }
+
     public Response getCodes() {
-        BasicHttpParams params = new BasicHttpParams();
-        params.setParameter("token", token);
-
-        HttpGet req = new HttpGet(getResourceURL("barcode", null));
-        req.setHeader("Accept", "application/json");
-        req.setParams(params);
-
-        StringBuilder json = new StringBuilder();
-        try {
-            httpClient = new DefaultHttpClient();
-            HttpResponse res = httpClient.execute(req);
-            
-            //return res.getEntity().getContent().read();
-            //return IOUtils.toString(myInputStream, "UTF-8");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
-            Response response = new Response(res.getStatusLine().getStatusCode(), reader);
-            /*
-            String line;
-            while ((line = r.readLine()) != null) {
-                json.append(line);
-            }
-            */
-            //return json.toString();
-            return response;
-        }
-        catch (IOException ex) {
-            Log.d(TAG, ex.toString());
-            return new Response(500, "Error", null);
-        }
+        HttpGet req = new HttpGet(getUserResourceURL("2", "barcodes", null));
+        return _execGet(req);
     }
 
     public Response postCode(String code, String name, String latitude, String longitude, String accuracy, String timestamp) {
-        //[FIXME: needs real location]
         HttpPost req = new HttpPost(getResourceURL("barcode", null));
-        req.setHeader("Accept", "application/json");
 
-        List nameValuePairs = new ArrayList(1);
+        List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>();
         nameValuePairs.add(new BasicNameValuePair("barcode[code]", code));
         nameValuePairs.add(new BasicNameValuePair("barcode[name]", name));
         nameValuePairs.add(new BasicNameValuePair("location[latitude]", latitude));
@@ -93,6 +76,64 @@ public class VVBServer {
         nameValuePairs.add(new BasicNameValuePair("location[timestamp]", timestamp));
         nameValuePairs.add(new BasicNameValuePair("token", token));
 
+        return _execPost(req, nameValuePairs);
+    }
+
+    public Response authorzie(String email, String password) {
+        HttpPost req = new HttpPost(getResourceURL("session", null));
+
+        List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>();
+        nameValuePairs.add(new BasicNameValuePair("user[email]", email));
+        nameValuePairs.add(new BasicNameValuePair("user[password]", password));
+
+        return _execPost(req, nameValuePairs);
+    }
+
+
+    /* HELPERS */
+    public String getUserResourceURL(String userId, String controller, String action) {
+        String url = serverURL + "/api/" + userId + "/" + controller;
+        if (action != null) {
+            url += action;
+        }
+        Log.d(TAG, url);
+        return url;
+    }
+    public String getResourceURL(String controller, String action) {
+        String url = serverURL + "/api/" + controller;
+        if (action != null) {
+            url += action;
+        }
+        Log.d(TAG, url);
+        return url;
+    }
+
+    protected Response _execGet(HttpGet req) {
+        return _execGet(req, new ArrayList<BasicNameValuePair>());
+    }
+    protected Response _execGet(HttpGet req, List<BasicNameValuePair> nameValuePairs) {
+        // automatically add token
+        if (token != null) {
+            nameValuePairs.add(new BasicNameValuePair(TOKEN_NAME, token));
+        }
+
+        BasicHttpParams params = new BasicHttpParams();
+        for (BasicNameValuePair nv : nameValuePairs) {
+            params.setParameter(nv.getName(), nv.getValue());
+	    }
+        req.setParams(params);
+
+        return _exec(req);
+    }
+    protected Response _execPost(HttpPost req) {
+        return _execPost(req, new ArrayList<BasicNameValuePair>());
+    }
+    protected Response _execPost(HttpPost req, List nameValuePairs) {
+        // automatically add token
+        if (token != null) {
+            nameValuePairs.add(new BasicNameValuePair(TOKEN_NAME, token));
+        }
+
         try {
             req.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         }
@@ -101,6 +142,11 @@ public class VVBServer {
             return new Response(500, "Error", null);
         }
 
+        return _exec(req);
+    }
+
+    protected Response _exec(HttpRequestBase req) {
+        req.setHeader("Accept", "application/json");
         try {
             httpClient = new DefaultHttpClient();
             HttpResponse res = httpClient.execute(req);
@@ -113,54 +159,6 @@ public class VVBServer {
             Log.d(TAG, ex.toString());
             return new Response(500, "Error", null);
         }
-    }
-
-    public Response getToken(String email, String password) {
-        HttpPost req = new HttpPost(getResourceURL("session", null));
-        req.setHeader("Accept", "application/json");
-
-        List nameValuePairs = new ArrayList(1);
-        nameValuePairs.add(new BasicNameValuePair("user[email]", email));
-        nameValuePairs.add(new BasicNameValuePair("user[password]", password));
-
-        try {
-            req.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-        }
-        catch (UnsupportedEncodingException ex) {
-            Log.d(TAG, ex.toString());
-            return new Response(500, "Error", null);
-        }
-
-        StringBuilder json = new StringBuilder();
-        try {
-            httpClient = new DefaultHttpClient();
-            HttpResponse res = httpClient.execute(req);
-
-            // read response into a StringBuilder
-            BufferedReader reader = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
-            Response response = new Response(res.getStatusLine().getStatusCode(), reader);
-            /*
-            String line;
-            while ((line = r.readLine()) != null) {
-                json.append(line);
-            }
-            */
-            //return json.toString();
-            return response;
-        }
-        catch (IOException ex) {
-            Log.d(TAG, ex.toString());
-            return new Response(500, "Error", null);
-        }
-    }
-
-    public String getResourceURL(String controller, String action) {
-        String url = serverURL + "/api/" + controller;
-        if (action != null) {
-            url += action;
-        }
-        Log.d(TAG, url);
-        return url;
     }
 }
 

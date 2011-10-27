@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <db>
-  <query type="SQL" class="*" name="create_barcodes">
+  <query name="create_barcodes">
     CREATE TABLE barcodes
     (
-        _id INT PRIMARY KEY,
+        id INT PRIMARY KEY,
         user_id INT NOT NULL,
         code TEXT NOT NULL,
         name TEXT DEFAULT NULL,
@@ -12,7 +12,10 @@
         accuracy NUMBER DEFAULT NULL
     )
   </query>
-  <query type="SQL" class="*" name="query_by_user">
+  <query name="drop_barcodes">
+    DROP TABLE barcodes
+  </query>
+  <query name="query_by_user">
     SELECT * FROM barcode where user_id = ?
   </query>
 </db>

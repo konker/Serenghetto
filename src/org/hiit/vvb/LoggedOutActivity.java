@@ -23,6 +23,8 @@ public class LoggedOutActivity extends BaseActivity implements OnClickListener
 
         Button buttonPrefs = (Button)findViewById(R.id.buttonPrefs);
         buttonPrefs.setOnClickListener(this);
+
+        Log.d(TAG, "LoggedOutActivity: onCreate");
     }
 
     /*[FIXME: whhen a user logs in and then returns to this activity, should "re-direct" to GameActivity?]*/

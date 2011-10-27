@@ -16,7 +16,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class BarcodeData {
+public class BarcodeData
+{
     private static final String TAG = "VVB";
 
     static final String NAME_DB = "db";
@@ -26,16 +27,55 @@ public class BarcodeData {
     static final String DATABASE = "barcodes.db";
     static final String TABLE = "barcodes";
 
-    // DBXML parser
-    class DbXmlParser extends DefaultHandler
+
+    final DbHelper dbHelper;
+
+    /*[FIXME: better exceptions?]*/
+    public BarcodeData(Context context) throws Exception {
+        this.dbHelper = new DbHelper(context);
+        Log.i(TAG, "Initialized data");
+    }
+    public void close() {
+        this.dbHelper.close();
+    }
+
+    // DbHelper implementations
+    class DbHelper extends SQLiteOpenHelper
+    {
+        public static final String CREATE_BARCODES = "create_barcodes";
+        public static final String DROP_BARCODES = "drop_barcodes";
+
+        private DbXmlHelper dbQueries;
+
+        /*[FIXME: better exceptions?]*/
+        public DbHelper(Context context) throws Exception {
+            super(context, DATABASE, null, VERSION);
+            this.dbQueries = new DbXmlHelper(context);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase db) {
+            Log.i(TAG, "Creating database: " + DATABASE);
+            db.execSQL(dbQueries.getQuery(CREATE_BARCODES));
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            db.execSQL(dbQueries.getQuery(DROP_BARCODES));
+            this.onCreate(db);
+        }
+    }
+    
+    /* XML parser */
+    class DbXmlHelper extends DefaultHandler
     {
         private HashMap<String, String> rep;
         private String curName = null;
         private String curValue = null;
 
         /*[FIXME: better exceptions?]*/
-        public DbXmlParser(Resources res) throws Exception {
-            rep = new HashMap<String, String>();
+        public DbXmlHelper(Context context) throws Exception {
+            this.rep = new HashMap<String, String>();
             
             // read in and parse the xml
             SAXParserFactory spf = SAXParserFactory.newInstance();
@@ -43,7 +83,7 @@ public class BarcodeData {
             XMLReader xr = sp.getXMLReader();
 
             xr.setContentHandler(this);
-            xr.parse(new InputSource(res.openRawResource(R.raw.db)));
+            xr.parse(new InputSource(context.getResources().openRawResource(R.raw.db)));
         }
 
         public String getQuery(String name) {
@@ -82,27 +122,5 @@ public class BarcodeData {
             }
         }
     }
-
-    // DbHelper implementations
-    class DbHelper extends SQLiteOpenHelper {
-
-        public DbHelper(Context context) {
-            super(context, DATABASE, null, VERSION);
-            //Xml.parse(getResources().openRawResource(R.raw.testXML), Xml.Encoding.UTF_8, root.getContentHandler());
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase db) {
-            Log.i(TAG, "Creating database: " + DATABASE);
-            db.execSQL("");
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("");
-            this.onCreate(db);
-        }
-    }
-    
 }
 

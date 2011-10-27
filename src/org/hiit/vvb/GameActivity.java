@@ -17,5 +17,7 @@ public class GameActivity extends BaseActivity
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
+
+        Log.d(TAG, "GameActivity: onCreate");
     }
 }

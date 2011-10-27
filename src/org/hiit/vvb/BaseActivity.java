@@ -21,6 +21,8 @@ public class BaseActivity extends Activity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.app = (VVBApplication) getApplication();
+
+        Log.d(TAG, "BaseActivity: onCreate");
     }
 
     @Override
@@ -29,13 +31,11 @@ public class BaseActivity extends Activity
         return true;
     }
 
-    // Called every time user clicks on a menu item
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return this.app.onOptionsItemSelected(item);
     }
 
-    // Called every time menu is opened
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         return app.onMenuOpened(featureId, menu);
