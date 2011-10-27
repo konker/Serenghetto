@@ -85,7 +85,7 @@ public class PrefsActivity extends PreferenceActivity implements OnClickListener
                 Map body = (Map)response.getBody();
                 Map user = (Map)body.get("user");
                 PrefsActivity.this.app.setToken((String)user.get("token"));
-                PrefsActivity.this.app.setUserId((String)user.get("userId"));
+                PrefsActivity.this.app.setUserId(String.valueOf(user.get("id")));
             }
             else {
                 Log.d(TAG, "http code: " + response.getHttpCode());

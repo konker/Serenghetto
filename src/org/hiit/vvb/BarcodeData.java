@@ -8,6 +8,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.XMLReader;
@@ -25,7 +26,7 @@ public class BarcodeData
 
     static final int VERSION = 1;
     static final String DATABASE = "barcodes.db";
-    static final String TABLE = "barcodes";
+    //static final String TABLE = "barcodes";
 
 
     final DbHelper dbHelper;
@@ -39,9 +40,35 @@ public class BarcodeData
         this.dbHelper.close();
     }
 
+    public boolean insertBarcode(Barcode b) {
+        ContentValues values = new ContentValues();
+        values.put(dbHelper.getQuery("c_id"), b.getId());
+        values.put(dbHelper.getQuery("c_user_id"), b.getUserId());
+        values.put(dbHelper.getQuery("c_code"), b.getCode());
+        values.put(dbHelper.getQuery("c_name"), b.getName());
+        return insertOrIgnore(values);
+    }
+
+    public boolean insertOrIgnore(ContentValues values) {
+        Log.d(TAG, "insertOrIgnore on " + values);
+        SQLiteDatabase db = this.dbHelper.getWritableDatabase();
+        boolean ret = true;
+        try {
+            db.insertOrThrow(dbHelper.getQuery(DbHelper.BARCODES_NAME), null, values);
+        }
+        catch (SQLiteException ex) {
+            ret = false;
+        }
+        finally {
+            db.close();
+        }
+        return ret;
+    }
+
     // DbHelper implementations
     class DbHelper extends SQLiteOpenHelper
     {
+        public static final String BARCODES_NAME = "barcodes_name";
         public static final String CREATE_BARCODES = "create_barcodes";
         public static final String DROP_BARCODES = "drop_barcodes";
 
@@ -63,6 +90,10 @@ public class BarcodeData
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL(dbQueries.getQuery(DROP_BARCODES));
             this.onCreate(db);
+        }
+
+        public String getQuery(String name) {
+            return dbQueries.getQuery(name);
         }
     }
     

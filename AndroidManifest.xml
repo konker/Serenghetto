@@ -20,7 +20,7 @@
         <activity android:name=".LoggedOutActivity"
                   android:label="@string/app_name"/>
 
-        <service android:name=".UpdatesService" />
+        <service android:name=".BarcodesService" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> 

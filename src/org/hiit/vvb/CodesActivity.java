@@ -1,6 +1,8 @@
 package org.hiit.vvb;
 
 import android.util.Log;
+import java.util.List;
+import java.util.Map;
 import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -44,6 +46,9 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 
         // start listening for location
         app.startLocationUpdates();
+
+        // fetch the user's codes
+        //new VVBServerTaskGetCodes().execute();
 
         Log.d(TAG, "CodesActivity: onCreate");
     }
@@ -122,8 +127,13 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 
         @Override
         protected void handleResult() {
-            CodesActivity.this.progress.dismiss();
-            Toast.makeText(CodesActivity.this, response.getMessage(), Toast.LENGTH_LONG).show();
+            //CodesActivity.this.progress.dismiss();
+            //Toast.makeText(CodesActivity.this, response.getMessage(), Toast.LENGTH_LONG).show();
+            List entries = (List)response.getBody().get("entries");
+            for (Object b : entries) {
+                
+                Log.d(TAG, ((Map)b).get("code").toString());
+            }
             return;
         }
     }

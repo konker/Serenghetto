@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <db>
+  <!-- these must match the queries below -->
+  <query name="t_barcodes">barcodes</query>
+  <query name="c_id">id</query>
+  <query name="c_user_id">user_id</query>
+  <query name="c_code">code</query>
+  <query name="c_name">name</query>
+  <query name="c_lat">lat</query>
+  <query name="c_lng">lng</query>
+  <query name="c_accuracy">accuracy</query>
+
   <query name="create_barcodes">
     CREATE TABLE barcodes
     (
@@ -11,6 +21,9 @@
         lng NUMBER DEFAULT NULL,
         accuracy NUMBER DEFAULT NULL
     )
+  </query>
+  <query name="insert_barcodes">
+    INSERT INTO barcodes (id, user_id, code, name, lat, lng, accuracy) VALUES (?,?,?,?,?,?,?)
   </query>
   <query name="drop_barcodes">
     DROP TABLE barcodes

@@ -11,7 +11,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
 
-public class UpdatesService extends Service {
+public class BarcodesService extends Service {
     private static final String TAG = "VVB";
     static final int DELAY_MS = 60000;
     private boolean runFlag = false;
@@ -62,25 +62,21 @@ public class UpdatesService extends Service {
         List<Barcode> barcodes;
 
         public Updater() {
-            super("UpdatesService-Updater");
+            super("BarcodesService-Updater");
 
             barcodes = new ArrayList<Barcode>();
         }
 
         @Override
         public void run() {
-            UpdatesService service = UpdatesService.this;
+            BarcodesService service = BarcodesService.this;
             while (service.runFlag) {
                 Log.d(TAG, "Updater running");
                 try {
-                    Response response = app.getServer().getCodes();
-
-                    JSONArray codes = (JSONArray)response.getBody().get("codes");
-
-                    for (Iterator iter = codes.iterator(); iter.hasNext();) {
-                        JSONObject b = (JSONObject)iter.next();
-                        Log.d(TAG, b.toString());
-                        barcodes.add(new Barcode((String)b.get("code"), (String)b.get("name")));
+                    VVBApplication app = (VVBApplication)service.getApplication();
+                    int newCodes = app.fetchBarcodes();
+                    if (newCodes > 0) {
+                        Log.d(TAG, "New codes received");
                     }
                     Thread.sleep(DELAY_MS);
                 }

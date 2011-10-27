@@ -12,16 +12,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
+
+import java.util.Scanner;
 
 
 public class VVBServer {
@@ -60,7 +64,7 @@ public class VVBServer {
     }
 
     public Response getCodes() {
-        HttpGet req = new HttpGet(getUserResourceURL("2", "barcodes", null));
+        HttpGet req = new HttpGet(getUserResourceURL(userId, "barcodes", null));
         return _execGet(req);
     }
 
@@ -80,6 +84,8 @@ public class VVBServer {
     }
 
     public Response authorzie(String email, String password) {
+        // set the token to null so that it isn't sent with this request
+        token = null;
         HttpPost req = new HttpPost(getResourceURL("session", null));
 
         List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>();
@@ -117,24 +123,49 @@ public class VVBServer {
             nameValuePairs.add(new BasicNameValuePair(TOKEN_NAME, token));
         }
 
+        String params =  URLEncodedUtils.format(nameValuePairs, "UTF-8");
+        String uri = req.getURI().toString();
+        if (uri.indexOf("?") != -1) {
+            uri = uri + "&" + params;
+        }
+        else {
+            uri = uri + "?" + params;
+        }
+        Log.d(TAG, uri);
+
+        try {
+            req.setURI(new URI(uri));
+        }
+        catch (URISyntaxException ex) {
+            Log.d(TAG, ex.toString());
+            return new Response(500, "Error", null);
+        }
+        /*
         BasicHttpParams params = new BasicHttpParams();
+        for (BasicNameValuePair nv : nameValuePairs) {
+            Log.d(TAG, nv.getName() + "->" + nv.getValue());
+	    }
         for (BasicNameValuePair nv : nameValuePairs) {
             params.setParameter(nv.getName(), nv.getValue());
 	    }
         req.setParams(params);
+        */
 
         return _exec(req);
     }
     protected Response _execPost(HttpPost req) {
         return _execPost(req, new ArrayList<BasicNameValuePair>());
     }
-    protected Response _execPost(HttpPost req, List nameValuePairs) {
+    protected Response _execPost(HttpPost req, List<BasicNameValuePair> nameValuePairs) {
         // automatically add token
         if (token != null) {
             nameValuePairs.add(new BasicNameValuePair(TOKEN_NAME, token));
         }
 
         try {
+            for (BasicNameValuePair nv : nameValuePairs) {
+                Log.d(TAG, nv.getName() + "->" + nv.getValue());
+            }
             req.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         }
         catch (UnsupportedEncodingException ex) {
@@ -148,11 +179,19 @@ public class VVBServer {
     protected Response _exec(HttpRequestBase req) {
         req.setHeader("Accept", "application/json");
         try {
+            Log.d(TAG, req.toString());
             httpClient = new DefaultHttpClient();
             HttpResponse res = httpClient.execute(req);
             
             BufferedReader reader = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
+            String json = new Scanner(reader).useDelimiter("\\A").next();
+            Log.d(TAG, json);
+            Response response = new Response(res.getStatusLine().getStatusCode(), json);
+            /*
             Response response = new Response(res.getStatusLine().getStatusCode(), reader);
+            */
+            reader.close();
+            Log.d(TAG, response.toString());
             return response;
         }
         catch (IOException ex) {

@@ -4,6 +4,7 @@
 package org.hiit.vvb;
 
 import android.util.Log;
+import java.util.Iterator;
 import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.preference.PreferenceManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 
 public class VVBApplication extends Application implements OnSharedPreferenceChangeListener, LocationListener
@@ -22,6 +25,7 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
     private static final String TAG = "VVB";
     private static final int TIME_DELTA_SIGNIFICANT_WINDOW_MS = 1000 * 60 * 2; // 2 minutes
 
+    //private static final String SERVER_BASE_URL = "http://vvb.a-z.fi";
     private static final String SERVER_BASE_URL = "http://serenghetto.herokuapp.com";
 
     public static final String PREF_KEY_AUTH_TOKEN = "authToken";
@@ -99,10 +103,10 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
                 break;
             case R.id.itemToggleService:
                 if (isServiceRunning()) {
-                    stopService(new Intent(this, UpdatesService.class));
+                    stopService(new Intent(this, BarcodesService.class));
                 }
                 else {
-                    startService(new Intent(this, UpdatesService.class));
+                    startService(new Intent(this, BarcodesService.class));
                 }
                 break;
         }
@@ -166,6 +170,22 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
 
     public BarcodeData getBarcodeData() {
         return barcodeData;
+    }
+
+    public int fetchBarcodes() {
+        int count = 0;
+        Response response = getServer().getCodes();
+        JSONArray codes = (JSONArray)response.getBody().get("entries");
+        for (Iterator iter = codes.iterator(); iter.hasNext();) {
+            JSONObject b = (JSONObject)iter.next();
+            //Log.d(TAG, b.toString());
+            /*[FIXME: hardcoded field names?]*/
+            boolean inserted = getBarcodeData().insertBarcode(new Barcode((String)b.get("id"), (String)b.get("user_id"), (String)b.get("code"), (String)b.get("name")));
+            if (inserted) {
+                count = count + 1;
+            }
+        }
+        return count;
     }
 
     /* methods required by OnSharedPreferenceChangeListener */
@@ -242,4 +262,10 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
     }
 }
 
+/*
+E/AndroidRuntime(14995): FATAL EXCEPTION: BarcodesService-Updater
+E/AndroidRuntime(14995): java.lang.ClassCastException: java.lang.Long
+E/AndroidRuntime(14995): 	at org.hiit.vvb.VVBApplication.fetchBarcodes(VVBApplication.java:183)
+E/AndroidRuntime(14995): 	at org.hiit.vvb.BarcodesService$Updater.run(BarcodesService.java:77)
+*/
 
