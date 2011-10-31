@@ -7,7 +7,7 @@
     android:layout_width="fill_parent">
     <TextView android:layout_height="wrap_content"
       android:layout_width="fill_parent" android:layout_weight="1"
-      android:id="@+id/textBarcode" android:text=""
+      android:id="@+id/textCode" android:text=""
       android:textStyle="bold" />
 
     <TextView android:layout_height="wrap_content"

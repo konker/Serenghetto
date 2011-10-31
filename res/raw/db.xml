@@ -13,8 +13,8 @@
   <query name="create_barcodes">
     CREATE TABLE barcodes
     (
-        id INT PRIMARY KEY,
-        user_id INT NOT NULL,
+        _id VARCHAR PRIMARY KEY,
+        user_id VARCHAR NOT NULL,
         code TEXT NOT NULL,
         name TEXT DEFAULT NULL,
         lat NUMBER DEFAULT NULL,
@@ -23,12 +23,15 @@
     )
   </query>
   <query name="insert_barcodes">
-    INSERT INTO barcodes (id, user_id, code, name, lat, lng, accuracy) VALUES (?,?,?,?,?,?,?)
+    INSERT INTO barcodes (_id, user_id, code, name, lat, lng, accuracy) VALUES (?,?,?,?,?,?,?)
+  </query>
+  <query name="insert_barcodes_basic">
+    INSERT INTO barcodes (_id, user_id, code, name) VALUES (?,?,?,?)
   </query>
   <query name="drop_barcodes">
     DROP TABLE barcodes
   </query>
-  <query name="query_by_user">
-    SELECT * FROM barcode where user_id = ?
+  <query name="barcodes_by_user">
+    SELECT * FROM barcodes where user_id = ?
   </query>
 </db>

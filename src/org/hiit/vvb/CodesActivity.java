@@ -21,8 +21,12 @@ import android.view.View.OnClickListener;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+import android.database.Cursor;
 
 import android.location.Location; 
+
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -31,14 +35,23 @@ import com.google.zxing.integration.android.IntentResult;
 public class CodesActivity extends BaseActivity implements OnClickListener
 {
     private static final String TAG = "VVB";
+
+    static final String[] FROM = { "code", "name" };
+    static final int[] TO = { R.id.textCode, R.id.textName };
     
     ProgressDialog progress;
+    Cursor cursor; 
+    ListView listView; 
+    SimpleCursorAdapter adapter; 
 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.codes);
+
+        listView = (ListView)findViewById(R.id.codesList);
+        setupList();
 
         // set a click listener on the scan_code button
         Button buttonScanCode = (Button)findViewById(R.id.buttonScanCode);
@@ -49,8 +62,28 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 
         // fetch the user's codes
         //new VVBServerTaskGetCodes().execute();
-
         Log.d(TAG, "CodesActivity: onCreate");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.setupList();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    private void setupList() {
+        Cursor cursor = this.app.getBarcodeData().getBarcodesByUser(this.app.getUserId());
+        startManagingCursor(cursor);
+
+        // Setup Adapter
+        adapter = new SimpleCursorAdapter(this, R.layout.barcoderow, cursor, FROM, TO);
+        //adapter.setViewBinder(VIEW_BINDER);
+        listView.setAdapter(adapter);
     }
 
     public void onClick(View view) {
@@ -118,6 +151,7 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 
     /**
     */
+    /*
     public class VVBServerTaskGetCodes extends VVBServerTask
     {
         @Override
@@ -137,6 +171,7 @@ public class CodesActivity extends BaseActivity implements OnClickListener
             return;
         }
     }
+    */
     
 }
 

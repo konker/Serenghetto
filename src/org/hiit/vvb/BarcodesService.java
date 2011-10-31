@@ -76,7 +76,7 @@ public class BarcodesService extends Service {
                     VVBApplication app = (VVBApplication)service.getApplication();
                     int newCodes = app.fetchBarcodes();
                     if (newCodes > 0) {
-                        Log.d(TAG, "New codes received");
+                        Log.d(TAG, newCodes + " new codes received");
                     }
                     Thread.sleep(DELAY_MS);
                 }

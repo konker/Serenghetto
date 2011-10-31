@@ -21,47 +21,83 @@ public class BarcodeData
 {
     private static final String TAG = "VVB";
 
-    static final String NAME_DB = "db";
+    static final String NAME_QUERY = "query";
     static final String NAME_NAME = "name";
 
-    static final int VERSION = 1;
+    static final int DB_VERSION = 2;
     static final String DATABASE = "barcodes.db";
     //static final String TABLE = "barcodes";
 
 
     final DbHelper dbHelper;
-
+    private SQLiteDatabase db;
+  
     /*[FIXME: better exceptions?]*/
     public BarcodeData(Context context) throws Exception {
         this.dbHelper = new DbHelper(context);
+        this.db = this.dbHelper.getWritableDatabase();
         Log.i(TAG, "Initialized data");
     }
     public void close() {
+        this.db.close();
         this.dbHelper.close();
     }
 
+    public Cursor getBarcodesByUser(String userId) {
+        Log.d(TAG, "selectBarcodesByUser: " + userId);
+
+        try {
+            String[] args = { userId };
+            return db.rawQuery(dbHelper.getQuery("barcodes_by_user"), args);
+        }
+        catch (SQLiteException ex) {
+            return null;
+        }
+        /*
+        finally {
+            db.close();
+        }
+        */
+    }
+
     public boolean insertBarcode(Barcode b) {
+        Log.d(TAG, "insertBarcode: " + b);
+        /*
+        Log.d(TAG, "c_id:" + dbHelper.getQuery("c_id"));
+        Log.d(TAG, "c_user_id:" + dbHelper.getQuery("c_user_id"));
+        Log.d(TAG, "c_code:" + dbHelper.getQuery("c_code"));
+        Log.d(TAG, "c_name:" + dbHelper.getQuery("c_name"));
+
         ContentValues values = new ContentValues();
         values.put(dbHelper.getQuery("c_id"), b.getId());
         values.put(dbHelper.getQuery("c_user_id"), b.getUserId());
         values.put(dbHelper.getQuery("c_code"), b.getCode());
         values.put(dbHelper.getQuery("c_name"), b.getName());
         return insertOrIgnore(values);
+        */
+        return insertOrIgnore(b);
     }
 
-    public boolean insertOrIgnore(ContentValues values) {
-        Log.d(TAG, "insertOrIgnore on " + values);
-        SQLiteDatabase db = this.dbHelper.getWritableDatabase();
+    //public boolean insertOrIgnore(ContentValues values) {
+    public boolean insertOrIgnore(Barcode b) {
+        //Log.d(TAG, "insertOrIgnore on " + values);
+        //Log.d(TAG, "insertOrIgnore on " + b);
+        //SQLiteDatabase db = this.dbHelper.getWritableDatabase();
         boolean ret = true;
         try {
-            db.insertOrThrow(dbHelper.getQuery(DbHelper.BARCODES_NAME), null, values);
+            //db.insertOrThrow(dbHelper.getQuery(DbHelper.BARCODES_NAME), null, values);
+            String[] args = { b.getId(), b.getUserId(), b.getCode(), b.getName() };
+            db.rawQuery(dbHelper.getQuery("insert_barcodes_basic"), args);
         }
         catch (SQLiteException ex) {
+            Log.d(TAG, ex.toString());
             ret = false;
         }
+        /*
         finally {
             db.close();
         }
+        */
         return ret;
     }
 
@@ -76,7 +112,7 @@ public class BarcodeData
 
         /*[FIXME: better exceptions?]*/
         public DbHelper(Context context) throws Exception {
-            super(context, DATABASE, null, VERSION);
+            super(context, DATABASE, null, DB_VERSION);
             this.dbQueries = new DbXmlHelper(context);
         }
 
@@ -115,6 +151,7 @@ public class BarcodeData
 
             xr.setContentHandler(this);
             xr.parse(new InputSource(context.getResources().openRawResource(R.raw.db)));
+            Log.d(TAG, "p:parsed: " + rep);
         }
 
         public String getQuery(String name) {
@@ -122,19 +159,23 @@ public class BarcodeData
         }
 
         public void setQuery(String name, String sql) {
+            Log.d(TAG, "setQuery: " + name + ", " + sql);
             rep.put(name, sql);
         }
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-            if (localName.equals(NAME_DB)) {
+            Log.d(TAG, "p:startElement: " + (localName.equals(NAME_QUERY)));
+            if (localName.equals(NAME_QUERY)) {
+                Log.d(TAG, "p:attr:" + attributes.getValue(NAME_NAME));
                 curName = attributes.getValue(NAME_NAME);
             }
         }
 
         @Override
         public void endElement(String uri, String localName, String qName) throws SAXException {
-            if (localName.equalsIgnoreCase(NAME_DB)) {
+            Log.d(TAG, "p:endElement: " + curName);
+            if (localName.equalsIgnoreCase(NAME_QUERY)) {
                 if (curName != null && curValue != null) {
                     setQuery(curName, curValue);
                 }
@@ -145,6 +186,7 @@ public class BarcodeData
 
         @Override
         public void characters(char[] ch, int start, int length) throws SAXException {
+            Log.d(TAG, "p:characters: " + length + ": " + curName);
             if (curName != null) {
                 if (curValue == null) {
                     curValue = "";

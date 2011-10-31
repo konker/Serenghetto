@@ -63,8 +63,8 @@ public class VVBServer {
         this.userId = userId;
     }
 
-    public Response getCodes() {
-        HttpGet req = new HttpGet(getUserResourceURL(userId, "barcodes", null));
+    public Response getBarcodes() {
+        HttpGet req = new HttpGet(getResourceURL("barcodes", null));
         return _execGet(req);
     }
 
@@ -140,16 +140,6 @@ public class VVBServer {
             Log.d(TAG, ex.toString());
             return new Response(500, "Error", null);
         }
-        /*
-        BasicHttpParams params = new BasicHttpParams();
-        for (BasicNameValuePair nv : nameValuePairs) {
-            Log.d(TAG, nv.getName() + "->" + nv.getValue());
-	    }
-        for (BasicNameValuePair nv : nameValuePairs) {
-            params.setParameter(nv.getName(), nv.getValue());
-	    }
-        req.setParams(params);
-        */
 
         return _exec(req);
     }
@@ -184,12 +174,12 @@ public class VVBServer {
             HttpResponse res = httpClient.execute(req);
             
             BufferedReader reader = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
+            /*
             String json = new Scanner(reader).useDelimiter("\\A").next();
             Log.d(TAG, json);
             Response response = new Response(res.getStatusLine().getStatusCode(), json);
-            /*
-            Response response = new Response(res.getStatusLine().getStatusCode(), reader);
             */
+            Response response = new Response(res.getStatusLine().getStatusCode(), reader);
             reader.close();
             Log.d(TAG, response.toString());
             return response;

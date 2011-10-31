@@ -63,6 +63,7 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
         catch (Exception ex) {
             /*[FIXME]*/
             /* now what? */
+            Log.d(TAG, ex.toString());
         }
 
         this.bestLocationEstimate = null;
@@ -78,6 +79,7 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
     public void onTerminate() {
         super.onTerminate();
         locationManager.removeUpdates(this);
+        barcodeData.close();
         Log.i(TAG, "onTerminated");
     }
 
@@ -135,7 +137,7 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
     public boolean hasToken() {
         return (server.getToken() != null);
     }
-    public String getuserId() {
+    public String getUserId() {
         return server.getUserId();
     }
     public void setUserId(String userId) {
@@ -174,16 +176,23 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
 
     public int fetchBarcodes() {
         int count = 0;
-        Response response = getServer().getCodes();
-        JSONArray codes = (JSONArray)response.getBody().get("entries");
-        for (Iterator iter = codes.iterator(); iter.hasNext();) {
-            JSONObject b = (JSONObject)iter.next();
-            //Log.d(TAG, b.toString());
-            /*[FIXME: hardcoded field names?]*/
-            boolean inserted = getBarcodeData().insertBarcode(new Barcode((String)b.get("id"), (String)b.get("user_id"), (String)b.get("code"), (String)b.get("name")));
-            if (inserted) {
-                count = count + 1;
+        Response response = getServer().getBarcodes();
+
+        JSONObject body = (JSONObject)response.getBody();
+        if (body != null) {
+            JSONArray codes = (JSONArray)response.getBody().get("entries");
+            for (Iterator iter = codes.iterator(); iter.hasNext();) {
+                JSONObject b = (JSONObject)iter.next();
+
+                /*[FIXME: hardcoded field names?]*/
+                boolean inserted = barcodeData.insertBarcode(new Barcode(String.valueOf(b.get("id")), String.valueOf(b.get("user_id")), (String)b.get("code"), (String)b.get("name")));
+                if (inserted) {
+                    count = count + 1;
+                }
             }
+        }
+        else {
+            Log.i(TAG, "No codes returned");
         }
         return count;
     }
