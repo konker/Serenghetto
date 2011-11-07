@@ -32,6 +32,6 @@
     DROP TABLE barcodes
   </query>
   <query name="barcodes_by_user">
-    SELECT * FROM barcodes where user_id = ?
+    SELECT * FROM barcodes
   </query>
 </db>

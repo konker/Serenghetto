@@ -5,6 +5,7 @@
 *.dex
 gen/
 bin/
+etc/
 
 # OS generated files #
 ######################

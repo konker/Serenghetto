@@ -174,20 +174,25 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
         return barcodeData;
     }
 
+    /*[FIXME: should this be moved into BarcodeData?]*/
     public int fetchBarcodes() {
         int count = 0;
         Response response = getServer().getBarcodes();
 
-        JSONObject body = (JSONObject)response.getBody();
-        if (body != null) {
-            JSONArray codes = (JSONArray)response.getBody().get("entries");
-            for (Iterator iter = codes.iterator(); iter.hasNext();) {
-                JSONObject b = (JSONObject)iter.next();
+        Log.d(TAG, "fetchBarcodes: " + response);
+        if (response.getHttpCode() != 500) {
+            JSONObject body = (JSONObject)response.getBody();
+            if (body != null) {
+                JSONArray codes = (JSONArray)response.getBody().get("entries");
+                for (Iterator iter = codes.iterator(); iter.hasNext();) {
+                    JSONObject jb = (JSONObject)iter.next();
 
-                /*[FIXME: hardcoded field names?]*/
-                boolean inserted = barcodeData.insertBarcode(new Barcode(String.valueOf(b.get("id")), String.valueOf(b.get("user_id")), (String)b.get("code"), (String)b.get("name")));
-                if (inserted) {
-                    count = count + 1;
+                    /*[FIXME: hardcoded field names?]*/
+                    Barcode b = new Barcode(String.valueOf(jb.get("id")), String.valueOf(jb.get("user_id")), (String)jb.get("code"), (String)jb.get("name"));
+                    boolean inserted = barcodeData.insertOrIgnoreBarcode(b);
+                    if (inserted) {
+                        count = count + 1;
+                    }
                 }
             }
         }
@@ -203,6 +208,10 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
             server.setToken(prefs.getString(PREF_KEY_AUTH_TOKEN, null));
         }
         return;
+    }
+
+    public Location getLastKnownLocation() {
+        return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
     }
 
     public void startLocationUpdates() {

@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import android.widget.ListView;
+import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.database.Cursor;
 
@@ -42,7 +43,7 @@ public class CodesActivity extends BaseActivity implements OnClickListener
     ProgressDialog progress;
     Cursor cursor; 
     ListView listView; 
-    SimpleCursorAdapter adapter; 
+    //SimpleCursorAdapter adapter; 
 
     /** Called when the activity is first created. */
     @Override
@@ -78,12 +79,19 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 
     private void setupList() {
         Cursor cursor = this.app.getBarcodeData().getBarcodesByUser(this.app.getUserId());
-        startManagingCursor(cursor);
+        if (cursor == null) {
+            /*[TODO: "no barcodes found" message]*/
+        }
+        else {
+            startManagingCursor(cursor);
+            Log.d(TAG, "cursor received: " + cursor + ": " + cursor.isClosed());
 
-        // Setup Adapter
-        adapter = new SimpleCursorAdapter(this, R.layout.barcoderow, cursor, FROM, TO);
-        //adapter.setViewBinder(VIEW_BINDER);
-        listView.setAdapter(adapter);
+            // Setup Adapter
+            ListAdapter adapter = new SimpleCursorAdapter(this, R.layout.barcoderow, cursor, FROM, TO);
+            //adapter.setViewBinder(VIEW_BINDER);
+            listView.setAdapter(adapter);
+            Log.d(TAG, "cursor received': " + cursor + ": " + cursor.isClosed());
+        }
     }
 
     public void onClick(View view) {
