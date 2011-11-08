@@ -32,7 +32,7 @@ public class GameActivity extends MapActivity
 
         setContentView(R.layout.game);
         mapView = (MapView) findViewById(R.id.mapview);
-        mapView.setBuiltInZoomControls(true);
+        //mapView.setBuiltInZoomControls(true);
 
         //mapController = mapView.getController();
         //mapController.setZoom(20);
