@@ -1,4 +1,4 @@
-package org.hiit.vvb;
+package org.hiit.serenghetto;
 
 import java.util.Map;
 import android.util.Log;
@@ -24,9 +24,9 @@ import org.json.simple.JSONObject;
 
 public class PrefsActivity extends PreferenceActivity implements OnClickListener
 {
-    public static final String TAG = "VVB";
+    public static final String TAG = "SERENGHETTO";
 
-    VVBApplication app;
+    SerenghettoApplication app;
     ProgressDialog progress;
 
     /** Called when the activity is first created. */
@@ -34,7 +34,7 @@ public class PrefsActivity extends PreferenceActivity implements OnClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        app = (VVBApplication) getApplication();
+        app = (SerenghettoApplication) getApplication();
 
         addPreferencesFromResource(R.xml.prefs);
         setContentView(R.layout.prefs);
@@ -64,14 +64,14 @@ public class PrefsActivity extends PreferenceActivity implements OnClickListener
     public void onClick(View view) {
         if (view == findViewById(R.id.buttonUpdate)) {
             progress = ProgressDialog.show(PrefsActivity.this, "", "Authenticating...", true);
-            new VVBServerTaskAuthorize().execute(app.getPrefs().getString("email", null), app.getPrefs().getString("password", null));
+            new SerenghettoServerTaskAuthorize().execute(app.getPrefs().getString("email", null), app.getPrefs().getString("password", null));
         }
     }
     
 
     /**
     */
-    public class VVBServerTaskAuthorize extends VVBServerTask
+    public class SerenghettoServerTaskAuthorize extends SerenghettoServerTask
     {
         @Override
         protected Response doInBackground(String... code) {

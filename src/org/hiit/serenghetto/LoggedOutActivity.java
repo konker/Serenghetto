@@ -1,4 +1,4 @@
-package org.hiit.vvb;
+package org.hiit.serenghetto;
 
 import android.util.Log;
 import android.app.Activity;
@@ -14,7 +14,7 @@ import android.widget.Button;
 
 public class LoggedOutActivity extends BaseActivity implements OnClickListener
 {
-    private static final String TAG = "VVB";
+    private static final String TAG = "SERENGHETTO";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,4 +37,5 @@ public class LoggedOutActivity extends BaseActivity implements OnClickListener
         }
     }
 }
+
 

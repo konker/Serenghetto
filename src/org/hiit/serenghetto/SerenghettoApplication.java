@@ -1,7 +1,7 @@
 /**
 */
 
-package org.hiit.vvb;
+package org.hiit.serenghetto;
 
 import android.util.Log;
 import java.util.Iterator;
@@ -20,12 +20,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
 
-public class VVBApplication extends Application implements OnSharedPreferenceChangeListener, LocationListener
+public class SerenghettoApplication extends Application implements OnSharedPreferenceChangeListener, LocationListener
 {
-    private static final String TAG = "VVB";
+    private static final String TAG = "SERENGHETTO";
     private static final int TIME_DELTA_SIGNIFICANT_WINDOW_MS = 1000 * 60 * 2; // 2 minutes
 
-    //private static final String SERVER_BASE_URL = "http://vvb.a-z.fi";
     private static final String SERVER_BASE_URL = "http://serenghetto.herokuapp.com";
 
     public static final String PREF_KEY_AUTH_TOKEN = "authToken";
@@ -36,7 +35,7 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
     public static final String PREF_KEY_PASSWORD_DIRTY = "passwordDirty";
 
     private BarcodeData barcodeData;
-    private VVBServer server;
+    private SerenghettoServer server;
     private boolean serviceRunning;
 
     private SharedPreferences prefs;
@@ -55,7 +54,7 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
 
         String token = prefs.getString(PREF_KEY_AUTH_TOKEN, null);
         String userId = prefs.getString(PREF_KEY_USER_ID, null);
-        this.server = new VVBServer(SERVER_BASE_URL, token, userId);
+        this.server = new SerenghettoServer(SERVER_BASE_URL, token, userId);
 
         try {
             this.barcodeData = new BarcodeData(this);
@@ -155,7 +154,7 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
         server.setToken(token);
     }
 
-    public VVBServer getServer() {
+    public SerenghettoServer getServer() {
         return server;
     }
 
@@ -279,11 +278,4 @@ public class VVBApplication extends Application implements OnSharedPreferenceCha
         return p1.equals(p2);
     }
 }
-
-/*
-E/AndroidRuntime(14995): FATAL EXCEPTION: BarcodesService-Updater
-E/AndroidRuntime(14995): java.lang.ClassCastException: java.lang.Long
-E/AndroidRuntime(14995): 	at org.hiit.vvb.VVBApplication.fetchBarcodes(VVBApplication.java:183)
-E/AndroidRuntime(14995): 	at org.hiit.vvb.BarcodesService$Updater.run(BarcodesService.java:77)
-*/
 

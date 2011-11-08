@@ -1,7 +1,7 @@
 /**
 */
 
-package org.hiit.vvb;
+package org.hiit.serenghetto;
 
 import android.util.Log;
 import android.net.http.AndroidHttpClient;
@@ -28,12 +28,12 @@ import org.apache.http.message.BasicNameValuePair;
 import java.util.Scanner;
 
 
-public class VVBServer {
-    private static final String TAG = "VVB";
+public class SerenghettoServer {
+    private static final String TAG = "SERENGHETTO";
     private static final String TOKEN_NAME = "token";
 
     //[FIXME: better ua]
-    public static String CLIENT_USER_AGENT = "Android VVB...";
+    public static String CLIENT_USER_AGENT = "Android SERENGHETTO...";
 
     private String serverURL;
     private DefaultHttpClient httpClient;
@@ -41,7 +41,7 @@ public class VVBServer {
     private String userId;
 
 
-    public VVBServer(String url, String token, String userId) {
+    public SerenghettoServer(String url, String token, String userId) {
         this.serverURL = url;
         this.token = token;
         this.userId = userId;

@@ -1,4 +1,4 @@
-package org.hiit.vvb;
+package org.hiit.serenghetto;
 
 import android.util.Log;
 import java.util.HashMap;
@@ -19,7 +19,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class BarcodeData
 {
-    private static final String TAG = "VVB";
+    private static final String TAG = "serenghetto";
 
     static final String NAME_QUERY = "query";
     static final String NAME_NAME = "name";
@@ -29,7 +29,7 @@ public class BarcodeData
 
     final DbHelper dbHelper;
     //private SQLiteDatabase db;
-  
+
     /*[FIXME: better exceptions?]*/
     public BarcodeData(Context context) throws Exception {
         this.dbHelper = new DbHelper(context);
@@ -115,7 +115,7 @@ public class BarcodeData
             return dbQueries.getQuery(name);
         }
     }
-    
+
     /* XML parser */
     class DbXmlHelper extends DefaultHandler
     {
@@ -126,7 +126,7 @@ public class BarcodeData
         /*[FIXME: better exceptions?]*/
         public DbXmlHelper(Context context) throws Exception {
             this.rep = new HashMap<String, String>();
-            
+
             // read in and parse the xml
             SAXParserFactory spf = SAXParserFactory.newInstance();
             SAXParser sp = spf.newSAXParser();

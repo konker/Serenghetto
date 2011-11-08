@@ -1,4 +1,4 @@
-package org.hiit.vvb;
+package org.hiit.serenghetto;
 
 import android.util.Log;
 import java.util.List;
@@ -26,8 +26,7 @@ import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.database.Cursor;
 
-import android.location.Location; 
-
+import android.location.Location;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -35,15 +34,14 @@ import com.google.zxing.integration.android.IntentResult;
 
 public class CodesActivity extends BaseActivity implements OnClickListener
 {
-    private static final String TAG = "VVB";
+    private static final String TAG = "SERENGHETTO";
 
     static final String[] FROM = { "code", "name" };
     static final int[] TO = { R.id.textCode, R.id.textName };
-    
+
     ProgressDialog progress;
-    Cursor cursor; 
-    ListView listView; 
-    //SimpleCursorAdapter adapter; 
+    Cursor cursor;
+    ListView listView;
 
     /** Called when the activity is first created. */
     @Override
@@ -61,8 +59,6 @@ public class CodesActivity extends BaseActivity implements OnClickListener
         // start listening for location
         app.startLocationUpdates();
 
-        // fetch the user's codes
-        //new VVBServerTaskGetCodes().execute();
         Log.d(TAG, "CodesActivity: onCreate");
     }
 
@@ -99,7 +95,7 @@ public class CodesActivity extends BaseActivity implements OnClickListener
             AlertDialog ad = IntentIntegrator.initiateScan(this);
         }
     }
-    
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
@@ -127,7 +123,7 @@ public class CodesActivity extends BaseActivity implements OnClickListener
                     }
 
                     // send to the server
-                    new VVBServerTaskPostCode().execute(scanResult.getContents(), input, lat, lng, accuracy, timestamp);
+                    new SerenghettoServerTaskPostCode().execute(scanResult.getContents(), input, lat, lng, accuracy, timestamp);
 
                     // store in local db?
 
@@ -141,7 +137,7 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 
     /**
     */
-    public class VVBServerTaskPostCode extends VVBServerTask
+    public class SerenghettoServerTaskPostCode extends SerenghettoServerTask
     {
         @Override
         protected Response doInBackground(String... args) {
@@ -156,30 +152,5 @@ public class CodesActivity extends BaseActivity implements OnClickListener
             return;
         }
     }
-
-    /**
-    */
-    /*
-    public class VVBServerTaskGetCodes extends VVBServerTask
-    {
-        @Override
-        protected Response doInBackground(String... params) {
-            return CodesActivity.this.app.getServer().getCodes();
-        }
-
-        @Override
-        protected void handleResult() {
-            //CodesActivity.this.progress.dismiss();
-            //Toast.makeText(CodesActivity.this, response.getMessage(), Toast.LENGTH_LONG).show();
-            List entries = (List)response.getBody().get("entries");
-            for (Object b : entries) {
-                
-                Log.d(TAG, ((Map)b).get("code").toString());
-            }
-            return;
-        }
-    }
-    */
-    
 }
 

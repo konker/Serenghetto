@@ -1,4 +1,4 @@
-package org.hiit.vvb;
+package org.hiit.serenghetto;
 
 import android.util.Log;
 import android.app.Activity;
@@ -13,14 +13,14 @@ import android.widget.Toast;
  */
 public class BaseActivity extends Activity
 {
-    private static final String TAG = "VVB";
+    private static final String TAG = "SERENGHETTO";
 
-    protected VVBApplication app;
+    protected SerenghettoApplication app;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.app = (VVBApplication) getApplication();
+        this.app = (SerenghettoApplication) getApplication();
 
         Log.d(TAG, "BaseActivity: onCreate");
     }
@@ -40,14 +40,14 @@ public class BaseActivity extends Activity
     public boolean onMenuOpened(int featureId, Menu menu) {
         return app.onMenuOpened(featureId, menu);
     }
-    
+
     @Override
     protected void onResume() {
         super.onRestart();
         Log.d(TAG, "onResume");
         app.startLocationUpdates();
     }
-    
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -55,3 +55,4 @@ public class BaseActivity extends Activity
         app.stopLocationUpdates();
     }
 }
+

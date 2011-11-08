@@ -1,4 +1,4 @@
-package org.hiit.vvb;
+package org.hiit.serenghetto;
 
 import android.app.AlertDialog;  
 import android.content.Context;  
@@ -60,4 +60,5 @@ public abstract class PromptDialog extends AlertDialog.Builder implements OnClic
     */
     abstract public boolean onOkClicked(String input);
 }  
+
 

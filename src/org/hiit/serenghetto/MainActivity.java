@@ -1,26 +1,13 @@
-package org.hiit.vvb;
+package org.hiit.serenghetto;
 
 import android.util.Log;
+import android.content.Intent;
 import android.app.Activity;
 import android.os.Bundle;
-import android.content.Intent;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.Menu;
-
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
-
-import android.preference.PreferenceManager;
-import android.content.SharedPreferences;
-
-import android.widget.Toast;
-
 
 public class MainActivity extends BaseActivity
 {
-    private static final String TAG = "VVB";
+    private static final String TAG = "SERENGHETTO";
 
     /** Called when the activity is first created. */
     @Override
@@ -40,4 +27,3 @@ public class MainActivity extends BaseActivity
         }
     }
 }
-

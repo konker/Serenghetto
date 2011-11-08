@@ -1,22 +1,22 @@
-package org.hiit.vvb;
+package org.hiit.serenghetto;
 
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import android.app.Service; 
-import android.content.Intent; 
-import android.os.IBinder; 
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
 import android.util.Log;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
 
 public class BarcodesService extends Service {
-    private static final String TAG = "VVB";
+    private static final String TAG = "SERENGHETTO";
     static final int DELAY_MS = 60000;
     private boolean runFlag = false;
     private Updater updater;
-    private VVBApplication app;
+    private SerenghettoApplication app;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -27,7 +27,7 @@ public class BarcodesService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        this.app = (VVBApplication) getApplication();
+        this.app = (SerenghettoApplication) getApplication();
         this.updater = new Updater();
         Log.d(TAG, "onCreated");
     }
@@ -73,7 +73,7 @@ public class BarcodesService extends Service {
             while (service.runFlag) {
                 Log.d(TAG, "Updater running");
                 try {
-                    VVBApplication app = (VVBApplication)service.getApplication();
+                    SerenghettoApplication app = (SerenghettoApplication)service.getApplication();
                     int newCodes = app.fetchBarcodes();
                     Log.d(TAG, newCodes + " new codes received");
                     Thread.sleep(DELAY_MS);
@@ -85,4 +85,5 @@ public class BarcodesService extends Service {
         }
     }
 }
+
 
