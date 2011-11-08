@@ -187,7 +187,7 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
                     JSONObject jb = (JSONObject)iter.next();
 
                     /*[FIXME: hardcoded field names?]*/
-                    Barcode b = new Barcode(String.valueOf(jb.get("id")), String.valueOf(jb.get("user_id")), (String)jb.get("code"), (String)jb.get("name"));
+                    Barcode b = new Barcode(String.valueOf(jb.get("id")), String.valueOf(((JSONObject)jb.get("user")).get("id")), (String)jb.get("code"), (String)jb.get("name"));
                     boolean inserted = barcodeData.insertOrIgnoreBarcode(b);
                     if (inserted) {
                         count = count + 1;

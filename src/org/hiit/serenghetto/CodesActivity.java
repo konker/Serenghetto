@@ -59,19 +59,26 @@ public class CodesActivity extends BaseActivity implements OnClickListener
         // start listening for location
         app.startLocationUpdates();
 
+        // populate barcode list
+        this.setupList();
+
         Log.d(TAG, "CodesActivity: onCreate");
     }
 
+    /*
     @Override
     protected void onResume() {
         super.onResume();
         this.setupList();
+        //app.startLocationUpdates();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        //app.stopLocationUpdates();
     }
+    */
 
     private void setupList() {
         Cursor cursor = this.app.getBarcodeData().getBarcodesByUser(this.app.getUserId());

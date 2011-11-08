@@ -4,12 +4,14 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
+    <!--
     <TextView  
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content" 
         android:text="@string/game"
         android:background="#FFFF0000"
         />
+        -->
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/mainlayout"
         android:orientation="vertical"
