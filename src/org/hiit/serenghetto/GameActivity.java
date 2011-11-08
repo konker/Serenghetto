@@ -37,7 +37,7 @@ public class GameActivity extends MapActivity
 
         mapController = mapView.getController();
         /*[FIXME: what should default zoom level be?]*/
-        mapController.setZoom(10);
+        mapController.setZoom(14);
 
         // start listening for location
         app.startLocationUpdates();

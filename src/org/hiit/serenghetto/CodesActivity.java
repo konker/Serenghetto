@@ -36,8 +36,8 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 {
     private static final String TAG = "SERENGHETTO";
 
-    static final String[] FROM = { "code", "name" };
-    static final int[] TO = { R.id.textCode, R.id.textName };
+    static final String[] FROM = { "code", "name", "score" };
+    static final int[] TO = { R.id.textCode, R.id.textName, R.id.textScore };
 
     ProgressDialog progress;
     Cursor cursor;
@@ -82,6 +82,16 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 
     private void setupList() {
         Cursor cursor = this.app.getBarcodeData().getBarcodesByUser(this.app.getUserId());
+        /*
+        Log.d(TAG, "start cursor walk..");
+        while (cursor.moveToNext()) {
+            String code = cursor.getString(cursor.getColumnIndex("code"));
+            String name = cursor.getString(cursor.getColumnIndex("name"));
+            Log.i(TAG, code + "->" + name);
+        }
+        Log.d(TAG, "end cursor walk..");
+        */
+
         if (cursor == null) {
             /*[TODO: "no barcodes found" message]*/
         }

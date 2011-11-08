@@ -17,7 +17,7 @@
   </LinearLayout>
 
   <TextView android:layout_height="wrap_content"
-    android:layout_width="fill_parent" android:id="@+id/textDate"
-    android:text="DATE" />
+    android:layout_width="fill_parent" android:id="@+id/textScore"
+    android:text="" />
 </LinearLayout>
 
