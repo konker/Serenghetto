@@ -13,6 +13,10 @@ import org.json.simple.JSONArray;
 
 public class BarcodesService extends Service {
     private static final String TAG = "SERENGHETTO";
+
+    public static final String NEW_BARCODES_INTENT = "org.hiit.serenghetto.NEW_BARCODES";
+    public static final String NEW_BARCODES_EXTRA_COUNT = "NEW_BARCODES_EXTRA_COUNT";
+
     static final int DELAY_MS = 60000;
     private boolean runFlag = false;
     private Updater updater;
@@ -59,6 +63,7 @@ public class BarcodesService extends Service {
     * Thread that performs the actual update from the online service
     */
     private class Updater extends Thread {
+        Intent intent;
         List<Barcode> barcodes;
 
         public Updater() {
@@ -76,6 +81,13 @@ public class BarcodesService extends Service {
                     SerenghettoApplication app = (SerenghettoApplication)service.getApplication();
                     int newCodes = app.fetchBarcodes();
                     Log.d(TAG, newCodes + " new codes received");
+                    if (newCodes > 0) {
+                        intent = new Intent(NEW_BARCODES_INTENT);
+                        intent.putExtra(NEW_BARCODES_EXTRA_COUNT, newCodes);
+                        
+                        /*[TODO: permissions]*/
+                        BarcodesService.this.sendBroadcast(intent);
+                    }
                     Thread.sleep(DELAY_MS);
                 }
                 catch (InterruptedException e) {

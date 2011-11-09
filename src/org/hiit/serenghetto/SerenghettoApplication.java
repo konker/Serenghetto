@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
@@ -33,6 +34,9 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
     public static final String PREF_KEY_EMAIL_DIRTY = "emailDirty";
     public static final String PREF_KEY_PASSWORD = "password";
     public static final String PREF_KEY_PASSWORD_DIRTY = "passwordDirty";
+
+    public static final String NEW_BEST_LOCATION_ESTIMATE_INTENT = "org.hiit.serenghetto.NEW_BEST_LOCATION_ESTIMATE";
+    public static final String NEW_BEST_LOCATION_ESTIMATE_EXTRA_LOCATION = "NEW_BEST_LOCATION_ESTIMATE_EXTRA_LOCATION";
 
     private BarcodeData barcodeData;
     private SerenghettoServer server;
@@ -69,9 +73,13 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
 
         this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        //[FIXME: START THE SERVICE HERE?]
+        //[FIXME: START THE SERVICE?]
+        startService(new Intent(this, BarcodesService.class));
 
-        Log.i(TAG, "App.onCreated: " + hasToken());
+        //[FIXME: START LISTENING FOR LOCATION?]
+        startLocationUpdates();
+
+        Log.i(TAG, "App.onCreate: " + hasToken());
     }
 
     @Override
@@ -79,7 +87,14 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
         super.onTerminate();
         locationManager.removeUpdates(this);
         barcodeData.close();
-        Log.i(TAG, "onTerminated");
+
+        //[FIXME: STOP THE SERVICE?]
+        stopService(new Intent(this, BarcodesService.class));
+
+        //[FIXME: STOP LISTENING FOR LOCATION?]
+        stopLocationUpdates();
+
+        Log.i(TAG, "App.onTerminate");
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -102,6 +117,7 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
                   .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                   .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
                 break;
+            /*
             case R.id.itemToggleService:
                 if (isServiceRunning()) {
                     stopService(new Intent(this, BarcodesService.class));
@@ -110,10 +126,12 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
                     startService(new Intent(this, BarcodesService.class));
                 }
                 break;
+                */
         }
         return true;
     }
     public boolean onMenuOpened(int featureId, Menu menu) {
+        /*
         MenuItem toggleItem = menu.findItem(R.id.itemToggleService);
         if (isServiceRunning()) {
             toggleItem.setTitle(R.string.titleServiceStop);
@@ -123,6 +141,7 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
             toggleItem.setTitle(R.string.titleServiceStart);
             toggleItem.setIcon(android.R.drawable.ic_media_play);
         }
+        */
         return true;
     }
 
@@ -160,6 +179,14 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
 
     public Location getBestLocationEstimate() {
         return bestLocationEstimate;
+    }
+    private void setBestLocationEstimate(Location bestLocationEstimate) {
+        this.bestLocationEstimate = bestLocationEstimate;
+
+        Intent intent = new Intent(NEW_BEST_LOCATION_ESTIMATE_INTENT);
+        intent.putExtra(NEW_BEST_LOCATION_ESTIMATE_EXTRA_LOCATION, bestLocationEstimate);
+        /*[TODO: permissions]*/
+        sendBroadcast(intent);
     }
 
     public boolean isServiceRunning() {
@@ -224,12 +251,13 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
         Log.d(TAG, "LOC: " + location.toString());
         if (isBetterLocation(location)) {
             Log.d(TAG, "LOC better: " + location.toString());
-            bestLocationEstimate = location;
+            setBestLocationEstimate(location);
         }
     }
     public void onProviderDisabled(String provider) {
     }
     public void onProviderEnabled(String provider) {
+        Toast.makeText(this, R.string.gps_disabled, Toast.LENGTH_LONG).show();
     }
     public void onStatusChanged(String provider, int status, Bundle extras) {
     }

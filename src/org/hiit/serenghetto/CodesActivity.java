@@ -6,6 +6,7 @@ import java.util.Map;
 import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Menu;
@@ -15,6 +16,8 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import android.preference.PreferenceManager;
+import android.content.Context;
+import android.content.BroadcastReceiver;
 import android.content.SharedPreferences;
 
 import android.view.View.OnClickListener;
@@ -42,6 +45,8 @@ public class CodesActivity extends BaseActivity implements OnClickListener
     ProgressDialog progress;
     Cursor cursor;
     ListView listView;
+    BarcodesReceiver receiver;
+    IntentFilter filter;
 
     /** Called when the activity is first created. */
     @Override
@@ -61,24 +66,31 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 
         // populate barcode list
         this.setupList();
+    
+        // Create the barcodes updated receiver
+        receiver = new BarcodesReceiver();
+        filter = new IntentFilter(BarcodesService.NEW_BARCODES_INTENT);
 
         Log.d(TAG, "CodesActivity: onCreate");
-    }
-
-    /*
-    @Override
-    protected void onResume() {
-        super.onResume();
-        this.setupList();
-        //app.startLocationUpdates();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //app.stopLocationUpdates();
+        Log.d(TAG, "CodesActivity.onPause");
+
+        // UNregister the receiver
+        unregisterReceiver(receiver); 
     }
-    */
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "CodesActivity.onResume");
+
+        // Register the receiver
+        registerReceiver(receiver, filter, null, null);
+    }
 
     private void setupList() {
         Cursor cursor = this.app.getBarcodeData().getBarcodesByUser(this.app.getUserId());
@@ -152,9 +164,21 @@ public class CodesActivity extends BaseActivity implements OnClickListener
         }
     }
 
+
+    // Receiver to wake up when BarcodesService gets new barcodes
+    class BarcodesReceiver extends BroadcastReceiver
+    {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            setupList();
+            Log.d(TAG, "BarcodesReceiver: onReceived");
+        }
+    }
+
+
     /**
     */
-    public class SerenghettoServerTaskPostCode extends SerenghettoServerTask
+    class SerenghettoServerTaskPostCode extends SerenghettoServerTask
     {
         @Override
         protected Response doInBackground(String... args) {

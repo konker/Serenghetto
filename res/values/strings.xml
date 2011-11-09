@@ -18,11 +18,12 @@
     <string name="titleGame">Game</string>
     <string name="titleCodes">Codes</string>
     <string name="titlePrefs">Preferences</string>
+    <string name="titleScanCode">Scan barcode</string>
     <string name="titleServiceStart">Start service</string>
     <string name="titleServiceStop">Stop service</string>
     <string name="titlePrompt">Name</string>
     <string name="summaryPrompt">Enter an optional name for this item</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
-
+    <string name="gps_disabled">GPS is disabled. Please enable it to continue.</string>
 </resources>
