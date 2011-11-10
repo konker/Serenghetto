@@ -181,7 +181,7 @@ public class SerenghettoServer {
             */
             Response response = new Response(res.getStatusLine().getStatusCode(), reader);
             reader.close();
-            Log.d(TAG, response.toString());
+            //Log.d(TAG, response.toString());
             return response;
         }
         catch (IOException ex) {

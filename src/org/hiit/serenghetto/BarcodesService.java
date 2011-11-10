@@ -33,7 +33,7 @@ public class BarcodesService extends Service {
 
         this.app = (SerenghettoApplication) getApplication();
         this.updater = new Updater();
-        Log.d(TAG, "onCreated");
+        Log.d(TAG, "BarcodesService.onCreate");
     }
 
     @Override
@@ -43,7 +43,7 @@ public class BarcodesService extends Service {
         this.runFlag = true;
         this.updater.start();
         this.app.setServiceRunning(true);
-        Log.d(TAG, "onStarted");
+        Log.d(TAG, "BarcodesService.onStart");
 
         return START_STICKY;
     }
@@ -56,7 +56,7 @@ public class BarcodesService extends Service {
         this.updater.interrupt();
         this.updater = null;
         this.app.setServiceRunning(false);
-        Log.d(TAG, "onDestroyed");
+        Log.d(TAG, "BarcodesService.onDestroy");
     }
 
     /**

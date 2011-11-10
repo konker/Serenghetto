@@ -22,7 +22,7 @@ public class BaseActivity extends Activity
         super.onCreate(savedInstanceState);
         this.app = (SerenghettoApplication) getApplication();
 
-        Log.d(TAG, "BaseActivity: onCreate");
+        Log.d(TAG, "BaseActivity.onCreate");
     }
 
     @Override
@@ -43,16 +43,16 @@ public class BaseActivity extends Activity
 
     @Override
     protected void onResume() {
-        super.onRestart();
-        Log.d(TAG, "onResume");
-        app.startLocationUpdates();
+        super.onResume();
+        Log.d(TAG, "BaseActivity.onResume");
+        //app.startLocationUpdates();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "onPause");
-        app.stopLocationUpdates();
+        Log.d(TAG, "BaseActivity.onPause");
+        //app.stopLocationUpdates();
     }
 }
 

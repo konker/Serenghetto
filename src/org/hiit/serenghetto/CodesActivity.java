@@ -28,6 +28,7 @@ import android.widget.ListView;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 import android.location.Location;
 
@@ -71,7 +72,7 @@ public class CodesActivity extends BaseActivity implements OnClickListener
         receiver = new BarcodesReceiver();
         filter = new IntentFilter(BarcodesService.NEW_BARCODES_INTENT);
 
-        Log.d(TAG, "CodesActivity: onCreate");
+        Log.d(TAG, "CodesActivity.onCreate");
     }
 
     @Override
@@ -92,8 +93,34 @@ public class CodesActivity extends BaseActivity implements OnClickListener
         registerReceiver(receiver, filter, null, null);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "CodesActivity.onStart");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "CodesActivity.onRestart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "CodesActivity.onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "CodesActivity.onDestroy");
+    }
+
     private void setupList() {
+        Log.d(TAG, "setupList.PRE");
         Cursor cursor = this.app.getBarcodeData().getBarcodesByUser(this.app.getUserId());
+        Log.d(TAG, "setupList.POST");
         /*
         Log.d(TAG, "start cursor walk..");
         while (cursor.moveToNext()) {
@@ -113,7 +140,6 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 
             // Setup Adapter
             ListAdapter adapter = new SimpleCursorAdapter(this, R.layout.barcoderow, cursor, FROM, TO);
-            //adapter.setViewBinder(VIEW_BINDER);
             listView.setAdapter(adapter);
             Log.d(TAG, "cursor received': " + cursor + ": " + cursor.isClosed());
         }

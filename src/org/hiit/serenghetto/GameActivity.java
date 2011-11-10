@@ -58,7 +58,7 @@ public class GameActivity extends MapActivity
         receiver = new BestLocationEstimateReceiver();
         filter = new IntentFilter(SerenghettoApplication.NEW_BEST_LOCATION_ESTIMATE_INTENT);
 
-        Log.d(TAG, "GameActivity: onCreate");
+        Log.d(TAG, "GameActivity.onCreate");
     }
     
     private void centerLocation(Location location) {
@@ -84,6 +84,30 @@ public class GameActivity extends MapActivity
 
         // Register the receiver
         registerReceiver(receiver, filter, null, null);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "GameActivity.onStart");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "GameActivity.onRestart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "GameActivity.onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "GameActivity.onDestroy");
     }
 
     @Override

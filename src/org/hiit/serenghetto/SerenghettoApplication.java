@@ -200,12 +200,12 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
         return barcodeData;
     }
 
-    /*[FIXME: should this be moved into BarcodeData?]*/
+    /*[FIXME: should this be moved into BarcodeData? Somewhere else?]*/
     public int fetchBarcodes() {
         int count = 0;
         Response response = getServer().getBarcodes();
 
-        Log.d(TAG, "fetchBarcodes: " + response);
+        //Log.d(TAG, "fetchBarcodes: " + response);
         if (response.getHttpCode() != 500) {
             JSONObject body = (JSONObject)response.getBody();
             if (body != null) {
