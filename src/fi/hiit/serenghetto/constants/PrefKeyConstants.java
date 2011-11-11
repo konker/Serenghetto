@@ -1,4 +1,4 @@
-package org.hiit.serenghetto.constants;
+package fi.hiit.serenghetto.constants;
 
 public class PrefKeyConstants {
     public static final String AUTH_TOKEN = "authToken";

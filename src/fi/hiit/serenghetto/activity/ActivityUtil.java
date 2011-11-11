@@ -1,4 +1,4 @@
-package org.hiit.serenghetto.activity;
+package fi.hiit.serenghetto.activity;
 
 import android.util.Log;
 import android.app.Activity;
@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.hiit.serenghetto.R;
+import fi.hiit.serenghetto.R;
 
 public class ActivityUtil
 {

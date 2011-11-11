@@ -1,4 +1,4 @@
-package org.hiit.serenghetto.activity;
+package fi.hiit.serenghetto.activity;
 
 import android.util.Log;
 import android.app.Activity;
@@ -16,9 +16,9 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapActivity;
 
-import org.hiit.serenghetto.R;
-import org.hiit.serenghetto.SerenghettoApplication;
-import org.hiit.serenghetto.constants.IntentConstants;
+import fi.hiit.serenghetto.R;
+import fi.hiit.serenghetto.SerenghettoApplication;
+import fi.hiit.serenghetto.constants.IntentConstants;
 
 
 public class GameActivity extends MapActivity

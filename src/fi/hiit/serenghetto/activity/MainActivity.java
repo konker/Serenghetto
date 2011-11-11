@@ -1,11 +1,11 @@
-package org.hiit.serenghetto.activity;
+package fi.hiit.serenghetto.activity;
 
 import android.util.Log;
 import android.content.Intent;
 import android.app.Activity;
 import android.os.Bundle;
 
-import org.hiit.serenghetto.SerenghettoApplication;
+import fi.hiit.serenghetto.SerenghettoApplication;
 
 
 public class MainActivity extends Activity

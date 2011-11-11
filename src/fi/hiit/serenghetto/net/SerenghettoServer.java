@@ -1,4 +1,4 @@
-package org.hiit.serenghetto.net;
+package fi.hiit.serenghetto.net;
 
 import android.util.Log;
 import android.net.http.AndroidHttpClient;

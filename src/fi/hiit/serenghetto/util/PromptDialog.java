@@ -1,4 +1,4 @@
-package org.hiit.serenghetto.util;
+package fi.hiit.serenghetto.util;
 
 import android.app.AlertDialog;  
 import android.content.Context;  
@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;  
 import android.widget.EditText;  
 
-import org.hiit.serenghetto.R;
+import fi.hiit.serenghetto.R;
 
 
 /**

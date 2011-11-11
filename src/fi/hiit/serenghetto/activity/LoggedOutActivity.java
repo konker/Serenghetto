@@ -1,4 +1,4 @@
-package org.hiit.serenghetto.activity;
+package fi.hiit.serenghetto.activity;
 
 import android.util.Log;
 import android.app.Activity;
@@ -11,8 +11,8 @@ import android.view.View.OnClickListener;
 import android.view.View;
 import android.widget.Button;
 
-import org.hiit.serenghetto.R;
-import org.hiit.serenghetto.SerenghettoApplication;
+import fi.hiit.serenghetto.R;
+import fi.hiit.serenghetto.SerenghettoApplication;
 
 
 public class LoggedOutActivity extends Activity implements OnClickListener

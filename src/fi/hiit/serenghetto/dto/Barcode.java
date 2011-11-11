@@ -1,4 +1,4 @@
-package org.hiit.serenghetto.dto;
+package fi.hiit.serenghetto.dto;
 
 public class Barcode {
     private String id;

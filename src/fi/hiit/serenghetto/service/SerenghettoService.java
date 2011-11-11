@@ -1,4 +1,4 @@
-package org.hiit.serenghetto.service;
+package fi.hiit.serenghetto.service;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -15,10 +15,10 @@ import android.location.LocationManager;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
-import org.hiit.serenghetto.R;
-import org.hiit.serenghetto.SerenghettoApplication;
-import org.hiit.serenghetto.constants.IntentConstants;
-import org.hiit.serenghetto.dto.Barcode;
+import fi.hiit.serenghetto.R;
+import fi.hiit.serenghetto.SerenghettoApplication;
+import fi.hiit.serenghetto.constants.IntentConstants;
+import fi.hiit.serenghetto.dto.Barcode;
 
 public class SerenghettoService extends Service {
     private static final String TAG = "SERENGHETTO";
@@ -89,6 +89,11 @@ public class SerenghettoService extends Service {
 
         private LocationManager locationManager;
         private Location bestLocationEstimate;
+
+        public LocationHelper() {
+            this.bestLocationEstimate = null;
+            this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        }
 
         public Location getLastKnownLocation() {
             return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);

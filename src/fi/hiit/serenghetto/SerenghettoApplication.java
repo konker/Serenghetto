@@ -1,7 +1,4 @@
-/**
-*/
-
-package org.hiit.serenghetto;
+package fi.hiit.serenghetto;
 
 import android.util.Log;
 import java.util.Iterator;
@@ -16,9 +13,12 @@ import android.location.Location;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
-import org.hiit.serenghetto.net.SerenghettoServer;
-import org.hiit.serenghetto.net.Response;
-import org.hiit.serenghetto.constants.PrefKeyConstants;
+import fi.hiit.serenghetto.net.SerenghettoServer;
+import fi.hiit.serenghetto.net.Response;
+import fi.hiit.serenghetto.dto.Barcode;
+import fi.hiit.serenghetto.data.BarcodeData;
+import fi.hiit.serenghetto.service.SerenghettoService;
+import fi.hiit.serenghetto.constants.PrefKeyConstants;
 
 public class SerenghettoApplication extends Application implements OnSharedPreferenceChangeListener
 {
@@ -56,10 +56,6 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
         }
 
         this.bestLocationEstimate = null;
-        /*
-
-        this.locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        */
 
         //[FIXME: START THE SERVICE?]
         startService(new Intent(this, SerenghettoService.class));

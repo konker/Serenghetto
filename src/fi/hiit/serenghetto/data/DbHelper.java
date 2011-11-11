@@ -1,4 +1,4 @@
-package org.hiit.serenghetto.util;
+package fi.hiit.serenghetto.data;
 
 import android.util.Log;
 import android.content.Context;

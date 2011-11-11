@@ -1,4 +1,4 @@
-package org.hiit.serenghetto.activity;
+package fi.hiit.serenghetto.activity;
 
 import android.util.Log;
 import java.util.List;
@@ -35,12 +35,12 @@ import android.location.Location;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import org.hiit.serenghetto.R;
-import org.hiit.serenghetto.SerenghettoApplication;
-import org.hiit.serenghetto.constants.IntentConstants;
-import org.hiit.serenghetto.net.ServerTask;
-import org.hiit.serenghetto.net.Response;
-import org.hiit.serenghetto.util.PromptDialog;
+import fi.hiit.serenghetto.R;
+import fi.hiit.serenghetto.SerenghettoApplication;
+import fi.hiit.serenghetto.constants.IntentConstants;
+import fi.hiit.serenghetto.net.ServerTask;
+import fi.hiit.serenghetto.net.Response;
+import fi.hiit.serenghetto.util.PromptDialog;
 
 
 public class CodesActivity extends Activity implements OnClickListener

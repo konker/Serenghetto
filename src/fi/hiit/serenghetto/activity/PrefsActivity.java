@@ -1,4 +1,4 @@
-package org.hiit.serenghetto.activity;
+package fi.hiit.serenghetto.activity;
 
 import java.util.Map;
 import android.util.Log;
@@ -21,10 +21,10 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import org.json.simple.JSONValue;
 import org.json.simple.JSONObject;
 
-import org.hiit.serenghetto.R;
-import org.hiit.serenghetto.SerenghettoApplication;
-import org.hiit.serenghetto.net.ServerTask;
-import org.hiit.serenghetto.net.Response;
+import fi.hiit.serenghetto.R;
+import fi.hiit.serenghetto.SerenghettoApplication;
+import fi.hiit.serenghetto.net.ServerTask;
+import fi.hiit.serenghetto.net.Response;
 
 
 public class PrefsActivity extends PreferenceActivity implements OnClickListener

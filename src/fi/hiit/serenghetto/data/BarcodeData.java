@@ -1,4 +1,4 @@
-package org.hiit.serenghetto;
+package fi.hiit.serenghetto.data;
 
 import android.util.Log;
 import android.content.ContentValues;
@@ -7,6 +7,9 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+
+import fi.hiit.serenghetto.dto.Barcode;
+
 
 public class BarcodeData
 {
