@@ -1,4 +1,4 @@
-package org.hiit.serenghetto;
+package org.hiit.serenghetto.net;
 
 import android.os.AsyncTask;
 import org.json.simple.JSONValue;
@@ -6,7 +6,7 @@ import org.json.simple.JSONObject;
 
 /**
 */
-public abstract class SerenghettoServerTask extends AsyncTask<String, Void, Response> {
+public abstract class ServerTask extends AsyncTask<String, Void, Response> {
     protected Response response;
 
     @Override

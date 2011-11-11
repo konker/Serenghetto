@@ -1,4 +1,4 @@
-package org.hiit.serenghetto;
+package org.hiit.serenghetto.util;
 
 import android.util.Log;
 import android.content.Context;
@@ -11,6 +11,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import org.hiit.serenghetto.R;
 
 /* XML parser */
 class DbXmlParser extends DefaultHandler

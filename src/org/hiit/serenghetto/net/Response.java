@@ -1,4 +1,4 @@
-package org.hiit.serenghetto;
+package org.hiit.serenghetto.net;
 
 import java.io.Reader;
 import java.util.Map;

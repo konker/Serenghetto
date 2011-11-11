@@ -1,4 +1,4 @@
-package org.hiit.serenghetto;
+package org.hiit.serenghetto.activity;
 
 import java.util.Map;
 import android.util.Log;
@@ -17,10 +17,15 @@ import android.widget.Toast;
 import android.preference.PreferenceManager;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.AsyncTask;
 
 import org.json.simple.JSONValue;
 import org.json.simple.JSONObject;
+
+import org.hiit.serenghetto.R;
+import org.hiit.serenghetto.SerenghettoApplication;
+import org.hiit.serenghetto.net.ServerTask;
+import org.hiit.serenghetto.net.Response;
+
 
 public class PrefsActivity extends PreferenceActivity implements OnClickListener
 {
@@ -46,32 +51,62 @@ public class PrefsActivity extends PreferenceActivity implements OnClickListener
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "PrefsActivity.onPause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "PrefsActivity.onResume");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "PrefsActivity.onStart");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "PrefsActivity.onRestart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "PrefsActivity.onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "PrefsActivity.onDestroy");
+    }
+    
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
+    	return ActivityUtil.onCreateOptionsMenu(this, menu);
     }
-
+    
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return this.app.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
-        return app.onMenuOpened(featureId, menu);
-    }
+	public boolean onOptionsItemSelected(MenuItem item) {
+    	return ActivityUtil.onOptionsItemSelected(this, item);
+	}
 
     public void onClick(View view) {
         if (view == findViewById(R.id.buttonUpdate)) {
             progress = ProgressDialog.show(PrefsActivity.this, "", "Authenticating...", true);
-            new SerenghettoServerTaskAuthorize().execute(app.getPrefs().getString("email", null), app.getPrefs().getString("password", null));
+            new ServerTaskAuthorize().execute(app.getPrefs().getString("email", null), app.getPrefs().getString("password", null));
         }
     }
     
 
     /**
     */
-    public class SerenghettoServerTaskAuthorize extends SerenghettoServerTask
+    public class ServerTaskAuthorize extends ServerTask
     {
         @Override
         protected Response doInBackground(String... code) {

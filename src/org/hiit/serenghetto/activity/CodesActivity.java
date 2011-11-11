@@ -1,4 +1,4 @@
-package org.hiit.serenghetto;
+package org.hiit.serenghetto.activity;
 
 import android.util.Log;
 import java.util.List;
@@ -35,14 +35,22 @@ import android.location.Location;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.hiit.serenghetto.R;
+import org.hiit.serenghetto.SerenghettoApplication;
+import org.hiit.serenghetto.constants.IntentConstants;
+import org.hiit.serenghetto.net.ServerTask;
+import org.hiit.serenghetto.net.Response;
+import org.hiit.serenghetto.util.PromptDialog;
 
-public class CodesActivity extends BaseActivity implements OnClickListener
+
+public class CodesActivity extends Activity implements OnClickListener
 {
     private static final String TAG = "SERENGHETTO";
 
     static final String[] FROM = { "code", "name", "score" };
     static final int[] TO = { R.id.textCode, R.id.textName, R.id.textScore };
 
+    SerenghettoApplication app;
     ProgressDialog progress;
     Cursor cursor;
     ListView listView;
@@ -55,6 +63,8 @@ public class CodesActivity extends BaseActivity implements OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.codes);
 
+        this.app = (SerenghettoApplication) getApplication();
+
         listView = (ListView)findViewById(R.id.codesList);
         setupList();
 
@@ -63,14 +73,14 @@ public class CodesActivity extends BaseActivity implements OnClickListener
         buttonScanCode.setOnClickListener(this);
 
         // start listening for location
-        app.startLocationUpdates();
+        //app.startLocationUpdates();
 
         // populate barcode list
         this.setupList();
     
         // Create the barcodes updated receiver
         receiver = new BarcodesReceiver();
-        filter = new IntentFilter(BarcodesService.NEW_BARCODES_INTENT);
+        filter = new IntentFilter(IntentConstants.NEW_BARCODES_INTENT);
 
         Log.d(TAG, "CodesActivity.onCreate");
     }
@@ -116,6 +126,16 @@ public class CodesActivity extends BaseActivity implements OnClickListener
         super.onDestroy();
         Log.d(TAG, "CodesActivity.onDestroy");
     }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+    	return ActivityUtil.onCreateOptionsMenu(this, menu);
+    }
+    
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+    	return ActivityUtil.onOptionsItemSelected(this, item);
+	}
 
     private void setupList() {
         Log.d(TAG, "setupList.PRE");
@@ -178,7 +198,7 @@ public class CodesActivity extends BaseActivity implements OnClickListener
                     }
 
                     // send to the server
-                    new SerenghettoServerTaskPostCode().execute(scanResult.getContents(), input, lat, lng, accuracy, timestamp);
+                    new ServerTaskPostCode().execute(scanResult.getContents(), input, lat, lng, accuracy, timestamp);
 
                     // store in local db?
 
@@ -191,7 +211,7 @@ public class CodesActivity extends BaseActivity implements OnClickListener
     }
 
 
-    // Receiver to wake up when BarcodesService gets new barcodes
+    // Receiver to wake up when SerenghettoService gets new barcodes
     class BarcodesReceiver extends BroadcastReceiver
     {
         @Override
@@ -204,11 +224,11 @@ public class CodesActivity extends BaseActivity implements OnClickListener
 
     /**
     */
-    class SerenghettoServerTaskPostCode extends SerenghettoServerTask
+    class ServerTaskPostCode extends ServerTask
     {
         @Override
         protected Response doInBackground(String... args) {
-            return CodesActivity.this.app.getServer().postCode(args[0], args[1], args[2], args[3], args[4], args[5]);
+            return CodesActivity.this.app.getServer().postBarcode(args[0], args[1], args[2], args[3], args[4], args[5]);
         }
 
         @Override
