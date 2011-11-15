@@ -13,7 +13,7 @@ import fi.hiit.serenghetto.dto.Barcode;
 
 public class BarcodeData
 {
-    private static final String TAG = "serenghetto";
+    private static final String TAG = "SERENGHETTO";
 
     final DbHelper dbHelper;
     private SQLiteDatabase db;
@@ -49,7 +49,7 @@ public class BarcodeData
     }
 
     public boolean insertOrIgnoreBarcode(Barcode b) {
-        Log.d(TAG, "insertOrIgnore on " + b);
+        //Log.d(TAG, "insertOrIgnore on " + b);
         //SQLiteDatabase db = this.dbHelper.getWritableDatabase();
         String[] args = { b.getId(), b.getUserId(), b.getCode(), b.getName() };
         boolean ret = true;
@@ -60,7 +60,7 @@ public class BarcodeData
             //db.setTransactionSuccessful();
         }
         catch (SQLiteException ex) {
-            Log.d(TAG, ex.toString());
+            //Log.d(TAG, ex.toString());
             ret = false;
         }
         finally {

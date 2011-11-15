@@ -43,7 +43,9 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
         this.prefs.registerOnSharedPreferenceChangeListener(this);
 
         String token = prefs.getString(PrefKeyConstants.AUTH_TOKEN, null);
+        Log.d(TAG, "SerenghettoApplication.onCreate|token:" + token + "|" + PrefKeyConstants.AUTH_TOKEN);
         String userId = prefs.getString(PrefKeyConstants.USER_ID, null);
+        Log.d(TAG, "SerenghettoApplication.onCreate|userId:" + userId + "|" + PrefKeyConstants.USER_ID);
         this.server = new SerenghettoServer(SERVER_BASE_URL, token, userId);
 
         try {
@@ -60,7 +62,7 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
         //[FIXME: START THE SERVICE?]
         startService(new Intent(this, SerenghettoService.class));
 
-        Log.i(TAG, "App.onCreate: " + hasToken());
+        Log.d(TAG, "App.onCreate");
     }
 
     @Override
@@ -122,6 +124,10 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
 
     public Location getBestLocationEstimate() {
         return bestLocationEstimate;
+    }
+    public void setBestLocationEstimate(Location bestLocationEstimate) {
+        Log.d(TAG, "SerenghettoApplication.setBestLocationEstimate");
+        this.bestLocationEstimate = bestLocationEstimate;
     }
 
     /*[FIXME: should this be moved into BarcodeData? Somewhere else?]*/

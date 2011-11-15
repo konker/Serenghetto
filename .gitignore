@@ -13,3 +13,10 @@ etc/
 ehthumbs.db
 Icon?
 Thumbs.db
+.classpath
+.project
+.settings
+
+# Tags file
+######################
+.tags

@@ -111,6 +111,8 @@ public class SerenghettoService extends Service {
         private void setBestLocationEstimate(Location bestLocationEstimate) {
             this.bestLocationEstimate = bestLocationEstimate;
 
+            app.setBestLocationEstimate(bestLocationEstimate);
+
             Intent intent = new Intent(IntentConstants.NEW_BEST_LOCATION_ESTIMATE_INTENT);
             intent.putExtra(IntentConstants.NEW_BEST_LOCATION_ESTIMATE_EXTRA_LOCATION, bestLocationEstimate);
             /*[TODO: permissions]*/
@@ -119,9 +121,9 @@ public class SerenghettoService extends Service {
 
         // Methods required by LocationListener
         public void onLocationChanged(Location location) {
-            Log.d(TAG, "LOC: " + location.toString());
+            //Log.d(TAG, "LOC: " + location.toString());
             if (isBetterLocation(location)) {
-                Log.d(TAG, "LOC better: " + location.toString());
+                //Log.d(TAG, "LOC better: " + location.toString());
                 setBestLocationEstimate(location);
             }
         }

@@ -6,7 +6,7 @@
     android:icon="@android:drawable/ic_menu_agenda"></item>
   <item android:id="@+id/itemPrefs" android:title="@string/titlePrefs"
     android:icon="@android:drawable/ic_menu_preferences"></item>
-  <item android:id="@+id/itemScanCode" android:title="@string/titleScanCode"
+  <item android:id="@+id/itemScanBarcode" android:title="@string/titleScanCode"
     android:icon="@android:drawable/ic_menu_add"></item>
   <!--
   <item android:id="@+id/itemToggleService" android:title="@string/titleServiceStart"

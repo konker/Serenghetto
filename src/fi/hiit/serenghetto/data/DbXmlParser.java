@@ -16,7 +16,7 @@ import fi.hiit.serenghetto.R;
 /* XML parser */
 class DbXmlParser extends DefaultHandler
 {
-    private static final String TAG = "serenghetto";
+    private static final String TAG = "SERENGHETTO";
 
     static final String NAME_QUERY = "query";
     static final String NAME_NAME = "name";
@@ -44,7 +44,7 @@ class DbXmlParser extends DefaultHandler
     }
 
     public void setQuery(String name, String sql) {
-        Log.d(TAG, "setQuery: " + name + ", " + sql);
+        //Log.d(TAG, "setQuery: " + name + ", " + sql);
         rep.put(name, sql);
     }
 

@@ -6,13 +6,26 @@
   <item type="id" name="itemGame"/>
   <item type="id" name="itemCodes"/>
   <item type="id" name="itemPrefs"/>
-  <item type="id" name="itemScanCode"/>
+  <item type="id" name="itemScanBarcode"/>
   <item type="id" name="itemToggleService"/>
+  <item type="id" name="mapGameLocation"/>
   <item type="id" name="codesList"/>
   <item type="id" name="scrollViewCodes"/>
   <item type="id" name="textCode"/>
   <item type="id" name="textName"/>
   <item type="id" name="textDate"/>
   <item type="id" name="textScore"/>
+  <item type="id" name="buttonSaveBarcode"/>
+  <item type="id" name="buttonCancelBarcode"/>
+  <item type="id" name="buttonOKBarcode"/>
+  <item type="id" name="inputBarcodeName"/>
+  <item type="id" name="textBarcodeName"/>
+  <item type="id" name="textBarcodeCode"/>
+  <item type="id" name="textBarcodeTime"/>
+  <item type="id" name="textBarcodeTimeReadable"/>
+  <item type="id" name="mapBarcodeLocation"/>
+  <item type="id" name="textBarcodeLocationLatitude"/>
+  <item type="id" name="textBarcodeLocationLongitude"/>
+  <item type="id" name="textBarcodeLocationAccuracy"/>
 </resources>
 

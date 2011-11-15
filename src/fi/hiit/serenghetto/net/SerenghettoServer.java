@@ -40,6 +40,7 @@ public class SerenghettoServer extends RESTServer {
         super(CLIENT_USER_AGENT, url);
         this.token = token;
         this.userId = userId;
+        Log.d(TAG, "SerenghettoServer.construct: " + url + "," + token + "," + userId);
     }
 
     public String getToken() {

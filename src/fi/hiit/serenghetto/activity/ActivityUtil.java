@@ -37,6 +37,12 @@ public class ActivityUtil
                   .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                   .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
                 break;
+            case R.id.itemScanBarcode:
+                activity.startActivity(new Intent(activity, BarcodeScanActivity.class)
+                  .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                  .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                  .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                break;
             /*
             case R.id.itemToggleService:
                 if (isServiceRunning()) {

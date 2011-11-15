@@ -45,7 +45,6 @@ public class RESTServer {
         if (action != null) {
             url += action;
         }
-        Log.d(TAG, url);
         return url;
     }
     public String getResourceURL(String controller, String action) {
@@ -53,7 +52,6 @@ public class RESTServer {
         if (action != null) {
             url += action;
         }
-        Log.d(TAG, url);
         return url;
     }
 
@@ -85,6 +83,7 @@ public class RESTServer {
         return _execPost(req, new ArrayList<BasicNameValuePair>());
     }
     protected Response _execPost(HttpPost req, List<BasicNameValuePair> nameValuePairs) {
+        Log.d(TAG, req.getURI().toString());
         try {
             for (BasicNameValuePair nv : nameValuePairs) {
                 Log.d(TAG, nv.getName() + "->" + nv.getValue());
@@ -102,7 +101,7 @@ public class RESTServer {
     protected Response _exec(HttpRequestBase req) {
         req.setHeader("Accept", "application/json");
         try {
-            Log.d(TAG, req.toString());
+            //Log.d(TAG, req.toString());
             httpClient = new DefaultHttpClient();
             HttpResponse res = httpClient.execute(req);
             

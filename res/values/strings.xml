@@ -14,7 +14,7 @@
     <string name="titleUsername">Username</string>
     <string name="summaryUsername">Your Serenghetto username</string>
     <string name="titlePassword">Password</string>
-    <string name="summaryPassword">Your VVD password</string>
+    <string name="summaryPassword">Your Serenghetto password</string>
     <string name="titleGame">Game</string>
     <string name="titleCodes">Codes</string>
     <string name="titlePrefs">Preferences</string>
@@ -26,4 +26,13 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="gps_disabled">GPS is disabled. Please enable it to continue.</string>
+    <string name="titleSaveBarcode">Save</string>
+    <string name="titleCancelBarcode">Cancel</string>
+    <string name="titleOKBarcode">OK</string>
+    <string name="titleBarcodeCode">Code</string>
+    <string name="titleBarcodeTime">Timestamp</string>
+    <string name="titleBarcodeLocation">Location</string>
+    <string name="titleBarcodeTimestamp">Timestamp</string>
+    <string name="titleBarcodeName">Name</string>
+    <string name="hintBarcodeName">Optional name</string>
 </resources>

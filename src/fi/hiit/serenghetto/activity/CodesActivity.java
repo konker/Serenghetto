@@ -68,13 +68,6 @@ public class CodesActivity extends Activity implements OnClickListener
         listView = (ListView)findViewById(R.id.codesList);
         setupList();
 
-        // set a click listener on the scan_code button
-        Button buttonScanCode = (Button)findViewById(R.id.buttonScanCode);
-        buttonScanCode.setOnClickListener(this);
-
-        // start listening for location
-        //app.startLocationUpdates();
-
         // populate barcode list
         this.setupList();
     
@@ -138,7 +131,7 @@ public class CodesActivity extends Activity implements OnClickListener
 	}
 
     private void setupList() {
-        Log.d(TAG, "setupList.PRE");
+        Log.d(TAG, "setupList.PRE:" + this.app.getUserId());
         Cursor cursor = this.app.getBarcodeData().getBarcodesByUser(this.app.getUserId());
         Log.d(TAG, "setupList.POST");
         /*
@@ -166,48 +159,7 @@ public class CodesActivity extends Activity implements OnClickListener
     }
 
     public void onClick(View view) {
-        if (view == findViewById(R.id.buttonScanCode)) {
-            AlertDialog ad = IntentIntegrator.initiateScan(this);
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        final IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        if (scanResult.getContents() != null) {
-            Log.d(TAG, "Format: " + scanResult.getFormatName() + "\nContents: " + scanResult.getContents());
-
-            // get name from the user
-            PromptDialog dlg = new PromptDialog(CodesActivity.this, R.string.titlePrompt, R.string.summaryPrompt) {
-                @Override
-                public boolean onOkClicked(String input) {
-                    Log.d(TAG, input);
-
-                    /*[FIXME: is location mandatory? If so enable/disable scan button?]*/
-                    progress = ProgressDialog.show(CodesActivity.this, "", "Sending...", true);
-                    Location bestLocationEstimate = app.getBestLocationEstimate();
-                    String lat = "";
-                    String lng = "";
-                    String accuracy = "";
-                    String timestamp = "";
-                    if (bestLocationEstimate != null) {
-                        lat = String.format("%f", bestLocationEstimate.getLatitude());
-                        lng = String.format("%f", bestLocationEstimate.getLongitude());
-                        accuracy = String.format("%f", bestLocationEstimate.getAccuracy());
-                        timestamp = String.format("%d", bestLocationEstimate.getTime());
-                    }
-
-                    // send to the server
-                    new ServerTaskPostCode().execute(scanResult.getContents(), input, lat, lng, accuracy, timestamp);
-
-                    // store in local db?
-
-
-                    return true;
-                }
-            };
-            dlg.show();
-        }
+        //TODO: handle click for list items
     }
 
 
@@ -216,27 +168,8 @@ public class CodesActivity extends Activity implements OnClickListener
     {
         @Override
         public void onReceive(Context context, Intent intent) {
-            setupList();
+            CodesActivity.this.setupList();
             Log.d(TAG, "BarcodesReceiver: onReceived");
-        }
-    }
-
-
-    /**
-    */
-    class ServerTaskPostCode extends ServerTask
-    {
-        @Override
-        protected Response doInBackground(String... args) {
-            return CodesActivity.this.app.getServer().postBarcode(args[0], args[1], args[2], args[3], args[4], args[5]);
-        }
-
-        @Override
-        protected void handleResult() {
-            /*[TODO: add to local list of code when OK]*/
-            CodesActivity.this.progress.dismiss();
-            Toast.makeText(CodesActivity.this, response.getMessage(), Toast.LENGTH_LONG).show();
-            return;
         }
     }
 }

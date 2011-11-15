@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 // DbHelper implementations
 class DbHelper extends SQLiteOpenHelper
 {
-    private static final String TAG = "serenghetto";
+    private static final String TAG = "SERENGHETTO";
 
     static final int DB_VERSION = 5;
     static final String DB_NAME = "barcodes.db";

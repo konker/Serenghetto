@@ -27,7 +27,7 @@ public class GameActivity extends MapActivity
 
     SerenghettoApplication app;
     LinearLayout linearLayout;
-    MapView mapView;
+    MapView mapGameLocation;
     MapController mapController;
     BestLocationEstimateReceiver receiver;
     IntentFilter filter;
@@ -42,12 +42,18 @@ public class GameActivity extends MapActivity
 
         setContentView(R.layout.game);
 
-        MapView mapView = (MapView) findViewById(R.id.mapview);
-        mapView.setBuiltInZoomControls(true);
+        MapView mapGameLocation = (MapView)findViewById(R.id.mapGameLocation);
+        Log.d(TAG, "GameActivity.onCreate: mapGameLocation: " + mapGameLocation);
+        if (mapGameLocation != null) {
+            mapGameLocation.setBuiltInZoomControls(true);
+            mapController = mapGameLocation.getController();
 
-        mapController = mapView.getController();
-        /*[FIXME: what should default zoom level be?]*/
-        mapController.setZoom(14);
+            /*[FIXME: what should default zoom level be?]*/
+            mapController.setZoom(14);
+        }
+        else  {
+            Log.d(TAG, "GameActivity.onCreate: NO MAP VIEW: " + mapGameLocation);
+        }
 
         // start listening for location
         //app.startLocationUpdates();
@@ -55,9 +61,7 @@ public class GameActivity extends MapActivity
         // center map to last know location
         //[FIXME]
         Location lastLocation = null; // app.getLastKnownLocation();
-        if (lastLocation != null) {
-            centerLocation(lastLocation);
-        }
+        onLocation(lastLocation);
     
         // Create the barcodes updated receiver
         receiver = new BestLocationEstimateReceiver();
@@ -66,6 +70,12 @@ public class GameActivity extends MapActivity
         Log.d(TAG, "GameActivity.onCreate");
     }
     
+    private void onLocation(Location location) {
+        if (location != null) {
+            centerLocation(location);
+        }
+    }
+
     private void centerLocation(Location location) {
         GeoPoint p = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
         mapController.animateTo(p);
@@ -130,16 +140,14 @@ public class GameActivity extends MapActivity
     	return ActivityUtil.onOptionsItemSelected(this, item);
 	}
 
-    // Receiver to wake up when BarcodesService gets new barcodes
+    // Receiver to wake up when BarcodesService gets new best location estimate
     class BestLocationEstimateReceiver extends BroadcastReceiver
     {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Location location = (Location)(intent.getExtras().get(IntentConstants.NEW_BEST_LOCATION_ESTIMATE_EXTRA_LOCATION));
-            if (location != null) {
-                centerLocation(location);
-                Log.d(TAG, "BestLocationEstimateReceiver.onReceived");
-            }
+            Location location = GameActivity.this.app.getBestLocationEstimate();
+            GameActivity.this.onLocation(location);
+            Log.d(TAG, "GameActivity$BestLocationEstimateReceiver.onReceive");
         }
     }
 }
