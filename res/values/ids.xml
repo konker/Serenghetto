@@ -11,14 +11,13 @@
   <item type="id" name="mapGameLocation"/>
   <item type="id" name="codesList"/>
   <item type="id" name="scrollViewCodes"/>
-  <item type="id" name="textCode"/>
-  <item type="id" name="textName"/>
   <item type="id" name="textDate"/>
   <item type="id" name="textScore"/>
   <item type="id" name="buttonSaveBarcode"/>
   <item type="id" name="buttonCancelBarcode"/>
   <item type="id" name="buttonOKBarcode"/>
   <item type="id" name="inputBarcodeName"/>
+  <item type="id" name="textBarcodeId"/>
   <item type="id" name="textBarcodeName"/>
   <item type="id" name="textBarcodeCode"/>
   <item type="id" name="textBarcodeTime"/>
@@ -27,5 +26,6 @@
   <item type="id" name="textBarcodeLocationLatitude"/>
   <item type="id" name="textBarcodeLocationLongitude"/>
   <item type="id" name="textBarcodeLocationAccuracy"/>
+  <item type="id" name="textBarcodeScore"/>
 </resources>
 

@@ -193,13 +193,13 @@ public class BarcodeScanActivity extends MapActivity implements OnClickListener
 
             String code = textBarcodeCode.getText().toString();
             String name = inputBarcodeName.getText().toString();
-            String lat = textBarcodeLocationLatitude.getText().toString();
-            String lng = textBarcodeLocationLongitude.getText().toString();
+            String latitude = textBarcodeLocationLatitude.getText().toString();
+            String longitude = textBarcodeLocationLongitude.getText().toString();
             String accuracy = textBarcodeLocationAccuracy.getText().toString();
             String timestamp = textBarcodeTime.getText().toString();
 
             // send to the server
-            new ServerTaskPostCode().execute(code, name, lat, lng, accuracy, timestamp);
+            new ServerTaskPostCode().execute(code, name, latitude, longitude, accuracy, timestamp);
 
             textBarcodeName.setText(name);
             inputBarcodeName.setVisibility(View.GONE);

@@ -33,6 +33,7 @@
     <string name="titleBarcodeTime">Timestamp</string>
     <string name="titleBarcodeLocation">Location</string>
     <string name="titleBarcodeTimestamp">Timestamp</string>
+    <string name="titleBarcodeScore">Score</string>
     <string name="titleBarcodeName">Name</string>
     <string name="hintBarcodeName">Optional name</string>
 </resources>

@@ -6,8 +6,8 @@
   <query name="c_user_id">user_id</query>
   <query name="c_code">code</query>
   <query name="c_name">name</query>
-  <query name="c_lat">lat</query>
-  <query name="c_lng">lng</query>
+  <query name="c_lat">latitude</query>
+  <query name="c_lng">longitude</query>
   <query name="c_accuracy">accuracy</query>
 
   <query name="create_barcodes">
@@ -17,14 +17,15 @@
         user_id VARCHAR NOT NULL,
         code TEXT NOT NULL,
         name TEXT DEFAULT NULL,
-        lat NUMBER DEFAULT NULL,
-        lng NUMBER DEFAULT NULL,
+        latitude NUMBER DEFAULT NULL,
+        longitude NUMBER DEFAULT NULL,
         accuracy NUMBER DEFAULT NULL,
+        timestamp DATETIME DEFAULT NULL,
         score NUMBER DEFAULT 0
     )
   </query>
   <query name="insert_barcodes">
-    INSERT INTO barcodes (_id, user_id, code, name, lat, lng, accuracy) VALUES (?,?,?,?,?,?,?)
+    INSERT INTO barcodes (_id, user_id, code, name, latitude, longitude, accuracy, timestamp, score) VALUES (?,?,?,?,?,?,?,?,?)
   </query>
   <query name="insert_barcodes_basic">
     INSERT INTO barcodes (_id, user_id, code, name) VALUES (?,?,?,?)
@@ -34,5 +35,8 @@
   </query>
   <query name="barcodes_by_user">
     SELECT * FROM barcodes WHERE user_id = ? ORDER BY _id DESC
+  </query>
+  <query name="barcode_by_id">
+    SELECT * FROM barcodes WHERE _id = ? LIMIT 1
   </query>
 </db>

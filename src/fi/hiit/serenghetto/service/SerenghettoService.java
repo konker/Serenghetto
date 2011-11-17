@@ -96,10 +96,11 @@ public class SerenghettoService extends Service {
         }
 
         public Location getLastKnownLocation() {
-            return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            return locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         }
         public void startLocationUpdates() {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
         }
         public void stopLocationUpdates() {
             locationManager.removeUpdates(this);

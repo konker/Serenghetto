@@ -48,24 +48,32 @@ public class BarcodeData
         }
     }
 
+    public Cursor getBarcodeById(String id) {
+        Log.d(TAG, "selectBarcodeById: " + id);
+        Log.d(TAG, dbHelper.getQuery("barcode_by_id"));
+
+        try {
+            String[] args = { id };
+            return db.rawQuery(dbHelper.getQuery("barcode_by_id"), args);
+        }
+        catch (SQLiteException ex) {
+            Log.d(TAG, ex.toString());
+            return null;
+        }
+    }
+
     public boolean insertOrIgnoreBarcode(Barcode b) {
         //Log.d(TAG, "insertOrIgnore on " + b);
         //SQLiteDatabase db = this.dbHelper.getWritableDatabase();
-        String[] args = { b.getId(), b.getUserId(), b.getCode(), b.getName() };
+        String[] args = { b.getId(), b.getUserId(), b.getCode(), b.getName(), b.getLatitude(), b.getLongitude(), b.getAccuracy(), b.getTimestamp() };
         boolean ret = true;
 
-        //db.beginTransaction();
         try {
-            db.execSQL(dbHelper.getQuery("insert_barcodes_basic"), args);
-            //db.setTransactionSuccessful();
+            db.execSQL(dbHelper.getQuery("insert_barcodes"), args);
         }
         catch (SQLiteException ex) {
             //Log.d(TAG, ex.toString());
             ret = false;
-        }
-        finally {
-            //db.endTransaction();
-            //db.close();
         }
         return ret;
     }

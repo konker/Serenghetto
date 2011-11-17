@@ -53,7 +53,7 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
         catch (Exception ex) {
             /*[FIXME]*/
             /* now what? */
-            Log.d(TAG, ex.toString());
+            Log.d(TAG, "Coudld not instantiate barcodeData: " + ex.toString());
         }
 
         this.bestLocationEstimate = null;
@@ -144,6 +144,15 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
 
                     /*[FIXME: hardcoded field names?]*/
                     Barcode b = new Barcode(String.valueOf(jb.get("id")), String.valueOf(((JSONObject)jb.get("user")).get("id")), (String)jb.get("code"), (String)jb.get("name"));
+                    JSONObject jlocation = (JSONObject)jb.get("location");
+                    if (jlocation != null) {
+                        b.setLatitude(String.valueOf(jlocation.get("x")));
+                        b.setLongitude(String.valueOf(jlocation.get("y")));
+                        b.setAccuracy(String.valueOf(jlocation.get("accuracy")));
+                        b.setTimestamp(String.valueOf(jlocation.get("device_timestamp")));
+                    }
+                    b.setScore(String.valueOf(jb.get("score")));
+
                     boolean inserted = barcodeData.insertOrIgnoreBarcode(b);
                     if (inserted) {
                         count = count + 1;

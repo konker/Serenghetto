@@ -60,8 +60,8 @@ public class GameActivity extends MapActivity
 
         // center map to last know location
         //[FIXME]
-        Location lastLocation = null; // app.getLastKnownLocation();
-        onLocation(lastLocation);
+        //Location lastLocation = app.getLastKnownLocation();
+        //onLocation(lastLocation);
     
         // Create the barcodes updated receiver
         receiver = new BestLocationEstimateReceiver();

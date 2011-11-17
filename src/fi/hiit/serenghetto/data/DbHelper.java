@@ -11,7 +11,7 @@ class DbHelper extends SQLiteOpenHelper
 {
     private static final String TAG = "SERENGHETTO";
 
-    static final int DB_VERSION = 5;
+    static final int DB_VERSION = 6;
     static final String DB_NAME = "barcodes.db";
 
     private DbXmlParser dbQueries;

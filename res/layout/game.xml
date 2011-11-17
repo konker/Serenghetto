@@ -12,18 +12,11 @@
         android:background="#FFFF0000"
         />
         -->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/mainlayout"
-        android:orientation="vertical"
+    <com.google.android.maps.MapView
+        android:id="@id/mapGameLocation"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-
-        <com.google.android.maps.MapView
-            android:id="@id/mapGameLocation"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:clickable="true"
-            android:apiKey="0Hkd6gl7IVP14c1Qyt9ctxeo9Sc0xgIVlQ0QBHg"
-            />
-    </RelativeLayout>
+        android:layout_height="fill_parent"
+        android:clickable="false"
+        android:apiKey="0Hkd6gl7IVP14c1Qyt9ctxeo9Sc0xgIVlQ0QBHg"
+        />
 </LinearLayout>

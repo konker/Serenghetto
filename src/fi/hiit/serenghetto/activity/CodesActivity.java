@@ -4,6 +4,7 @@ import android.util.Log;
 import java.util.List;
 import java.util.Map;
 import android.app.Activity;
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -21,9 +22,15 @@ import android.content.BroadcastReceiver;
 import android.content.SharedPreferences;
 
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.TextView;
 import android.widget.ListView;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
@@ -43,17 +50,17 @@ import fi.hiit.serenghetto.net.Response;
 import fi.hiit.serenghetto.util.PromptDialog;
 
 
-public class CodesActivity extends Activity implements OnClickListener
+public class CodesActivity extends ListActivity implements OnItemClickListener, OnItemLongClickListener
 {
     private static final String TAG = "SERENGHETTO";
 
-    static final String[] FROM = { "code", "name", "score" };
-    static final int[] TO = { R.id.textCode, R.id.textName, R.id.textScore };
+    static final String[] FROM = { "_id", "code", "name", "score" };
+    static final int[] TO = { R.id.textBarcodeId, R.id.textBarcodeCode, R.id.textBarcodeName, R.id.textBarcodeScore };
 
     SerenghettoApplication app;
     ProgressDialog progress;
     Cursor cursor;
-    ListView listView;
+    //ListView listView;
     BarcodesReceiver receiver;
     IntentFilter filter;
 
@@ -65,8 +72,8 @@ public class CodesActivity extends Activity implements OnClickListener
 
         this.app = (SerenghettoApplication) getApplication();
 
-        listView = (ListView)findViewById(R.id.codesList);
-        setupList();
+        //listView = (ListView)findViewById(R.id.codesList);
+        //setupList();
 
         // populate barcode list
         this.setupList();
@@ -131,9 +138,7 @@ public class CodesActivity extends Activity implements OnClickListener
 	}
 
     private void setupList() {
-        Log.d(TAG, "setupList.PRE:" + this.app.getUserId());
         Cursor cursor = this.app.getBarcodeData().getBarcodesByUser(this.app.getUserId());
-        Log.d(TAG, "setupList.POST");
         /*
         Log.d(TAG, "start cursor walk..");
         while (cursor.moveToNext()) {
@@ -149,17 +154,38 @@ public class CodesActivity extends Activity implements OnClickListener
         }
         else {
             startManagingCursor(cursor);
-            Log.d(TAG, "cursor received: " + cursor + ": " + cursor.isClosed());
 
             // Setup Adapter
             ListAdapter adapter = new SimpleCursorAdapter(this, R.layout.barcoderow, cursor, FROM, TO);
+            ListView listView = getListView();
+            listView.setOnItemClickListener(this);
+            listView.setOnItemLongClickListener(this);
             listView.setAdapter(adapter);
-            Log.d(TAG, "cursor received': " + cursor + ": " + cursor.isClosed());
         }
     }
 
-    public void onClick(View view) {
+    @Override
+    public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3) {
         //TODO: handle click for list items
+        TextView textBarcodeId = (TextView)view.findViewById(R.id.textBarcodeId);
+        Log.d(TAG, "CLICK: " + textBarcodeId.getText());
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> arg0, View view, int arg2, long arg3) {
+        //TODO: handle long click for list items
+        TextView textBarcodeId = (TextView)view.findViewById(R.id.textBarcodeId);
+        Log.d(TAG, "LONG CLICK: " + textBarcodeId.getText());
+
+        Intent i = new Intent(this, BarcodeViewActivity.class);
+        i.putExtra("id", textBarcodeId.getText());
+
+        startActivity(i
+          .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+          .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+          .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+
+        return true;
     }
 
 
