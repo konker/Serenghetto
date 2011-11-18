@@ -63,16 +63,16 @@ public class BarcodeData
     }
 
     public boolean insertOrIgnoreBarcode(Barcode b) {
-        //Log.d(TAG, "insertOrIgnore on " + b);
+        Log.d(TAG, "insertOrIgnore on " + b);
         //SQLiteDatabase db = this.dbHelper.getWritableDatabase();
-        String[] args = { b.getId(), b.getUserId(), b.getCode(), b.getName(), b.getLatitude(), b.getLongitude(), b.getAccuracy(), b.getTimestamp() };
+        String[] args = { b.getId(), b.getUserId(), b.getCode(), b.getName(), b.getLatitude(), b.getLongitude(), b.getAccuracy(), b.getTimestamp(), b.getScore() };
         boolean ret = true;
 
         try {
             db.execSQL(dbHelper.getQuery("insert_barcodes"), args);
         }
         catch (SQLiteException ex) {
-            //Log.d(TAG, ex.toString());
+            Log.d(TAG, ex.toString());
             ret = false;
         }
         return ret;

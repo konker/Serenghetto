@@ -1,6 +1,12 @@
 package fi.hiit.serenghetto.dto;
 
+import android.util.Log;
+import org.json.simple.JSONObject;
+
+
 public class Barcode {
+    private static final String TAG = "SERENGHETTO";
+
     private String id;
     private String userId;
     private String code;
@@ -17,6 +23,40 @@ public class Barcode {
 
     public Barcode(String id, String userId, String code, String name) {
         _init(id, userId, code, name, null, null, null, null, null);
+    }
+
+    public Barcode(JSONObject json) {
+        try {
+            JSONObject juser = (JSONObject)json.get("user");
+            JSONObject jlocation = (JSONObject)json.get("location");
+            JSONObject jscore = (JSONObject)json.get("score");
+
+            /*[FIXME: hardcoded field names?]*/
+            id = String.valueOf(json.get("id"));
+            code = (String)json.get("code");
+            name = (String)json.get("name");
+
+            if (juser != null) {
+                userId = String.valueOf(juser.get("id"));
+            }
+            if (jlocation != null) {
+                accuracy = String.valueOf(jlocation.get("accuracy"));
+                timestamp = String.valueOf(jlocation.get("device_timestamp"));
+
+                JSONObject jgeom = (JSONObject)jlocation.get("geom");
+                if (jgeom != null) {
+                    latitude = String.valueOf(jgeom.get("y"));
+                    longitude = String.valueOf(jgeom.get("x"));
+                }
+            }
+            if (jscore != null) {
+                Log.d(TAG, "got score object: " + jscore + ", " + jscore.get("score"));
+                score = String.valueOf(jscore.get("score"));
+            }
+        }
+        catch (Exception ex) {
+            Log.d(TAG, "Barcode JSON contructor failed: " + ex);
+        }
     }
 
     private void _init(String id, String userId, String code, String name, String latitude, String longitude, String accuracy, String timestamp, String score) {
@@ -96,7 +136,7 @@ public class Barcode {
 
     public String toString() {
         /*[FIXME: rest of fields]*/
-        return "Barcode[id:" + id + ", userId:" + userId + ", code:" + code + ", name:" + name + ", latitude:" + latitude + ", longitude:" + longitude + ", accuracy:" + accuracy + ", timestamp:" + timestamp + "]";
+        return "Barcode[id:" + id + ", userId:" + userId + ", code:" + code + ", name:" + name + ", latitude:" + latitude + ", longitude:" + longitude + ", accuracy:" + accuracy + ", timestamp:" + timestamp + ", score: " + score + "]";
     }
 }
 

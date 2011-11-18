@@ -27,7 +27,6 @@
                 android:text="@string/titleBarcodeName"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
-                android:paddingBottom="4dp"
                 android:textStyle="bold"
                 />
             <TextView
@@ -35,13 +34,13 @@
                 android:text=""
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
+                android:paddingBottom="12dp"
                 />
 
             <TextView
                 android:text="@string/titleBarcodeScore"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
-                android:paddingBottom="4dp"
                 android:textStyle="bold"
                 />
             <TextView
@@ -49,13 +48,13 @@
                 android:text=""
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
+                android:paddingBottom="12dp"
                 />
 
             <TextView
                 android:text="@string/titleBarcodeCode"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
-                android:paddingBottom="4dp"
                 android:textStyle="bold"
                 />
             <TextView
@@ -63,13 +62,13 @@
                 android:text=""
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
+                android:paddingBottom="12dp"
                 />
 
             <TextView
                 android:text="@string/titleBarcodeTime"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
-                android:paddingBottom="4dp"
                 android:textStyle="bold"
                 />
             <TextView
@@ -77,21 +76,22 @@
                 android:text=""
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
+                android:paddingBottom="12dp"
                 />
             <TextView
                 android:id="@id/textBarcodeTime"
                 android:text=""
                 android:layout_width="0dip" 
                 android:layout_height="0dip" 
-                android:visibility="invisible"
+                android:visibility="gone"
                 />
 
             <TextView
                 android:text="@string/titleBarcodeLocation"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="4dp"
                 android:textStyle="bold"
+                android:paddingBottom="4dp"
                 />
             <com.google.android.maps.MapView
                 android:id="@id/mapBarcodeLocation"
@@ -99,6 +99,7 @@
                 android:layout_height="125dp"
                 android:clickable="false"
                 android:apiKey="0Hkd6gl7IVP14c1Qyt9ctxeo9Sc0xgIVlQ0QBHg"
+                android:paddingBottom="12dp"
                 />
             <TextView
                 android:id="@id/textBarcodeLocationLatitude"

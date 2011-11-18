@@ -3,6 +3,7 @@ package fi.hiit.serenghetto.activity;
 import android.util.Log;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
 import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -247,8 +248,9 @@ public class BarcodeScanActivity extends MapActivity implements OnClickListener
             else {
                 //TODO: hide the location label and map
                 //TODO: add a manual timestamp?
-                textBarcodeTime.setText(String.format("NOW: %d", 100));
-                textBarcodeTimeReadable.setText(String.format("READABLE NOW: %d", 100));
+                Log.d(TAG, "No location, using curent time");
+                textBarcodeTime.setText(String.format("%d", (new Date()).getTime()));
+                textBarcodeTimeReadable.setText(String.format("READABLE: %d", (new Date()).getTime()));
             }
         }
         else {

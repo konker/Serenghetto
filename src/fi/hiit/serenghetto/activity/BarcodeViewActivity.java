@@ -111,7 +111,7 @@ public class BarcodeViewActivity extends MapActivity implements OnClickListener
     }
 
     private void renderBarcode(String id) {
-        Cursor cursor = this.app.getBarcodeData().getBarcodeById(this.app.getUserId());
+        Cursor cursor = this.app.getBarcodeData().getBarcodeById(id);
         if (cursor == null) {
             /*[TODO: "no barcodes found" message]*/
         }
@@ -132,7 +132,7 @@ public class BarcodeViewActivity extends MapActivity implements OnClickListener
                 textBarcodeLocationLatitude.setText(String.valueOf(latitude));
                 textBarcodeLocationLongitude.setText(String.valueOf(longitude));
                 textBarcodeLocationAccuracy.setText(accuracy);
-                textBarcodeTime.setText(timestamp);
+                textBarcodeTimeReadable.setText(timestamp);
                 textBarcodeScore.setText(String.valueOf(score));
 
                 Log.d(TAG, "LAT: " + latitude + ", LNG: " + longitude);
@@ -146,6 +146,9 @@ public class BarcodeViewActivity extends MapActivity implements OnClickListener
                         Log.d(TAG, "Could not parse number: " + ex.toString());
                     }
                 }
+            }
+            else {
+                Log.d(TAG, "renderBarcode: Barcode cursor empty");
             }
         }
     }

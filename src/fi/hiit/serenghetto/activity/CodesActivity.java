@@ -57,12 +57,11 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
     static final String[] FROM = { "_id", "code", "name", "score" };
     static final int[] TO = { R.id.textBarcodeId, R.id.textBarcodeCode, R.id.textBarcodeName, R.id.textBarcodeScore };
 
-    SerenghettoApplication app;
-    ProgressDialog progress;
-    Cursor cursor;
-    //ListView listView;
-    BarcodesReceiver receiver;
-    IntentFilter filter;
+    private SerenghettoApplication app;
+    private ProgressDialog progress;
+    private Cursor cursor;
+    private BarcodesReceiver receiver;
+    private IntentFilter filter;
 
     /** Called when the activity is first created. */
     @Override
@@ -74,9 +73,6 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
 
         //listView = (ListView)findViewById(R.id.codesList);
         //setupList();
-
-        // populate barcode list
-        this.setupList();
     
         // Create the barcodes updated receiver
         receiver = new BarcodesReceiver();
@@ -90,6 +86,10 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
         super.onPause();
         Log.d(TAG, "CodesActivity.onPause");
 
+        if (cursor != null) {
+            cursor.close();
+        }
+
         // UNregister the receiver
         unregisterReceiver(receiver); 
     }
@@ -98,6 +98,9 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
     protected void onResume() {
         super.onResume();
         Log.d(TAG, "CodesActivity.onResume");
+
+        // populate barcode list
+        this.setupList();
 
         // Register the receiver
         registerReceiver(receiver, filter, null, null);
@@ -138,16 +141,15 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
 	}
 
     private void setupList() {
-        Cursor cursor = this.app.getBarcodeData().getBarcodesByUser(this.app.getUserId());
-        /*
+        cursor = this.app.getBarcodeData().getBarcodesByUser(this.app.getUserId());
         Log.d(TAG, "start cursor walk..");
         while (cursor.moveToNext()) {
             String code = cursor.getString(cursor.getColumnIndex("code"));
             String name = cursor.getString(cursor.getColumnIndex("name"));
-            Log.i(TAG, code + "->" + name);
+            String score = cursor.getString(cursor.getColumnIndex("score"));
+            Log.i(TAG, code + "->" + name + ", " + score);
         }
         Log.d(TAG, "end cursor walk..");
-        */
 
         if (cursor == null) {
             /*[TODO: "no barcodes found" message]*/
@@ -161,6 +163,8 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
             listView.setOnItemClickListener(this);
             listView.setOnItemLongClickListener(this);
             listView.setAdapter(adapter);
+
+            //cursor.close();
         }
     }
 

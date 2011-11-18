@@ -20,7 +20,7 @@
         latitude NUMBER DEFAULT NULL,
         longitude NUMBER DEFAULT NULL,
         accuracy NUMBER DEFAULT NULL,
-        timestamp DATETIME DEFAULT NULL,
+        timestamp TEXT DEFAULT NULL,
         score NUMBER DEFAULT 0
     )
   </query>

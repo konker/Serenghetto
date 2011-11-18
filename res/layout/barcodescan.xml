@@ -19,7 +19,6 @@
                 android:text="@string/titleBarcodeCode"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
-                android:paddingBottom="4dp"
                 android:textStyle="bold"
                 />
             <TextView
@@ -27,12 +26,12 @@
                 android:text=""
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
+                android:paddingBottom="12dp"
                 />
             <TextView
                 android:text="@string/titleBarcodeTime"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
-                android:paddingBottom="4dp"
                 android:textStyle="bold"
                 />
 
@@ -41,13 +40,14 @@
                 android:text=""
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
+                android:paddingBottom="12dp"
                 />
             <TextView
                 android:id="@id/textBarcodeTime"
                 android:text=""
                 android:layout_width="0dip" 
                 android:layout_height="0dip" 
-                android:visibility="invisible"
+                android:visibility="gone"
                 />
 
             <TextView
@@ -69,29 +69,29 @@
                 android:text=""
                 android:layout_width="0dip" 
                 android:layout_height="0dip" 
-                android:visibility="invisible"
+                android:visibility="gone"
                 />
             <TextView
                 android:id="@id/textBarcodeLocationLongitude"
                 android:text=""
                 android:layout_width="0dip" 
                 android:layout_height="0dip" 
-                android:visibility="invisible"
+                android:visibility="gone"
                 />
             <TextView
                 android:id="@id/textBarcodeLocationAccuracy"
                 android:text=""
                 android:layout_width="0dip" 
                 android:layout_height="0dip" 
-                android:visibility="invisible"
+                android:visibility="gone"
                 />
 
             <TextView
                 android:text="@string/titleBarcodeName"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
-                android:paddingBottom="4dp"
                 android:textStyle="bold"
+                android:paddingTop="12dp"
                 />
             <EditText
                 android:id="@id/inputBarcodeName"
@@ -100,6 +100,7 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:maxLength="255"
+                android:paddingBottom="12dp"
                 />
             <TextView
                 android:id="@id/textBarcodeName"
@@ -107,9 +108,10 @@
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
                 android:visibility="gone"
+                android:paddingBottom="12dp"
                 />
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"

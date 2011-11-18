@@ -38,17 +38,18 @@ public class GameActivity extends MapActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        this.app = (SerenghettoApplication) getApplication();
-
         setContentView(R.layout.game);
 
+        this.app = (SerenghettoApplication) getApplication();
+
+        /*
         MapView mapGameLocation = (MapView)findViewById(R.id.mapGameLocation);
         Log.d(TAG, "GameActivity.onCreate: mapGameLocation: " + mapGameLocation);
         if (mapGameLocation != null) {
             mapGameLocation.setBuiltInZoomControls(true);
             mapController = mapGameLocation.getController();
 
-            /*[FIXME: what should default zoom level be?]*/
+            //[FIXME: what should default zoom level be?]
             mapController.setZoom(14);
         }
         else  {
@@ -67,18 +68,21 @@ public class GameActivity extends MapActivity
         receiver = new BestLocationEstimateReceiver();
         filter = new IntentFilter(IntentConstants.NEW_BEST_LOCATION_ESTIMATE_INTENT);
 
+        */
         Log.d(TAG, "GameActivity.onCreate");
     }
     
     private void onLocation(Location location) {
-        if (location != null) {
-            centerLocation(location);
-        }
+        centerLocation(location);
     }
 
     private void centerLocation(Location location) {
-        GeoPoint p = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
-        mapController.animateTo(p);
+        if (location != null) {
+            if (mapController != null) {
+                GeoPoint p = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
+                mapController.animateTo(p);
+            }
+        }
     }
 
     @Override
@@ -88,7 +92,9 @@ public class GameActivity extends MapActivity
         //app.stopLocationUpdates();
 
         // UNregister the receiver
-        unregisterReceiver(receiver); 
+        if (receiver != null) {
+            unregisterReceiver(receiver); 
+        }
     }
     
     @Override
@@ -98,7 +104,9 @@ public class GameActivity extends MapActivity
         //app.startLocationUpdates();
 
         // Register the receiver
-        registerReceiver(receiver, filter, null, null);
+        if (receiver != null && filter != null) {
+            registerReceiver(receiver, filter, null, null);
+        }
     }
 
     @Override

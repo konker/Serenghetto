@@ -81,7 +81,6 @@ public class SerenghettoServer extends RESTServer {
             nameValuePairs.add(new BasicNameValuePair(TOKEN_NAME, token));
         }
 
-
         return _execPost(req, nameValuePairs);
     }
 

@@ -5,35 +5,27 @@
     android:layout_height="wrap_content"
     android:padding="16dp"
     >
-    <LinearLayout
-        android:orientation="horizontal"
+    <!-- hidden id field -->
+    <TextView
+        android:id="@id/textBarcodeId"
+        android:text=""
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        />
+    <TextView
+        android:id="@id/textBarcodeName"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        >
-        <!-- hidden id field -->
-        <TextView
-            android:id="@id/textBarcodeId"
-            android:text=""
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="gone"
-            />
-        <TextView
-            android:id="@id/textBarcodeName"
-            android:layout_height="wrap_content"
-            android:layout_width="fill_parent"
-            android:text=""
-            android:textStyle="bold"
-            />
-        <TextView
-            android:id="@id/textBarcodeScore"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="K"
-            android:layout_weight="1"
-            android:gravity="right"
-            />
-    </LinearLayout>
+        android:text=""
+        android:textStyle="bold"
+        />
+    <TextView
+        android:id="@id/textBarcodeScore"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text=""
+        />
     <TextView
         android:id="@id/textBarcodeCode"
         android:layout_height="wrap_content"
