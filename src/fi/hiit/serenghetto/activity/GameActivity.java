@@ -42,7 +42,6 @@ public class GameActivity extends MapActivity
 
         this.app = (SerenghettoApplication) getApplication();
 
-        /*
         MapView mapGameLocation = (MapView)findViewById(R.id.mapGameLocation);
         Log.d(TAG, "GameActivity.onCreate: mapGameLocation: " + mapGameLocation);
         if (mapGameLocation != null) {
@@ -56,9 +55,6 @@ public class GameActivity extends MapActivity
             Log.d(TAG, "GameActivity.onCreate: NO MAP VIEW: " + mapGameLocation);
         }
 
-        // start listening for location
-        //app.startLocationUpdates();
-
         // center map to last know location
         //[FIXME]
         //Location lastLocation = app.getLastKnownLocation();
@@ -68,7 +64,6 @@ public class GameActivity extends MapActivity
         receiver = new BestLocationEstimateReceiver();
         filter = new IntentFilter(IntentConstants.NEW_BEST_LOCATION_ESTIMATE_INTENT);
 
-        */
         Log.d(TAG, "GameActivity.onCreate");
     }
     
@@ -89,7 +84,6 @@ public class GameActivity extends MapActivity
     protected void onPause() {
         super.onPause();
         Log.d(TAG, "GameActivity.onPause");
-        //app.stopLocationUpdates();
 
         // UNregister the receiver
         if (receiver != null) {
@@ -101,7 +95,6 @@ public class GameActivity extends MapActivity
     protected void onResume() {
         super.onRestart();
         Log.d(TAG, "GameActivity.onResume");
-        //app.startLocationUpdates();
 
         // Register the receiver
         if (receiver != null && filter != null) {
