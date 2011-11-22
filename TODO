@@ -1,0 +1,47 @@
+TODO
+------------------------------------------------------------------------------
+
+- Exceptions
+    - proper runtime exceptions in case e.g. db cannot be accessed
+    - catch all null pointer exceptions etc and gracefully close?
+    
+- Game
+    - center position automatically according to location
+        - can we set zoom level according to the accuracy?
+        - should be able to turn this off/on?
+        - could have explicit button for this (target button)?
+        - should we remember last position/zoom for next time that app is opened?
+            - where to store?
+                - db?
+                - prefs?
+                - fs?
+
+    - draw blobs on map overlay
+        - can we get the GPS coordinates of current viewport?
+            - query server for all barcodes within the given viewport specifications
+
+    - have map move to a point given by paramter (Codes -> Game)
+
+- Codes
+    - nicer rendering of rows
+    - indicator if location is present?
+    - handle the case of no name?
+    - sort orders?
+
+- BarcodeView/Scan
+    - only have one layout for barcode scan/view?
+    - if location available draw some kind of marker on the map?
+    - if location available can we set zoom level according to the accuracy?
+    
+- Service
+    - Is service stopping when app is stopping?
+        - even Activity.onPause -> pause service?
+
+- Application
+    - work out how to stop BarcodeScanActivity from changing orientation
+    - work out how to stop some screens from being in the "history stack"
+        - e.g. Codes -> BarcodeView -> Codes
+            - don't want <- button to go back to BarcodeView
+        - e.g. MainActivity -> Game
+            - don't want <- button to go back to MainActivity
+
