@@ -1,4 +1,4 @@
-package fi.hiit.serenghetto.net;
+package fi.hiit.serenghetto.remote;
 
 import android.os.AsyncTask;
 import org.json.simple.JSONValue;

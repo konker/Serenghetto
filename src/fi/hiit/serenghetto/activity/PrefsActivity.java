@@ -23,16 +23,14 @@ import org.json.simple.JSONObject;
 
 import fi.hiit.serenghetto.R;
 import fi.hiit.serenghetto.SerenghettoApplication;
-import fi.hiit.serenghetto.net.ServerTask;
-import fi.hiit.serenghetto.net.Response;
+import fi.hiit.serenghetto.remote.ServerTask;
+import fi.hiit.serenghetto.remote.Response;
 
 
 public class PrefsActivity extends PreferenceActivity implements OnClickListener
 {
-    public static final String TAG = "SERENGHETTO";
-
-    SerenghettoApplication app;
-    ProgressDialog progress;
+    private SerenghettoApplication app;
+    private ProgressDialog progress;
 
     /** Called when the activity is first created. */
     @Override
@@ -47,43 +45,43 @@ public class PrefsActivity extends PreferenceActivity implements OnClickListener
         Button buttonUpdate = (Button)findViewById(R.id.buttonUpdate);
         buttonUpdate.setOnClickListener(this);
 
-        Log.d(TAG, "PrefsActivity: onCreate");
+        Log.d(SerenghettoApplication.TAG, "PrefsActivity: onCreate");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "PrefsActivity.onPause");
+        Log.d(SerenghettoApplication.TAG, "PrefsActivity.onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "PrefsActivity.onResume");
+        Log.d(SerenghettoApplication.TAG, "PrefsActivity.onResume");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "PrefsActivity.onStart");
+        Log.d(SerenghettoApplication.TAG, "PrefsActivity.onStart");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(TAG, "PrefsActivity.onRestart");
+        Log.d(SerenghettoApplication.TAG, "PrefsActivity.onRestart");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "PrefsActivity.onStop");
+        Log.d(SerenghettoApplication.TAG, "PrefsActivity.onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "PrefsActivity.onDestroy");
+        Log.d(SerenghettoApplication.TAG, "PrefsActivity.onDestroy");
     }
     
     @Override
@@ -123,7 +121,7 @@ public class PrefsActivity extends PreferenceActivity implements OnClickListener
                 PrefsActivity.this.app.setUserId(String.valueOf(user.get("id")));
             }
             else {
-                Log.d(TAG, "http code: " + response.getHttpCode());
+                Log.d(SerenghettoApplication.TAG, "http code: " + response.getHttpCode());
             }
             /*[FIXME: handle != 201 error?]*/
             Toast.makeText(PrefsActivity.this, response.getMessage(), Toast.LENGTH_LONG).show();

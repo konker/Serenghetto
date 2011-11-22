@@ -3,10 +3,10 @@ package fi.hiit.serenghetto.dto;
 import android.util.Log;
 import org.json.simple.JSONObject;
 
+import fi.hiit.serenghetto.SerenghettoApplication;
+
 
 public class Barcode {
-    private static final String TAG = "SERENGHETTO";
-
     private String id;
     private String userId;
     private String code;
@@ -50,12 +50,11 @@ public class Barcode {
                 }
             }
             if (jscore != null) {
-                Log.d(TAG, "got score object: " + jscore + ", " + jscore.get("score"));
                 score = String.valueOf(jscore.get("score"));
             }
         }
         catch (Exception ex) {
-            Log.d(TAG, "Barcode JSON contructor failed: " + ex);
+            Log.d(SerenghettoApplication.TAG, "Barcode JSON contructor failed: " + ex);
         }
     }
 

@@ -21,8 +21,6 @@ import fi.hiit.serenghetto.constants.IntentConstants;
 import fi.hiit.serenghetto.dto.Barcode;
 
 public class SerenghettoService extends Service {
-    private static final String TAG = "SERENGHETTO";
-
     static final int DELAY_MS = 30000;
     private boolean runFlag = false;
     private Updater updater;
@@ -38,11 +36,11 @@ public class SerenghettoService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        this.app = (SerenghettoApplication) getApplication();
+        this.app = (SerenghettoApplication)getApplication();
         this.updater = new Updater();
         this.locationHelper = new LocationHelper();
 
-        Log.d(TAG, "SerenghettoService.onCreate");
+        Log.d(SerenghettoApplication.TAG, "SerenghettoService.onCreate");
     }
 
     @Override
@@ -56,7 +54,7 @@ public class SerenghettoService extends Service {
         //[FIXME: START LISTENING FOR LOCATION?]
         this.locationHelper.startLocationUpdates();
 
-        Log.d(TAG, "SerenghettoService.onStart");
+        Log.d(SerenghettoApplication.TAG, "SerenghettoService.onStart");
         return START_STICKY;
     }
 
@@ -72,7 +70,7 @@ public class SerenghettoService extends Service {
         //[FIXME: STOP LISTENING FOR LOCATION?]
         this.locationHelper.stopLocationUpdates();
 
-        Log.d(TAG, "SerenghettoService.onDestroy");
+        Log.d(SerenghettoApplication.TAG, "SerenghettoService.onDestroy");
     }
 
 
@@ -122,9 +120,9 @@ public class SerenghettoService extends Service {
 
         // Methods required by LocationListener
         public void onLocationChanged(Location location) {
-            //Log.d(TAG, "LOC: " + location.toString());
+            //Log.d(SerenghettoApplication.TAG, "LOC: " + location.toString());
             if (isBetterLocation(location)) {
-                //Log.d(TAG, "LOC better: " + location.toString());
+                //Log.d(SerenghettoApplication.TAG, "LOC better: " + location.toString());
                 setBestLocationEstimate(location);
             }
         }
@@ -200,10 +198,10 @@ public class SerenghettoService extends Service {
             SerenghettoApplication app = (SerenghettoApplication)service.getApplication();
 
             while (service.runFlag) {
-                Log.d(TAG, "Updater running");
+                Log.d(SerenghettoApplication.TAG, "Updater running");
                 try {
-                    int newCodes = app.fetchBarcodes();
-                    Log.d(TAG, newCodes + " new codes received");
+                    int newCodes = app.getBarcodeData().synchBarcodesWithServer(app.getServer());
+                    Log.d(SerenghettoApplication.TAG, newCodes + " new codes received");
                     if (newCodes > 0) {
                         SerenghettoService.this.sendNewBarcodesBroadcast(newCodes);
                     }

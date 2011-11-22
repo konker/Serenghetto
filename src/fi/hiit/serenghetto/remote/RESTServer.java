@@ -1,4 +1,4 @@
-package fi.hiit.serenghetto.net;
+package fi.hiit.serenghetto.remote;
 
 import android.util.Log;
 import android.net.http.AndroidHttpClient;
@@ -24,10 +24,10 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.util.Scanner;
 
+import fi.hiit.serenghetto.SerenghettoApplication;
+
 
 public class RESTServer {
-    private static final String TAG = "SERENGHETTO";
-
     private String userAgent;
     private String serverURL;
     private DefaultHttpClient httpClient;
@@ -67,13 +67,13 @@ public class RESTServer {
         else {
             uri = uri + "?" + params;
         }
-        Log.d(TAG, uri);
+        Log.d(SerenghettoApplication.TAG, uri);
 
         try {
             req.setURI(new URI(uri));
         }
         catch (URISyntaxException ex) {
-            Log.d(TAG, ex.toString());
+            Log.d(SerenghettoApplication.TAG, ex.toString());
             return new Response(500, "Error", null);
         }
 
@@ -83,15 +83,15 @@ public class RESTServer {
         return _execPost(req, new ArrayList<BasicNameValuePair>());
     }
     protected Response _execPost(HttpPost req, List<BasicNameValuePair> nameValuePairs) {
-        Log.d(TAG, req.getURI().toString());
+        Log.d(SerenghettoApplication.TAG, req.getURI().toString());
         try {
             for (BasicNameValuePair nv : nameValuePairs) {
-                Log.d(TAG, nv.getName() + "->" + nv.getValue());
+                Log.d(SerenghettoApplication.TAG, nv.getName() + "->" + nv.getValue());
             }
             req.setEntity(new UrlEncodedFormEntity(nameValuePairs));
         }
         catch (UnsupportedEncodingException ex) {
-            Log.d(TAG, ex.toString());
+            Log.d(SerenghettoApplication.TAG, ex.toString());
             return new Response(500, "Error", null);
         }
 
@@ -101,23 +101,23 @@ public class RESTServer {
     protected Response _exec(HttpRequestBase req) {
         req.setHeader("Accept", "application/json");
         try {
-            //Log.d(TAG, req.toString());
+            //Log.d(SerenghettoApplication.TAG, req.toString());
             httpClient = new DefaultHttpClient();
             HttpResponse res = httpClient.execute(req);
             
             BufferedReader reader = new BufferedReader(new InputStreamReader(res.getEntity().getContent()));
             /*
             String json = new Scanner(reader).useDelimiter("\\A").next();
-            Log.d(TAG, json);
+            Log.d(SerenghettoApplication.TAG, json);
             Response response = new Response(res.getStatusLine().getStatusCode(), json);
             */
             Response response = new Response(res.getStatusLine().getStatusCode(), reader);
             reader.close();
-            //Log.d(TAG, response.toString());
+            //Log.d(SerenghettoApplication.TAG, response.toString());
             return response;
         }
         catch (IOException ex) {
-            Log.d(TAG, ex.toString());
+            Log.d(SerenghettoApplication.TAG, ex.toString());
             return new Response(500, "Error", null);
         }
     }

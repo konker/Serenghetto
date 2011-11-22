@@ -1,4 +1,4 @@
-package fi.hiit.serenghetto.net;
+package fi.hiit.serenghetto.remote;
 
 import android.util.Log;
 import android.net.http.AndroidHttpClient;
@@ -24,9 +24,10 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.util.Scanner;
 
+import fi.hiit.serenghetto.SerenghettoApplication;
+
 
 public class SerenghettoServer extends RESTServer {
-    private static final String TAG = "SERENGHETTO";
     private static final String TOKEN_NAME = "token";
 
     //[FIXME: better ua]
@@ -40,14 +41,14 @@ public class SerenghettoServer extends RESTServer {
         super(CLIENT_USER_AGENT, url);
         this.token = token;
         this.userId = userId;
-        Log.d(TAG, "SerenghettoServer.construct: " + url + "," + token + "," + userId);
+        Log.d(SerenghettoApplication.TAG, "SerenghettoServer.construct: " + url + "," + token + "," + userId);
     }
 
     public String getToken() {
         return token;
     }
     public void setToken(String token) {
-        Log.d(TAG, "token: " + token);
+        Log.d(SerenghettoApplication.TAG, "token: " + token);
         this.token = token;
     }
 
@@ -55,7 +56,7 @@ public class SerenghettoServer extends RESTServer {
         return userId;
     }
     public void setUserId(String userId) {
-        Log.d(TAG, "userId: " + userId);
+        Log.d(SerenghettoApplication.TAG, "userId: " + userId);
         this.userId = userId;
     }
 
@@ -74,7 +75,7 @@ public class SerenghettoServer extends RESTServer {
         nameValuePairs.add(new BasicNameValuePair("location[longitude]", longitude));
         nameValuePairs.add(new BasicNameValuePair("location[accuracy]", accuracy));
         nameValuePairs.add(new BasicNameValuePair("location[timestamp]", timestamp));
-        nameValuePairs.add(new BasicNameValuePair("token", token));
+        nameValuePairs.add(new BasicNameValuePair(TOKEN_NAME, token));
 
         // add token
         if (token != null) {

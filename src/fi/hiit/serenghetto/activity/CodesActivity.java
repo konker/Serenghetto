@@ -45,15 +45,10 @@ import com.google.zxing.integration.android.IntentResult;
 import fi.hiit.serenghetto.R;
 import fi.hiit.serenghetto.SerenghettoApplication;
 import fi.hiit.serenghetto.constants.IntentConstants;
-import fi.hiit.serenghetto.net.ServerTask;
-import fi.hiit.serenghetto.net.Response;
-import fi.hiit.serenghetto.util.PromptDialog;
 
 
 public class CodesActivity extends ListActivity implements OnItemClickListener, OnItemLongClickListener
 {
-    private static final String TAG = "SERENGHETTO";
-
     static final String[] FROM = { "_id", "code", "name", "score" };
     static final int[] TO = { R.id.textBarcodeId, R.id.textBarcodeCode, R.id.textBarcodeName, R.id.textBarcodeScore };
 
@@ -78,13 +73,13 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
         receiver = new BarcodesReceiver();
         filter = new IntentFilter(IntentConstants.NEW_BARCODES_INTENT);
 
-        Log.d(TAG, "CodesActivity.onCreate");
+        Log.d(SerenghettoApplication.TAG, "CodesActivity.onCreate");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "CodesActivity.onPause");
+        Log.d(SerenghettoApplication.TAG, "CodesActivity.onPause");
 
         if (cursor != null) {
             cursor.close();
@@ -97,7 +92,7 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "CodesActivity.onResume");
+        Log.d(SerenghettoApplication.TAG, "CodesActivity.onResume");
 
         // populate barcode list
         this.setupList();
@@ -109,25 +104,35 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "CodesActivity.onStart");
+        Log.d(SerenghettoApplication.TAG, "CodesActivity.onStart");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(TAG, "CodesActivity.onRestart");
+        Log.d(SerenghettoApplication.TAG, "CodesActivity.onRestart");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "CodesActivity.onStop");
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        Log.d(SerenghettoApplication.TAG, "CodesActivity.onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "CodesActivity.onDestroy");
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        Log.d(SerenghettoApplication.TAG, "CodesActivity.onDestroy");
     }
     
     @Override
@@ -142,15 +147,16 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
 
     private void setupList() {
         cursor = this.app.getBarcodeData().getBarcodesByUser(this.app.getUserId());
-        Log.d(TAG, "start cursor walk..");
+        /*
+        Log.d(SerenghettoApplication.TAG, "start cursor walk..");
         while (cursor.moveToNext()) {
             String code = cursor.getString(cursor.getColumnIndex("code"));
             String name = cursor.getString(cursor.getColumnIndex("name"));
             String score = cursor.getString(cursor.getColumnIndex("score"));
-            Log.i(TAG, code + "->" + name + ", " + score);
+            Log.i(SerenghettoApplication.TAG, code + "->" + name + ", " + score);
         }
-        Log.d(TAG, "end cursor walk..");
-
+        Log.d(SerenghettoApplication.TAG, "end cursor walk..");
+        */
         if (cursor == null) {
             /*[TODO: "no barcodes found" message]*/
         }
@@ -172,22 +178,24 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
     public void onItemClick(AdapterView<?> arg0, View view, int arg2, long arg3) {
         //TODO: handle click for list items
         TextView textBarcodeId = (TextView)view.findViewById(R.id.textBarcodeId);
-        Log.d(TAG, "CLICK: " + textBarcodeId.getText());
+        Log.d(SerenghettoApplication.TAG, "CLICK: " + textBarcodeId.getText());
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> arg0, View view, int arg2, long arg3) {
         //TODO: handle long click for list items
         TextView textBarcodeId = (TextView)view.findViewById(R.id.textBarcodeId);
-        Log.d(TAG, "LONG CLICK: " + textBarcodeId.getText());
+        Log.d(SerenghettoApplication.TAG, "LONG CLICK: " + textBarcodeId.getText());
 
         Intent i = new Intent(this, BarcodeViewActivity.class);
         i.putExtra("id", textBarcodeId.getText());
 
-        startActivity(i
+        startActivity(i);
+          /*
           .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
           .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
           .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+          */
 
         return true;
     }
@@ -199,7 +207,7 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
         @Override
         public void onReceive(Context context, Intent intent) {
             CodesActivity.this.setupList();
-            Log.d(TAG, "BarcodesReceiver: onReceived");
+            Log.d(SerenghettoApplication.TAG, "BarcodesReceiver: onReceived");
         }
     }
 }

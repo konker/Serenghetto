@@ -10,9 +10,7 @@ import fi.hiit.serenghetto.SerenghettoApplication;
 
 public class MainActivity extends Activity
 {
-    private static final String TAG = "SERENGHETTO";
-
-    SerenghettoApplication app;
+    private SerenghettoApplication app;
 
     /** Called when the activity is first created. */
     @Override
@@ -23,51 +21,55 @@ public class MainActivity extends Activity
 
         /*[FIXME: new activity needs to replace MainActivity in the stack]*/
         if (this.app.hasToken()) {
-            Log.d(TAG, "has token");
-            startActivity(new Intent(this, GameActivity.class)
+            Log.d(SerenghettoApplication.TAG, "has token");
+            startActivity(new Intent(this, GameActivity.class));
+            /*
               .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+              */
         }
         else {
-            Log.d(TAG, "no has token");
-            startActivity(new Intent(this, LoggedOutActivity.class)
+            Log.d(SerenghettoApplication.TAG, "no has token");
+            startActivity(new Intent(this, LoggedOutActivity.class));
+            /*
               .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+              */
         }
-        Log.d(TAG, "MainActivity.onCreate");
+        Log.d(SerenghettoApplication.TAG, "MainActivity.onCreate");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "MainActivity.onPause");
+        Log.d(SerenghettoApplication.TAG, "MainActivity.onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "MainActivity.onResume");
+        Log.d(SerenghettoApplication.TAG, "MainActivity.onResume");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "MainActivity.onStart");
+        Log.d(SerenghettoApplication.TAG, "MainActivity.onStart");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(TAG, "MainActivity.onRestart");
+        Log.d(SerenghettoApplication.TAG, "MainActivity.onRestart");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "MainActivity.onStop");
+        Log.d(SerenghettoApplication.TAG, "MainActivity.onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "MainActivity.onDestroy");
+        Log.d(SerenghettoApplication.TAG, "MainActivity.onDestroy");
     }
 }

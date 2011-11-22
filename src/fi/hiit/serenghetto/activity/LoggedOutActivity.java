@@ -17,9 +17,7 @@ import fi.hiit.serenghetto.SerenghettoApplication;
 
 public class LoggedOutActivity extends Activity implements OnClickListener
 {
-    private static final String TAG = "SERENGHETTO";
-
-    SerenghettoApplication app;
+    private SerenghettoApplication app;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,43 +29,43 @@ public class LoggedOutActivity extends Activity implements OnClickListener
         Button buttonPrefs = (Button)findViewById(R.id.buttonPrefs);
         buttonPrefs.setOnClickListener(this);
 
-        Log.d(TAG, "LoggedOutActivity.onCreate");
+        Log.d(SerenghettoApplication.TAG, "LoggedOutActivity.onCreate");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "LoggedOutActivity.onPause");
+        Log.d(SerenghettoApplication.TAG, "LoggedOutActivity.onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "LoggedOutActivity.onResume");
+        Log.d(SerenghettoApplication.TAG, "LoggedOutActivity.onResume");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "LoggedOutActivity.onStart");
+        Log.d(SerenghettoApplication.TAG, "LoggedOutActivity.onStart");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(TAG, "LoggedOutActivity.onRestart");
+        Log.d(SerenghettoApplication.TAG, "LoggedOutActivity.onRestart");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "LoggedOutActivity.onStop");
+        Log.d(SerenghettoApplication.TAG, "LoggedOutActivity.onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "LoggedOutActivity.onDestroy");
+        Log.d(SerenghettoApplication.TAG, "LoggedOutActivity.onDestroy");
     }
     
     @Override
@@ -84,9 +82,11 @@ public class LoggedOutActivity extends Activity implements OnClickListener
 
     public void onClick(View view) {
         if (view == findViewById(R.id.buttonPrefs)) {
-            startActivity(new Intent(this, PrefsActivity.class)
+            startActivity(new Intent(this, PrefsActivity.class));
+            /*
               .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
               .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+              */
         }
     }
 }

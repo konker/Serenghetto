@@ -27,8 +27,10 @@
   <query name="insert_barcodes">
     INSERT INTO barcodes (_id, user_id, code, name, latitude, longitude, accuracy, timestamp, score) VALUES (?,?,?,?,?,?,?,?,?)
   </query>
-  <query name="insert_barcodes_basic">
-    INSERT INTO barcodes (_id, user_id, code, name) VALUES (?,?,?,?)
+  <query name="update_barcode">
+    UPDATE barcodes
+    SET user_id = ?, code = ?, name = ?, latitude = ?, longitude = ?, accuracy = ?, timestamp = ?, score = ?
+    WHERE _id = ?
   </query>
   <query name="drop_barcodes">
     DROP TABLE barcodes

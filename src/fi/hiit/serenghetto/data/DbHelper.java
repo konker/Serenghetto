@@ -5,13 +5,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import fi.hiit.serenghetto.SerenghettoApplication;
+
 
 // DbHelper implementations
 class DbHelper extends SQLiteOpenHelper
 {
-    private static final String TAG = "SERENGHETTO";
-
-    static final int DB_VERSION = 13;
+    static final int DB_VERSION = 14;
     static final String DB_NAME = "barcodes.db";
 
     private DbXmlParser dbQueries;
@@ -26,7 +26,7 @@ class DbHelper extends SQLiteOpenHelper
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.i(TAG, "Creating database: " + DB_NAME);
+        Log.i(SerenghettoApplication.TAG, "Creating database: " + DB_NAME);
         db.execSQL(dbQueries.getQuery("create_barcodes"));
     }
 

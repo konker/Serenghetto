@@ -12,12 +12,12 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import fi.hiit.serenghetto.R;
+import fi.hiit.serenghetto.SerenghettoApplication;
+
 
 /* XML parser */
 class DbXmlParser extends DefaultHandler
 {
-    private static final String TAG = "SERENGHETTO";
-
     static final String NAME_QUERY = "query";
     static final String NAME_NAME = "name";
 
@@ -36,7 +36,6 @@ class DbXmlParser extends DefaultHandler
 
         xr.setContentHandler(this);
         xr.parse(new InputSource(context.getResources().openRawResource(R.raw.db)));
-        //Log.d(TAG, "p:parsed: " + rep);
     }
 
     public String getQuery(String name) {
@@ -44,22 +43,18 @@ class DbXmlParser extends DefaultHandler
     }
 
     public void setQuery(String name, String sql) {
-        //Log.d(TAG, "setQuery: " + name + ", " + sql);
         rep.put(name, sql);
     }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-        //Log.d(TAG, "p:startElement: " + (localName.equals(NAME_QUERY)));
         if (localName.equals(NAME_QUERY)) {
-            //Log.d(TAG, "p:attr:" + attributes.getValue(NAME_NAME));
             curName = attributes.getValue(NAME_NAME);
         }
     }
 
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        //Log.d(TAG, "p:endElement: " + curName);
         if (localName.equalsIgnoreCase(NAME_QUERY)) {
             if (curName != null && curValue != null) {
                 setQuery(curName, curValue);
@@ -71,7 +66,6 @@ class DbXmlParser extends DefaultHandler
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-        //Log.d(TAG, "p:characters: " + length + ": " + curName);
         if (curName != null) {
             if (curValue == null) {
                 curValue = "";

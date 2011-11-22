@@ -1,7 +1,6 @@
 package fi.hiit.serenghetto;
 
 import android.util.Log;
-import java.util.Iterator;
 import android.app.Application;
 import android.content.Intent;
 import android.view.Menu;
@@ -10,11 +9,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
 import android.location.Location;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONArray;
 
-import fi.hiit.serenghetto.net.SerenghettoServer;
-import fi.hiit.serenghetto.net.Response;
+import fi.hiit.serenghetto.remote.SerenghettoServer;
+import fi.hiit.serenghetto.remote.Response;
 import fi.hiit.serenghetto.dto.Barcode;
 import fi.hiit.serenghetto.data.BarcodeData;
 import fi.hiit.serenghetto.service.SerenghettoService;
@@ -22,7 +19,7 @@ import fi.hiit.serenghetto.constants.PrefKeyConstants;
 
 public class SerenghettoApplication extends Application implements OnSharedPreferenceChangeListener
 {
-    private static final String TAG = "SERENGHETTO";
+    public static final String TAG = "SERENGHETTO";
 
     private static final String SERVER_BASE_URL = "http://serenghetto.herokuapp.com";
 
@@ -53,7 +50,7 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
         catch (Exception ex) {
             /*[FIXME]*/
             /* now what? */
-            Log.d(TAG, "Coudld not instantiate barcodeData: " + ex.toString());
+            Log.d(SerenghettoApplication.TAG, "Could not instantiate barcodeData: " + ex.toString());
         }
 
         this.bestLocationEstimate = null;
@@ -61,21 +58,18 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
         //[FIXME: START THE SERVICE?]
         startService(new Intent(this, SerenghettoService.class));
 
-        Log.d(TAG, "App.onCreate");
+        Log.d(SerenghettoApplication.TAG, "App.onCreate");
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        /*
-        locationManager.removeUpdates(this);
-        */
         barcodeData.close();
 
         //[FIXME: STOP THE SERVICE?]
         stopService(new Intent(this, SerenghettoService.class));
 
-        Log.i(TAG, "App.onTerminate");
+        Log.i(SerenghettoApplication.TAG, "App.onTerminate");
     }
 
     public SharedPreferences getPrefs() {
@@ -85,9 +79,6 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
         return editor;
     }
 
-    public boolean hasToken() {
-        return (server.getToken() != null);
-    }
     public String getUserId() {
         return server.getUserId();
     }
@@ -97,6 +88,9 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
         server.setUserId(userId);
     }
 
+    public boolean hasToken() {
+        return (server.getToken() != null);
+    }
     public String getToken() {
         return server.getToken();
     }
@@ -125,35 +119,8 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
         return bestLocationEstimate;
     }
     public void setBestLocationEstimate(Location bestLocationEstimate) {
-        Log.d(TAG, "SerenghettoApplication.setBestLocationEstimate");
+        Log.d(SerenghettoApplication.TAG, "SerenghettoApplication.setBestLocationEstimate");
         this.bestLocationEstimate = bestLocationEstimate;
-    }
-
-    /*[FIXME: should this be moved into BarcodeData? Somewhere else?]*/
-    public int fetchBarcodes() {
-        int count = 0;
-        Response response = getServer().getBarcodes();
-
-        //Log.d(TAG, "fetchBarcodes: " + response);
-        if (response.getHttpCode() != 500) {
-            JSONObject body = (JSONObject)response.getBody();
-            if (body != null) {
-                JSONArray codes = (JSONArray)response.getBody().get("entries");
-                for (Iterator iter = codes.iterator(); iter.hasNext();) {
-                    JSONObject json = (JSONObject)iter.next();
-                    Barcode barcode = new Barcode(json);
-
-                    boolean inserted = barcodeData.insertOrIgnoreBarcode(barcode);
-                    if (inserted) {
-                        count = count + 1;
-                    }
-                }
-            }
-        }
-        else {
-            Log.i(TAG, "No codes returned");
-        }
-        return count;
     }
 
     /* methods required by OnSharedPreferenceChangeListener */

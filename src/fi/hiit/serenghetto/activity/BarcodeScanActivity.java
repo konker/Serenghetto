@@ -45,15 +45,12 @@ import com.google.android.maps.MapController;
 import fi.hiit.serenghetto.R;
 import fi.hiit.serenghetto.SerenghettoApplication;
 import fi.hiit.serenghetto.constants.IntentConstants;
-import fi.hiit.serenghetto.net.ServerTask;
-import fi.hiit.serenghetto.net.Response;
-import fi.hiit.serenghetto.util.PromptDialog;
+import fi.hiit.serenghetto.remote.ServerTask;
+import fi.hiit.serenghetto.remote.Response;
 
 
 public class BarcodeScanActivity extends MapActivity implements OnClickListener
 {
-    private static final String TAG = "SERENGHETTO";
-
     private SerenghettoApplication app;
     private ProgressDialog progress;
 
@@ -114,7 +111,7 @@ public class BarcodeScanActivity extends MapActivity implements OnClickListener
 
         AlertDialog ad = IntentIntegrator.initiateScan(this);
 
-        Log.d(TAG, "BarcodeScanActivity.onCreate");
+        Log.d(SerenghettoApplication.TAG, "BarcodeScanActivity.onCreate");
     }
 
     private void clearFields() {
@@ -139,37 +136,37 @@ public class BarcodeScanActivity extends MapActivity implements OnClickListener
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "BarcodeScanActivity.onPause");
+        Log.d(SerenghettoApplication.TAG, "BarcodeScanActivity.onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "BarcodeScanActivity.onResume");
+        Log.d(SerenghettoApplication.TAG, "BarcodeScanActivity.onResume");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "BarcodeScanActivity.onStart");
+        Log.d(SerenghettoApplication.TAG, "BarcodeScanActivity.onStart");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(TAG, "BarcodeScanActivity.onRestart");
+        Log.d(SerenghettoApplication.TAG, "BarcodeScanActivity.onRestart");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "BarcodeScanActivity.onStop");
+        Log.d(SerenghettoApplication.TAG, "BarcodeScanActivity.onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "BarcodeScanActivity.onDestroy");
+        Log.d(SerenghettoApplication.TAG, "BarcodeScanActivity.onDestroy");
     }
 
     @Override
@@ -189,7 +186,7 @@ public class BarcodeScanActivity extends MapActivity implements OnClickListener
 
     public void onClick(View view) {
         if (view == findViewById(R.id.buttonSaveBarcode)) {
-            Log.d(TAG, "BarcodeScanActivity.Save");
+            Log.d(SerenghettoApplication.TAG, "BarcodeScanActivity.Save");
             progress = ProgressDialog.show(this, "", "Sending...", true);
 
             String code = textBarcodeCode.getText().toString();
@@ -208,17 +205,21 @@ public class BarcodeScanActivity extends MapActivity implements OnClickListener
             buttonCancelBarcode.setVisibility(View.GONE);
         }
         else if (view == findViewById(R.id.buttonCancelBarcode)) {
-            Log.d(TAG, "BarcodeScanActivity.Cancel");
-            this.startActivity(new Intent(this, GameActivity.class)
+            Log.d(SerenghettoApplication.TAG, "BarcodeScanActivity.Cancel");
+            this.startActivity(new Intent(this, GameActivity.class));
+            /*
               .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
               .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
               .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+              */
         }
         else if (view == findViewById(R.id.buttonOKBarcode)) {
-            this.startActivity(new Intent(this, CodesActivity.class)
+            this.startActivity(new Intent(this, CodesActivity.class));
+            /*
               .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
               .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
               .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+              */
         }
     }
 
@@ -248,7 +249,7 @@ public class BarcodeScanActivity extends MapActivity implements OnClickListener
             else {
                 //TODO: hide the location label and map
                 //TODO: add a manual timestamp?
-                Log.d(TAG, "No location, using curent time");
+                Log.d(SerenghettoApplication.TAG, "No location, using curent time");
                 textBarcodeTime.setText(String.format("%d", (new Date()).getTime()));
                 textBarcodeTimeReadable.setText(String.format("READABLE: %d", (new Date()).getTime()));
             }

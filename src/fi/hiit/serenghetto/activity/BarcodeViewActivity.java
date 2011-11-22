@@ -44,15 +44,10 @@ import com.google.android.maps.MapController;
 import fi.hiit.serenghetto.R;
 import fi.hiit.serenghetto.SerenghettoApplication;
 import fi.hiit.serenghetto.constants.IntentConstants;
-import fi.hiit.serenghetto.net.ServerTask;
-import fi.hiit.serenghetto.net.Response;
-import fi.hiit.serenghetto.util.PromptDialog;
 
 
 public class BarcodeViewActivity extends MapActivity implements OnClickListener
 {
-    private static final String TAG = "SERENGHETTO";
-
     private SerenghettoApplication app;
     private ProgressDialog progress;
 
@@ -104,10 +99,10 @@ public class BarcodeViewActivity extends MapActivity implements OnClickListener
         Intent i = getIntent();
         String id = i.getStringExtra("id");
 
-        Log.d(TAG, "rendering id: " + id);
+        Log.d(SerenghettoApplication.TAG, "rendering id: " + id);
         renderBarcode(id);
 
-        Log.d(TAG, "BarcodeViewActivity.onCreate");
+        Log.d(SerenghettoApplication.TAG, "BarcodeViewActivity.onCreate");
     }
 
     private void renderBarcode(String id) {
@@ -135,7 +130,7 @@ public class BarcodeViewActivity extends MapActivity implements OnClickListener
                 textBarcodeTimeReadable.setText(timestamp);
                 textBarcodeScore.setText(String.valueOf(score));
 
-                Log.d(TAG, "LAT: " + latitude + ", LNG: " + longitude);
+                Log.d(SerenghettoApplication.TAG, "LAT: " + latitude + ", LNG: " + longitude);
                 if (latitude != 0 && longitude != 0) {
                     try {
                         GeoPoint p = new GeoPoint((int)(latitude*1E6), (int)(longitude*1E6));
@@ -143,12 +138,12 @@ public class BarcodeViewActivity extends MapActivity implements OnClickListener
                         mapBarcodeLocation.setVisibility(View.VISIBLE);
                     }
                     catch (NumberFormatException ex) {
-                        Log.d(TAG, "Could not parse number: " + ex.toString());
+                        Log.d(SerenghettoApplication.TAG, "Could not parse number: " + ex.toString());
                     }
                 }
             }
             else {
-                Log.d(TAG, "renderBarcode: Barcode cursor empty");
+                Log.d(SerenghettoApplication.TAG, "renderBarcode: Barcode cursor empty");
             }
         }
     }
@@ -168,37 +163,37 @@ public class BarcodeViewActivity extends MapActivity implements OnClickListener
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d(TAG, "BarcodeViewActivity.onPause");
+        Log.d(SerenghettoApplication.TAG, "BarcodeViewActivity.onPause");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG, "BarcodeViewActivity.onResume");
+        Log.d(SerenghettoApplication.TAG, "BarcodeViewActivity.onResume");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d(TAG, "BarcodeViewActivity.onStart");
+        Log.d(SerenghettoApplication.TAG, "BarcodeViewActivity.onStart");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d(TAG, "BarcodeViewActivity.onRestart");
+        Log.d(SerenghettoApplication.TAG, "BarcodeViewActivity.onRestart");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        Log.d(TAG, "BarcodeViewActivity.onStop");
+        Log.d(SerenghettoApplication.TAG, "BarcodeViewActivity.onStop");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "BarcodeViewActivity.onDestroy");
+        Log.d(SerenghettoApplication.TAG, "BarcodeViewActivity.onDestroy");
     }
 
     @Override
@@ -218,10 +213,12 @@ public class BarcodeViewActivity extends MapActivity implements OnClickListener
 
     public void onClick(View view) {
         if (view == findViewById(R.id.buttonOKBarcode)) {
-            this.startActivity(new Intent(this, CodesActivity.class)
+            this.startActivity(new Intent(this, CodesActivity.class));
+            /*
               .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
               .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
               .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+            */
         }
     }
 

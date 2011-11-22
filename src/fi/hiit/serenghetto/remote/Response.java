@@ -1,4 +1,4 @@
-package fi.hiit.serenghetto.net;
+package fi.hiit.serenghetto.remote;
 
 import java.io.Reader;
 import java.util.Map;

@@ -17,6 +17,7 @@ Thumbs.db
 .project
 .settings
 
-# Tags file
+# Other
 ######################
 .tags
+local.properties

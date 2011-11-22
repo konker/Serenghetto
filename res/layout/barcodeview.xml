@@ -98,7 +98,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="125dp"
                 android:clickable="false"
-                android:apiKey="0Hkd6gl7IVP14c1Qyt9ctxeo9Sc0xgIVlQ0QBHg"
+                android:apiKey="0f0aELJ43lGpUkvw0oY-jpgGlvQHY_yXDWVonRg"
                 android:paddingBottom="12dp"
                 />
             <TextView

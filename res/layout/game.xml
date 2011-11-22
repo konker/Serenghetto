@@ -6,32 +6,10 @@
     android:layout_height="fill_parent" >
 
     <com.google.android.maps.MapView
-        android:id="@id/mapGameLocation"
+        android:id="@+id/mapGame"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:clickable="true"
-        android:apiKey="0Hkd6gl7IVP14c1Qyt9ctxeo9Sc0xgIVlQ0QBHg"
+        android:apiKey="0f0aELJ43lGpUkvw0oY-jpgGlvQHY_yXDWVonRg"
         />
 </RelativeLayout>
-    <!--
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-    <TextView  
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content" 
-        android:text="@string/game"
-        android:background="#FFFF0000"
-        />
-    <com.google.android.maps.MapView
-        android:id="@+id/mapGameLocation"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:clickable="true"
-        android:apiKey="0Hkd6gl7IVP14c1Qyt9ctxeo9Sc0xgIVlQ0QBHg"
-        />
-</LinearLayout>
-        -->
-

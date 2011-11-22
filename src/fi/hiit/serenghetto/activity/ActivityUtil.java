@@ -20,39 +20,22 @@ public class ActivityUtil
     public static boolean onOptionsItemSelected(Activity activity, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.itemPrefs:
-                activity.startActivity(new Intent(activity, PrefsActivity.class)
+                activity.startActivity(new Intent(activity, PrefsActivity.class));
+                  /*
                   .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                   .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
                   .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                  */
                 break;
             case R.id.itemCodes:
-                activity.startActivity(new Intent(activity, CodesActivity.class)
-                  .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                  .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                  .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                activity.startActivity(new Intent(activity, CodesActivity.class));
                 break;
             case R.id.itemGame:
-                activity.startActivity(new Intent(activity, GameActivity.class)
-                  .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                  .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                  .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                activity.startActivity(new Intent(activity, GameActivity.class));
                 break;
             case R.id.itemScanBarcode:
-                activity.startActivity(new Intent(activity, BarcodeScanActivity.class)
-                  .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                  .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-                  .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT));
+                activity.startActivity(new Intent(activity, BarcodeScanActivity.class));
                 break;
-            /*
-            case R.id.itemToggleService:
-                if (isServiceRunning()) {
-                    stopService(new Intent(activity, BarcodesService.class));
-                }
-                else {
-                    startService(new Intent(activity, BarcodesService.class));
-                }
-                break;
-                */
         }
         return true;
     }

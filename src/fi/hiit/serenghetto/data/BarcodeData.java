@@ -1,28 +1,32 @@
 package fi.hiit.serenghetto.data;
 
 import android.util.Log;
+import java.util.Iterator;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 
 import fi.hiit.serenghetto.dto.Barcode;
+import fi.hiit.serenghetto.SerenghettoApplication;
+import fi.hiit.serenghetto.remote.SerenghettoServer;
+import fi.hiit.serenghetto.remote.Response;
 
 
 public class BarcodeData
 {
-    private static final String TAG = "SERENGHETTO";
-
-    final DbHelper dbHelper;
+    private final DbHelper dbHelper;
     private SQLiteDatabase db;
 
     /*[FIXME: better exceptions?]*/
     public BarcodeData(Context context) throws Exception {
         this.dbHelper = new DbHelper(context);
         this.db = this.dbHelper.getWritableDatabase();
-        Log.i(TAG, "Initialized data");
+        Log.i(SerenghettoApplication.TAG, "Initialized data");
     }
     public void close() {
         this.db.close();
@@ -34,46 +38,95 @@ public class BarcodeData
     }
 
     public Cursor getBarcodesByUser(String userId) {
-        //SQLiteDatabase db = this.dbHelper.getReadableDatabase();
-        Log.d(TAG, "selectBarcodesByUser: " + userId);
-        Log.d(TAG, dbHelper.getQuery("barcodes_by_user"));
-
+        Log.d(SerenghettoApplication.TAG, "selectBarcodesByUser: " + userId);
         try {
             String[] args = { userId };
             return db.rawQuery(dbHelper.getQuery("barcodes_by_user"), args);
         }
         catch (SQLiteException ex) {
-            Log.d(TAG, ex.toString());
+            Log.d(SerenghettoApplication.TAG, ex.toString());
             return null;
         }
     }
 
     public Cursor getBarcodeById(String id) {
-        Log.d(TAG, "selectBarcodeById: " + id);
-        Log.d(TAG, dbHelper.getQuery("barcode_by_id"));
+        Log.d(SerenghettoApplication.TAG, "selectBarcodeById: " + id);
+        Log.d(SerenghettoApplication.TAG, dbHelper.getQuery("barcode_by_id"));
 
         try {
             String[] args = { id };
             return db.rawQuery(dbHelper.getQuery("barcode_by_id"), args);
         }
         catch (SQLiteException ex) {
-            Log.d(TAG, ex.toString());
+            Log.d(SerenghettoApplication.TAG, ex.toString());
             return null;
         }
     }
 
-    public boolean insertOrIgnoreBarcode(Barcode b) {
-        Log.d(TAG, "insertOrIgnore on " + b);
-        //SQLiteDatabase db = this.dbHelper.getWritableDatabase();
-        String[] args = { b.getId(), b.getUserId(), b.getCode(), b.getName(), b.getLatitude(), b.getLongitude(), b.getAccuracy(), b.getTimestamp(), b.getScore() };
+    /*[FIXME: should this be moved into BarcodeData? Somewhere else?]*/
+    public int synchBarcodesWithServer(SerenghettoServer server) {
+        int count = 0;
+        Response response = server.getBarcodes();
+
+        if (response.getHttpCode() != 500) {
+            JSONObject body = (JSONObject)response.getBody();
+            if (body != null) {
+                JSONArray codes = (JSONArray)response.getBody().get("entries");
+                for (Iterator iter = codes.iterator(); iter.hasNext();) {
+                    JSONObject json = (JSONObject)iter.next();
+                    Barcode barcode = new Barcode(json);
+
+                    boolean inserted = insertOrUpdateBarcode(barcode);
+                    if (inserted) {
+                        count = count + 1;
+                    }
+                }
+            }
+        }
+        else {
+            Log.i(SerenghettoApplication.TAG, "No codes returned");
+        }
+        return count;
+    }
+    
+    public boolean insertOrUpdateBarcode(Barcode b) {
+        Log.d(SerenghettoApplication.TAG, "insertOrIgnore on " + b);
+
         boolean ret = true;
 
         try {
+            String[] args = {
+                b.getId(),
+                b.getUserId(),
+                b.getCode(),
+                b.getName(),
+                b.getLatitude(),
+                b.getLongitude(),
+                b.getAccuracy(),
+                b.getTimestamp(),
+                b.getScore()
+                };
             db.execSQL(dbHelper.getQuery("insert_barcodes"), args);
         }
-        catch (SQLiteException ex) {
-            Log.d(TAG, ex.toString());
+        catch (SQLiteException ex1) {
             ret = false;
+            try {
+                String[] args = {
+                    b.getUserId(),
+                    b.getCode(),
+                    b.getName(),
+                    b.getLatitude(),
+                    b.getLongitude(),
+                    b.getAccuracy(),
+                    b.getTimestamp(),
+                    b.getScore(),
+                    b.getId()
+                    };
+                db.execSQL(dbHelper.getQuery("update_barcode"), args);
+            }
+            catch (SQLiteException ex2) {
+                Log.d(SerenghettoApplication.TAG, ex2.toString());
+            }
         }
         return ret;
     }
