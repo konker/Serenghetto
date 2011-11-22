@@ -1,10 +1,12 @@
 package fi.hiit.serenghetto.activity;
 
+import android.util.Log;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.Menu;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Context;
 import android.content.BroadcastReceiver;
 import android.location.Location;
@@ -16,6 +18,7 @@ import com.google.android.maps.MapActivity;
 
 import fi.hiit.serenghetto.R;
 import fi.hiit.serenghetto.SerenghettoApplication;
+import fi.hiit.serenghetto.constants.IntentConstants;
 
 
 public class GameActivity extends MapActivity
@@ -23,6 +26,8 @@ public class GameActivity extends MapActivity
     private SerenghettoApplication app;
     private MapView mapGame;
     private MapController mapController;
+    private BestLocationEstimateReceiver receiver;
+    private IntentFilter filter;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -37,9 +42,60 @@ public class GameActivity extends MapActivity
         }
         else  {
             //[FIXME]
+            Log.d(SerenghettoApplication.TAG, "NO MAP REFERENCE");
         }
+    
+        // Create the barcodes updated receiver
+        receiver = new BestLocationEstimateReceiver();
+        filter = new IntentFilter(IntentConstants.NEW_BEST_LOCATION_ESTIMATE_INTENT);
 
         this.app = (SerenghettoApplication) getApplication();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(SerenghettoApplication.TAG, "GameActivity.onPause");
+
+        // UNregister the receiver
+        if (receiver != null) {
+            unregisterReceiver(receiver); 
+        }
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(SerenghettoApplication.TAG, "GameActivity.onResume");
+
+        // Register the receiver
+        if (receiver != null && filter != null) {
+            registerReceiver(receiver, filter, null, null);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(SerenghettoApplication.TAG, "GameActivity.onStart");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(SerenghettoApplication.TAG, "GameActivity.onRestart");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(SerenghettoApplication.TAG, "GameActivity.onStop");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(SerenghettoApplication.TAG, "GameActivity.onDestroy");
     }
 
     @Override
