@@ -90,7 +90,7 @@ public class BarcodeData
     }
     
     public boolean insertOrUpdateBarcode(Barcode b) {
-        Log.d(SerenghettoApplication.TAG, "insertOrIgnore on " + b);
+        Log.d(SerenghettoApplication.TAG, "insertOrUpdateBarcode on " + b);
 
         boolean ret = true;
 
@@ -100,11 +100,11 @@ public class BarcodeData
                 b.getUserId(),
                 b.getCode(),
                 b.getName(),
-                b.getLatitude(),
-                b.getLongitude(),
-                b.getAccuracy(),
+                String.valueOf(b.getLatitude()),
+                String.valueOf(b.getLongitude()),
+                String.valueOf(b.getAccuracy()),
                 b.getTimestamp(),
-                b.getScore()
+                String.valueOf(b.getScore())
                 };
             db.execSQL(dbHelper.getQuery("insert_barcodes"), args);
         }
@@ -115,11 +115,11 @@ public class BarcodeData
                     b.getUserId(),
                     b.getCode(),
                     b.getName(),
-                    b.getLatitude(),
-                    b.getLongitude(),
-                    b.getAccuracy(),
+                    String.valueOf(b.getLatitude()),
+                    String.valueOf(b.getLongitude()),
+                    String.valueOf(b.getAccuracy()),
                     b.getTimestamp(),
-                    b.getScore(),
+                    String.valueOf(b.getScore()),
                     b.getId()
                     };
                 db.execSQL(dbHelper.getQuery("update_barcode"), args);

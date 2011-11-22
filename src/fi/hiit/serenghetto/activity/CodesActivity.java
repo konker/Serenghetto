@@ -147,16 +147,7 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
 
     private void setupList() {
         cursor = this.app.getBarcodeData().getBarcodesByUser(this.app.getUserId());
-        /*
-        Log.d(SerenghettoApplication.TAG, "start cursor walk..");
-        while (cursor.moveToNext()) {
-            String code = cursor.getString(cursor.getColumnIndex("code"));
-            String name = cursor.getString(cursor.getColumnIndex("name"));
-            String score = cursor.getString(cursor.getColumnIndex("score"));
-            Log.i(SerenghettoApplication.TAG, code + "->" + name + ", " + score);
-        }
-        Log.d(SerenghettoApplication.TAG, "end cursor walk..");
-        */
+
         if (cursor == null) {
             /*[TODO: "no barcodes found" message]*/
         }

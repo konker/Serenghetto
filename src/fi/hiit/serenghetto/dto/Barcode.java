@@ -1,7 +1,9 @@
 package fi.hiit.serenghetto.dto;
 
 import android.util.Log;
+import android.database.Cursor;
 import org.json.simple.JSONObject;
+import com.google.android.maps.GeoPoint;
 
 import fi.hiit.serenghetto.SerenghettoApplication;
 
@@ -11,18 +13,34 @@ public class Barcode {
     private String userId;
     private String code;
     private String name;
-    private String latitude;
-    private String longitude;
-    private String accuracy;
+    private double latitude;
+    private double longitude;
+    private double accuracy;
     private String timestamp;
-    private String score;
+    private double score;
 
-    public Barcode(String id, String userId, String code, String name, String latitude, String longitude, String accuracy, String timestamp, String score) {
-        _init(id, userId, code, name, latitude, longitude, accuracy, timestamp, score);
+    public Barcode(String id, String userId, String code, String name, double latitude, double longitude, double accuracy, String timestamp, double score) {
+        this.id = id;
+        this.userId = userId;
+        this.code = code;
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.accuracy = accuracy;
+        this.timestamp = timestamp;
+        this.score = score;
     }
 
-    public Barcode(String id, String userId, String code, String name) {
-        _init(id, userId, code, name, null, null, null, null, null);
+    public Barcode(Cursor cursor) {
+        this.id = cursor.getString(cursor.getColumnIndex("_id"));
+        this.userId = cursor.getString(cursor.getColumnIndex("user_id"));
+        this.code = cursor.getString(cursor.getColumnIndex("code"));
+        this.name = cursor.getString(cursor.getColumnIndex("name"));
+        this.latitude = cursor.getDouble(cursor.getColumnIndex("latitude"));
+        this.longitude = cursor.getDouble(cursor.getColumnIndex("longitude"));
+        this.accuracy = cursor.getDouble(cursor.getColumnIndex("accuracy"));
+        this.timestamp = cursor.getString(cursor.getColumnIndex("timestamp"));
+        this.score = cursor.getDouble(cursor.getColumnIndex("score"));
     }
 
     public Barcode(JSONObject json) {
@@ -33,41 +51,37 @@ public class Barcode {
 
             /*[FIXME: hardcoded field names?]*/
             id = String.valueOf(json.get("id"));
-            code = (String)json.get("code");
-            name = (String)json.get("name");
+            code = String.valueOf(json.get("code"));
+            name = String.valueOf(json.get("name"));
 
             if (juser != null) {
                 userId = String.valueOf(juser.get("id"));
             }
             if (jlocation != null) {
-                accuracy = String.valueOf(jlocation.get("accuracy"));
+                Double jaccuracy = (Double)jlocation.get("accuracy");
+                if (jaccuracy != null) {
+                    accuracy = jaccuracy.doubleValue();
+                }
                 timestamp = String.valueOf(jlocation.get("device_timestamp"));
 
                 JSONObject jgeom = (JSONObject)jlocation.get("geom");
                 if (jgeom != null) {
-                    latitude = String.valueOf(jgeom.get("y"));
-                    longitude = String.valueOf(jgeom.get("x"));
+                    Double jx = (Double)jgeom.get("x");
+                    Double jy = (Double)jgeom.get("y");
+                    latitude = jy.doubleValue();
+                    longitude = jx.doubleValue();
                 }
             }
             if (jscore != null) {
-                score = String.valueOf(jscore.get("score"));
+                Double jscore_score = (Double)jscore.get("score");
+                if (jscore_score != null) {
+                    score = jscore_score.doubleValue();
+                }
             }
         }
         catch (Exception ex) {
             Log.d(SerenghettoApplication.TAG, "Barcode JSON contructor failed: " + ex);
         }
-    }
-
-    private void _init(String id, String userId, String code, String name, String latitude, String longitude, String accuracy, String timestamp, String score) {
-        this.id = id;
-        this.userId = userId;
-        this.code = code;
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.accuracy = accuracy;
-        this.timestamp = timestamp;
-        this.score = score;
     }
 
     public String getId() {
@@ -98,24 +112,32 @@ public class Barcode {
         this.code = code;
     }
 
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
-    public void setLatitude(String latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
-    public void setLongitude(String longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public String getAccuracy() {
+    public GeoPoint getGeoPoint() {
+        //[FIXME: is 0 the same as null in this case?]
+        if (latitude != 0 && longitude != 0) {
+            return new GeoPoint((int)(longitude * 1E6), (int)(latitude * 1E6));
+        }
+        return null;
+    }
+
+    public double getAccuracy() {
         return accuracy;
     }
-    public void setAccuracy(String accuracy) {
+    public void setAccuracy(double accuracy) {
         this.accuracy = accuracy;
     }
 
@@ -126,10 +148,10 @@ public class Barcode {
         this.timestamp = timestamp;
     }
 
-    public String getScore() {
+    public double getScore() {
         return score;
     }
-    public void setScore(String score) {
+    public void setScore(double score) {
         this.score = score;
     }
 

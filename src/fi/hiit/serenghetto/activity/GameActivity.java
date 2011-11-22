@@ -10,15 +10,19 @@ import android.content.IntentFilter;
 import android.content.Context;
 import android.content.BroadcastReceiver;
 import android.location.Location;
+import android.database.Cursor;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapView;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapActivity;
+import com.google.android.maps.Overlay;
 
 import fi.hiit.serenghetto.R;
 import fi.hiit.serenghetto.SerenghettoApplication;
 import fi.hiit.serenghetto.constants.IntentConstants;
+import fi.hiit.serenghetto.dto.Barcode;
+import fi.hiit.serenghetto.map.MapCircleOverlay;
 
 
 public class GameActivity extends MapActivity
@@ -29,16 +33,22 @@ public class GameActivity extends MapActivity
     private BestLocationEstimateReceiver receiver;
     private IntentFilter filter;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
 
+        this.app = (SerenghettoApplication) getApplication();
+
         mapGame = (MapView) findViewById(R.id.mapGame);
         if (mapGame != null) {
             mapGame.setBuiltInZoomControls(true);
             mapController = mapGame.getController();
+            mapController.setZoom(12);
+            
+            initOverlays();
         }
         else  {
             //[FIXME]
@@ -50,6 +60,24 @@ public class GameActivity extends MapActivity
         filter = new IntentFilter(IntentConstants.NEW_BEST_LOCATION_ESTIMATE_INTENT);
 
         this.app = (SerenghettoApplication) getApplication();
+    }
+
+    protected void initOverlays() {
+        // get users' barcodes
+        Cursor barcodeCursor = app.getBarcodeData().getBarcodesByUser(app.getUserId());
+
+        if (barcodeCursor != null) {
+            Log.d(SerenghettoApplication.TAG, "start cursor walk..");
+            while (barcodeCursor.moveToNext()) {
+                Barcode b = new Barcode(barcodeCursor);
+                GeoPoint p = b.getGeoPoint();
+                if (p != null) {
+                    Log.d(SerenghettoApplication.TAG, "Adding overlay point: " + b.getLongitude() + "," + b.getLatitude() + ":" + b.getName());
+                    mapGame.getOverlays().add(new MapCircleOverlay(p, b.getScore()));
+                }
+            }
+            Log.d(SerenghettoApplication.TAG, "end cursor walk..");
+        }
     }
 
     @Override
