@@ -56,16 +56,7 @@ public class BarcodeData
             cursor = db.rawQuery(dbHelper.getQuery("barcode_by_id"), args);
 
             if (cursor.moveToNext()) {
-                String userId = cursor.getString(cursor.getColumnIndex("user_id"));
-                String code = cursor.getString(cursor.getColumnIndex("code"));
-                String name = cursor.getString(cursor.getColumnIndex("name"));
-                double latitude = cursor.getDouble(cursor.getColumnIndex("latitude"));
-                double longitude = cursor.getDouble(cursor.getColumnIndex("longitude"));
-                double accuracy = cursor.getDouble(cursor.getColumnIndex("accuracy"));
-                String timestamp = cursor.getString(cursor.getColumnIndex("timestamp"));
-                double score = cursor.getDouble(cursor.getColumnIndex("score"));
-
-                return new Barcode(id, userId, code, name, latitude, longitude, accuracy, timestamp, score);
+                return new Barcode(cursor);
             }
             else {
                 Log.d(SerenghettoApplication.TAG, "renderBarcode: Barcode cursor empty");

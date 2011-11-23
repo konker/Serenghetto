@@ -45,13 +45,23 @@ public class GameActivity extends MapActivity
 
         bCentered = false;
 
+        Intent i = getIntent();
+        String id = i.getStringExtra("id");
+
         mapGame = (MapView) findViewById(R.id.mapGame);
         if (mapGame != null) {
             mapGame.setBuiltInZoomControls(true);
             mapController = mapGame.getController();
-            mapController.setZoom(12);
+
+            if (id != null) {
+                Barcode barcode = this.app.getBarcodeData().getBarcodeById(id);
+                if (barcode != null) {
+                    centerLocation(barcode.getLatitude(), barcode.getLongitude());
+                    bCentered = true;
+                }
+            }
             
-            initOverlays();
+            initOverlays(id);
         }
         else  {
             //[FIXME]
@@ -61,31 +71,27 @@ public class GameActivity extends MapActivity
         // Create the barcodes updated receiver
         receiver = new BestLocationEstimateReceiver();
         filter = new IntentFilter(IntentConstants.NEW_BEST_LOCATION_ESTIMATE_INTENT);
-
-        Intent i = getIntent();
-        String id = i.getStringExtra("id");
-        if (id != null) {
-            Barcode barcode = this.app.getBarcodeData().getBarcodeById(id);
-            if (barcode != null) {
-                centerLocation(barcode.getLatitude(), barcode.getLongitude());
-                bCentered = true;
-            }
-        }
     }
 
-    protected void initOverlays() {
+    protected void initOverlays(String curId) {
         // get users' barcodes
         Cursor barcodeCursor = app.getBarcodeData().getBarcodesByUser(app.getUserId());
+        Barcode curBarcode = null;
 
         if (barcodeCursor != null) {
             Log.d(SerenghettoApplication.TAG, "start cursor walk..");
             while (barcodeCursor.moveToNext()) {
                 Barcode barcode = new Barcode(barcodeCursor);
-                GeoPoint p = barcode.getGeoPoint();
-                if (p != null) {
-                    Log.d(SerenghettoApplication.TAG, "Adding overlay point: " + barcode);
-                    mapGame.getOverlays().add(new MapCircleOverlay(p, barcode.getScore(), 0xFF, 0x00, 0x00));
+                if (curId != null && barcode.getId().equals(curId)) {
+                    curBarcode = barcode;
+                    continue;
                 }
+                else if (barcode.hasLocation()) {
+                    mapGame.getOverlays().add(new MapCircleOverlay(barcode, 0x00, 0x00, 0xFF));
+                }
+            }
+            if (curBarcode != null && curBarcode.hasLocation()) {
+                mapGame.getOverlays().add(new MapCircleOverlay(curBarcode, 0x00, 0xFF, 0x00));
             }
             barcodeCursor.close();
             Log.d(SerenghettoApplication.TAG, "end cursor walk..");

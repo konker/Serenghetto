@@ -122,18 +122,11 @@ public class BarcodeViewActivity extends MapActivity implements OnClickListener
             textBarcodeTimeReadable.setText(barcode.getTimestamp());
             textBarcodeScore.setText(String.valueOf(barcode.getScore()));
 
-            if (latitude != 0 && longitude != 0) {
-                try {
-                    GeoPoint p = barcode.getGeoPoint();
-                    if (p != null) {
-                        mapController.setCenter(p);
-                        mapBarcodeLocation.getOverlays().add(new MapCircleOverlay(p, barcode.getScore(), 0xFF, 0x00, 0x00));
-                        mapBarcodeLocation.setVisibility(View.VISIBLE);
-                    }
-                }
-                catch (NumberFormatException ex) {
-                    Log.d(SerenghettoApplication.TAG, "Could not parse number: " + ex.toString());
-                }
+            if (barcode.hasLocation()) {
+                GeoPoint p = barcode.getGeoPoint();
+                mapController.setCenter(p);
+                mapBarcodeLocation.getOverlays().add(new MapCircleOverlay(barcode, 0x00, 0x00, 0xFF));
+                mapBarcodeLocation.setVisibility(View.VISIBLE);
             }
         }
     }

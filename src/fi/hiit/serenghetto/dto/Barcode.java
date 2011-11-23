@@ -126,12 +126,12 @@ public class Barcode {
         this.longitude = longitude;
     }
 
+    public boolean hasLocation() {
+        return (latitude != 0 && longitude != 0);
+    }
+
     public GeoPoint getGeoPoint() {
-        //[FIXME: is 0 the same as null in this case?]
-        if (latitude != 0 && longitude != 0) {
-            return new GeoPoint((int)(latitude * 1E6), (int)(longitude * 1E6));
-        }
-        return null;
+        return new GeoPoint((int)(latitude * 1E6), (int)(longitude * 1E6));
     }
 
     public double getAccuracy() {
