@@ -32,6 +32,7 @@ public class GameActivity extends MapActivity
     private MapController mapController;
     private BestLocationEstimateReceiver receiver;
     private IntentFilter filter;
+    private boolean bCentered;
 
 
     @Override
@@ -41,6 +42,8 @@ public class GameActivity extends MapActivity
         setContentView(R.layout.game);
 
         this.app = (SerenghettoApplication) getApplication();
+
+        bCentered = false;
 
         mapGame = (MapView) findViewById(R.id.mapGame);
         if (mapGame != null) {
@@ -59,7 +62,15 @@ public class GameActivity extends MapActivity
         receiver = new BestLocationEstimateReceiver();
         filter = new IntentFilter(IntentConstants.NEW_BEST_LOCATION_ESTIMATE_INTENT);
 
-        this.app = (SerenghettoApplication) getApplication();
+        Intent i = getIntent();
+        String id = i.getStringExtra("id");
+        if (id != null) {
+            Barcode barcode = this.app.getBarcodeData().getBarcodeById(id);
+            if (barcode != null) {
+                centerLocation(barcode.getLatitude(), barcode.getLongitude());
+                bCentered = true;
+            }
+        }
     }
 
     protected void initOverlays() {
@@ -69,13 +80,14 @@ public class GameActivity extends MapActivity
         if (barcodeCursor != null) {
             Log.d(SerenghettoApplication.TAG, "start cursor walk..");
             while (barcodeCursor.moveToNext()) {
-                Barcode b = new Barcode(barcodeCursor);
-                GeoPoint p = b.getGeoPoint();
+                Barcode barcode = new Barcode(barcodeCursor);
+                GeoPoint p = barcode.getGeoPoint();
                 if (p != null) {
-                    Log.d(SerenghettoApplication.TAG, "Adding overlay point: " + b.getLongitude() + "," + b.getLatitude() + ":" + b.getName());
-                    mapGame.getOverlays().add(new MapCircleOverlay(p, b.getScore()));
+                    Log.d(SerenghettoApplication.TAG, "Adding overlay point: " + barcode);
+                    mapGame.getOverlays().add(new MapCircleOverlay(p, barcode.getScore(), 0xFF, 0x00, 0x00));
                 }
             }
+            barcodeCursor.close();
             Log.d(SerenghettoApplication.TAG, "end cursor walk..");
         }
     }
@@ -132,15 +144,27 @@ public class GameActivity extends MapActivity
     }
     
     private void onLocation(Location location) {
-        centerLocation(location);
+        if (!bCentered) {
+            centerLocation(location);
+            bCentered = true;
+        }
     }
 
-    private void centerLocation(Location location) {
-        if (location != null) {
+    private void centerLocation(GeoPoint p) {
+        if (p != null) {
             if (mapController != null) {
-                GeoPoint p = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
                 mapController.animateTo(p);
             }
+        }
+    }
+    private void centerLocation(double latitude, double longitude) {
+        GeoPoint p = new GeoPoint((int)(latitude*1E6), (int)(longitude*1E6));
+        centerLocation(p);
+    }
+    private void centerLocation(Location location) {
+        if (location != null) {
+            GeoPoint p = new GeoPoint((int)(location.getLatitude()*1E6), (int)(location.getLongitude()*1E6));
+            centerLocation(p);
         }
     }
     

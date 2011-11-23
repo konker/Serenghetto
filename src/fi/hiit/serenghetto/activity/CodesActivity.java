@@ -129,6 +129,7 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
         super.onDestroy();
 
         if (cursor != null) {
+            stopManagingCursor(cursor);
             cursor.close();
         }
 
@@ -160,8 +161,6 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
             listView.setOnItemClickListener(this);
             listView.setOnItemLongClickListener(this);
             listView.setAdapter(adapter);
-
-            //cursor.close();
         }
     }
 
@@ -170,6 +169,11 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
         //TODO: handle click for list items
         TextView textBarcodeId = (TextView)view.findViewById(R.id.textBarcodeId);
         Log.d(SerenghettoApplication.TAG, "CLICK: " + textBarcodeId.getText());
+
+        Intent i = new Intent(this, GameActivity.class);
+        i.putExtra("id", textBarcodeId.getText());
+
+        startActivity(i);
     }
 
     @Override

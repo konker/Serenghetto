@@ -129,7 +129,7 @@ public class Barcode {
     public GeoPoint getGeoPoint() {
         //[FIXME: is 0 the same as null in this case?]
         if (latitude != 0 && longitude != 0) {
-            return new GeoPoint((int)(longitude * 1E6), (int)(latitude * 1E6));
+            return new GeoPoint((int)(latitude * 1E6), (int)(longitude * 1E6));
         }
         return null;
     }

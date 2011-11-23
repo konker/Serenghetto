@@ -11,10 +11,10 @@ import android.database.sqlite.SQLiteException;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 
-import fi.hiit.serenghetto.dto.Barcode;
 import fi.hiit.serenghetto.SerenghettoApplication;
 import fi.hiit.serenghetto.remote.SerenghettoServer;
 import fi.hiit.serenghetto.remote.Response;
+import fi.hiit.serenghetto.dto.Barcode;
 
 
 public class BarcodeData
@@ -49,17 +49,37 @@ public class BarcodeData
         }
     }
 
-    public Cursor getBarcodeById(String id) {
-        Log.d(SerenghettoApplication.TAG, "selectBarcodeById: " + id);
-        Log.d(SerenghettoApplication.TAG, dbHelper.getQuery("barcode_by_id"));
-
+    public Barcode getBarcodeById(String id) {
+        Cursor cursor = null;
         try {
             String[] args = { id };
-            return db.rawQuery(dbHelper.getQuery("barcode_by_id"), args);
+            cursor = db.rawQuery(dbHelper.getQuery("barcode_by_id"), args);
+
+            if (cursor.moveToNext()) {
+                String userId = cursor.getString(cursor.getColumnIndex("user_id"));
+                String code = cursor.getString(cursor.getColumnIndex("code"));
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                double latitude = cursor.getDouble(cursor.getColumnIndex("latitude"));
+                double longitude = cursor.getDouble(cursor.getColumnIndex("longitude"));
+                double accuracy = cursor.getDouble(cursor.getColumnIndex("accuracy"));
+                String timestamp = cursor.getString(cursor.getColumnIndex("timestamp"));
+                double score = cursor.getDouble(cursor.getColumnIndex("score"));
+
+                return new Barcode(id, userId, code, name, latitude, longitude, accuracy, timestamp, score);
+            }
+            else {
+                Log.d(SerenghettoApplication.TAG, "renderBarcode: Barcode cursor empty");
+                return null;
+            }
         }
         catch (SQLiteException ex) {
             Log.d(SerenghettoApplication.TAG, ex.toString());
             return null;
+        }
+        finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
     }
 
@@ -90,8 +110,7 @@ public class BarcodeData
     }
     
     public boolean insertOrUpdateBarcode(Barcode b) {
-        Log.d(SerenghettoApplication.TAG, "insertOrUpdateBarcode on " + b);
-
+        //Log.d(SerenghettoApplication.TAG, "insertOrUpdateBarcode on " + b);
         boolean ret = true;
 
         try {

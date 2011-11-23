@@ -1,5 +1,6 @@
 package fi.hiit.serenghetto.map;
 
+import android.util.Log;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,6 +10,8 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.Projection;
 
+import fi.hiit.serenghetto.SerenghettoApplication;
+
 
 /* from: http://stackoverflow.com/questions/5722490/android-maps-circle-overlay-dynamically-change-radius */
 public class MapCircleOverlay extends Overlay
@@ -17,12 +20,12 @@ public class MapCircleOverlay extends Overlay
     private double score;
     private Paint paint1, paint2;
 
-    public MapCircleOverlay(GeoPoint point, double score) {
+    public MapCircleOverlay(GeoPoint point, double score, int R, int G, int B) {
         this.point = point;
         this.score = score;
 
         paint1 = new Paint();
-        paint1.setARGB(128, 0, 0, 255);
+        paint1.setARGB(0x40, 0x00, 0x00, 0xFF);
         paint1.setStrokeWidth(2);
         paint1.setStrokeCap(Paint.Cap.ROUND);
         paint1.setAntiAlias(true);
@@ -30,7 +33,7 @@ public class MapCircleOverlay extends Overlay
         paint1.setStyle(Paint.Style.STROKE);
 
         paint2 = new Paint();
-        paint2.setARGB(64, 0, 0, 255);  
+        paint2.setARGB(0x20, R, G, B);  
     }
 
     @Override
@@ -44,7 +47,7 @@ public class MapCircleOverlay extends Overlay
         }
 
         canvas.drawCircle(pt.x, pt.y, radius, paint2);
-        canvas.drawCircle(pt.x, pt.y, radius, paint1);
+        //canvas.drawCircle(pt.x, pt.y, radius, paint1);
     }
 }
 

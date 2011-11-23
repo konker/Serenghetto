@@ -43,7 +43,9 @@ import com.google.android.maps.MapController;
 
 import fi.hiit.serenghetto.R;
 import fi.hiit.serenghetto.SerenghettoApplication;
+import fi.hiit.serenghetto.dto.Barcode;
 import fi.hiit.serenghetto.constants.IntentConstants;
+import fi.hiit.serenghetto.map.MapCircleOverlay;
 
 
 public class BarcodeViewActivity extends MapActivity implements OnClickListener
@@ -106,44 +108,32 @@ public class BarcodeViewActivity extends MapActivity implements OnClickListener
     }
 
     private void renderBarcode(String id) {
-        Cursor cursor = this.app.getBarcodeData().getBarcodeById(id);
-        if (cursor == null) {
-            /*[TODO: "no barcodes found" message]*/
-        }
-        else {
-            if (cursor.moveToNext()) {
-                String userId = cursor.getString(cursor.getColumnIndex("user_id"));
-                String code = cursor.getString(cursor.getColumnIndex("code"));
-                String name = cursor.getString(cursor.getColumnIndex("name"));
-                double latitude = cursor.getDouble(cursor.getColumnIndex("latitude"));
-                double longitude = cursor.getDouble(cursor.getColumnIndex("longitude"));
-                String accuracy = cursor.getString(cursor.getColumnIndex("accuracy"));
-                String timestamp = cursor.getString(cursor.getColumnIndex("timestamp"));
-                int score = cursor.getInt(cursor.getColumnIndex("score"));
+        Barcode barcode = this.app.getBarcodeData().getBarcodeById(id);
+        if (barcode != null) {
+            double latitude = barcode.getLatitude();
+            double longitude = barcode.getLongitude();
 
-                textBarcodeId.setText(id);
-                textBarcodeCode.setText(code);
-                textBarcodeName.setText(name);
-                textBarcodeLocationLatitude.setText(String.valueOf(latitude));
-                textBarcodeLocationLongitude.setText(String.valueOf(longitude));
-                textBarcodeLocationAccuracy.setText(accuracy);
-                textBarcodeTimeReadable.setText(timestamp);
-                textBarcodeScore.setText(String.valueOf(score));
+            textBarcodeId.setText(barcode.getId());
+            textBarcodeCode.setText(barcode.getCode());
+            textBarcodeName.setText(barcode.getName());
+            textBarcodeLocationLatitude.setText(String.valueOf(latitude));
+            textBarcodeLocationLongitude.setText(String.valueOf(longitude));
+            textBarcodeLocationAccuracy.setText(String.valueOf(barcode.getAccuracy()));
+            textBarcodeTimeReadable.setText(barcode.getTimestamp());
+            textBarcodeScore.setText(String.valueOf(barcode.getScore()));
 
-                Log.d(SerenghettoApplication.TAG, "LAT: " + latitude + ", LNG: " + longitude);
-                if (latitude != 0 && longitude != 0) {
-                    try {
-                        GeoPoint p = new GeoPoint((int)(latitude*1E6), (int)(longitude*1E6));
+            if (latitude != 0 && longitude != 0) {
+                try {
+                    GeoPoint p = barcode.getGeoPoint();
+                    if (p != null) {
                         mapController.setCenter(p);
+                        mapBarcodeLocation.getOverlays().add(new MapCircleOverlay(p, barcode.getScore(), 0xFF, 0x00, 0x00));
                         mapBarcodeLocation.setVisibility(View.VISIBLE);
                     }
-                    catch (NumberFormatException ex) {
-                        Log.d(SerenghettoApplication.TAG, "Could not parse number: " + ex.toString());
-                    }
                 }
-            }
-            else {
-                Log.d(SerenghettoApplication.TAG, "renderBarcode: Barcode cursor empty");
+                catch (NumberFormatException ex) {
+                    Log.d(SerenghettoApplication.TAG, "Could not parse number: " + ex.toString());
+                }
             }
         }
     }

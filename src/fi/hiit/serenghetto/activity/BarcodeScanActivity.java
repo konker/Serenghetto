@@ -47,6 +47,7 @@ import fi.hiit.serenghetto.SerenghettoApplication;
 import fi.hiit.serenghetto.constants.IntentConstants;
 import fi.hiit.serenghetto.remote.ServerTask;
 import fi.hiit.serenghetto.remote.Response;
+import fi.hiit.serenghetto.map.MapCircleOverlay;
 
 
 public class BarcodeScanActivity extends MapActivity implements OnClickListener
