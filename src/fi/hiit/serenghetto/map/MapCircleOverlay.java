@@ -21,12 +21,12 @@ public class MapCircleOverlay extends Overlay
     private GeoPoint geoPoint;
     private Paint paint1;
 
-    public MapCircleOverlay(Barcode barcode, int R, int G, int B) {
+    public MapCircleOverlay(Barcode barcode, int A, int R, int G, int B) {
         this.barcode = barcode;
         this.geoPoint = barcode.getGeoPoint();
 
         paint1 = new Paint();
-        paint1.setARGB(0x20, R, G, B);  
+        paint1.setARGB(A, R, G, B);  
     }
 
     @Override

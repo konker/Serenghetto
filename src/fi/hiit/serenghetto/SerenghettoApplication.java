@@ -20,8 +20,11 @@ import fi.hiit.serenghetto.constants.PrefKeyConstants;
 public class SerenghettoApplication extends Application implements OnSharedPreferenceChangeListener
 {
     public static final String TAG = "SERENGHETTO";
+    public static final String ERROR_TAG = "SERENGHETTO:ERROR";
+    public static final int MAP_OVERLAY_ALPHA = 0x20;
 
     private static final String SERVER_BASE_URL = "http://serenghetto.herokuapp.com";
+
 
     private Location bestLocationEstimate;
     private BarcodeData barcodeData;

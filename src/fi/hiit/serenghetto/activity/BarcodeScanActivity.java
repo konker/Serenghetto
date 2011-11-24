@@ -42,9 +42,12 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 
+import org.json.simple.JSONObject;
+
 import fi.hiit.serenghetto.R;
 import fi.hiit.serenghetto.SerenghettoApplication;
 import fi.hiit.serenghetto.constants.IntentConstants;
+import fi.hiit.serenghetto.dto.Barcode;
 import fi.hiit.serenghetto.remote.ServerTask;
 import fi.hiit.serenghetto.remote.Response;
 import fi.hiit.serenghetto.map.MapCircleOverlay;
@@ -273,7 +276,20 @@ public class BarcodeScanActivity extends MapActivity implements OnClickListener
         protected void handleResult() {
             //[TODO: add to local list of code when OK]
             BarcodeScanActivity.this.progress.dismiss();
-            Toast.makeText(BarcodeScanActivity.this, response.getMessage(), Toast.LENGTH_LONG).show();
+            Log.d(SerenghettoApplication.TAG, "ServerTaskPostCode.handleResult: " + response);
+            Barcode barcode = new Barcode((JSONObject)response.getBody().get("barcode"));
+            //[XXX: remove this once response is correct]
+            if (barcode.getUserId() == null) {
+                barcode.setUserId(BarcodeScanActivity.this.app.getUserId());
+            }
+            Log.d(SerenghettoApplication.TAG, "ServerTaskPostCode.handleResult: " + barcode);
+            boolean localOK = BarcodeScanActivity.this.app.getBarcodeData().insertOrUpdateBarcode(barcode);
+            if (localOK) {
+                Toast.makeText(BarcodeScanActivity.this, response.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(BarcodeScanActivity.this, R.string.scanned_but_not_local, Toast.LENGTH_LONG).show();
+            }
             textBarcodeName.setVisibility(View.VISIBLE);
             buttonOKBarcode.setVisibility(View.VISIBLE);
             return;

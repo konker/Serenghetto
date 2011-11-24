@@ -87,11 +87,11 @@ public class GameActivity extends MapActivity
                     continue;
                 }
                 else if (barcode.hasLocation()) {
-                    mapGame.getOverlays().add(new MapCircleOverlay(barcode, 0x00, 0x00, 0xFF));
+                    mapGame.getOverlays().add(new MapCircleOverlay(barcode, SerenghettoApplication.MAP_OVERLAY_ALPHA, 0x00, 0x00, 0xFF));
                 }
             }
             if (curBarcode != null && curBarcode.hasLocation()) {
-                mapGame.getOverlays().add(new MapCircleOverlay(curBarcode, 0x00, 0xFF, 0x00));
+                mapGame.getOverlays().add(new MapCircleOverlay(curBarcode, 0xFF, 0x00, 0xFF, 0x00));
             }
             barcodeCursor.close();
             Log.d(SerenghettoApplication.TAG, "end cursor walk..");

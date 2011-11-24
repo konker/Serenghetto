@@ -135,7 +135,7 @@ public class BarcodeData
                 db.execSQL(dbHelper.getQuery("update_barcode"), args);
             }
             catch (SQLiteException ex2) {
-                Log.d(SerenghettoApplication.TAG, ex2.toString());
+                Log.e(SerenghettoApplication.ERROR_TAG, ex2.toString());
             }
         }
         return ret;

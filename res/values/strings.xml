@@ -26,6 +26,8 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="gps_disabled">GPS is disabled. Please enable it to continue.</string>
+    <!--[FIXME: does the user need the message below?]-->
+    <string name="scanned_but_not_local">Barcode scanned but could not add to local database.</string>
     <string name="titleSaveBarcode">Save</string>
     <string name="titleCancelBarcode">Cancel</string>
     <string name="titleOKBarcode">OK</string>

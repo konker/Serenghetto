@@ -59,7 +59,7 @@ public class Response {
         this.body = body;
     }
     public String toString() {
-        return "Response[" + httpCode + "][" + message + "]: " + body;
+        return "Response[" + httpCode + "][" + message + "]: |" + body + "|";
     }
 }
 

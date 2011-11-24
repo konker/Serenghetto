@@ -125,7 +125,7 @@ public class BarcodeViewActivity extends MapActivity implements OnClickListener
             if (barcode.hasLocation()) {
                 GeoPoint p = barcode.getGeoPoint();
                 mapController.setCenter(p);
-                mapBarcodeLocation.getOverlays().add(new MapCircleOverlay(barcode, 0x00, 0x00, 0xFF));
+                mapBarcodeLocation.getOverlays().add(new MapCircleOverlay(barcode, SerenghettoApplication.MAP_OVERLAY_ALPHA, 0x00, 0x00, 0xFF));
                 mapBarcodeLocation.setVisibility(View.VISIBLE);
             }
         }
