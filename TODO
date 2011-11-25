@@ -20,7 +20,7 @@ TODO
         - can we get the GPS coordinates of current viewport?
             - query server for all barcodes within the given viewport specifications
 
-    - have map move to a point given by paramter (Codes -> Game)
+    X have map move to a point given by paramter (Codes -> Game)
 
 - Codes
     - nicer rendering of rows
@@ -32,6 +32,11 @@ TODO
     - only have one layout for barcode scan/view?
     - if location available draw some kind of marker on the map?
     - if location available can we set zoom level according to the accuracy?
+    - on scan, auto-suggest name based on previous scans of the same code?
+    - name input field should not allow multiple lines
+
+- Preferences
+    - preference input fields should not allow multiple lines
     
 - Service
     - Is service stopping when app is stopping?
