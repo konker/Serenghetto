@@ -23,9 +23,13 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
 {
     public static final String TAG = "SERENGHETTO";
     public static final String ERROR_TAG = "SERENGHETTO:ERROR";
+
     public static final int MAP_OVERLAY_ALPHA = 0x20;
-    public static SimpleDateFormat OUT_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-    public static SimpleDateFormat IN_DATE_FORMAT = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss'Z'");
+    public static final float DEFAULT_SCORE = 12;
+    public static final int DEFAULT_MAP_ZOOM = 10;
+
+    public static final SimpleDateFormat OUT_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    public static final SimpleDateFormat IN_DATE_FORMAT = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss'Z'");
 
 
     private static final String SERVER_BASE_URL = "http://serenghetto.herokuapp.com";

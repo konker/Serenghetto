@@ -250,6 +250,7 @@ public class BarcodeScanActivity extends MapActivity implements OnClickListener
 
                 GeoPoint p = new GeoPoint((int)(bestLocationEstimate.getLatitude()*1E6), (int)(bestLocationEstimate.getLongitude()*1E6));
                 mapController.setCenter(p);
+                mapBarcodeLocation.getOverlays().add(new MapCircleOverlay(p, SerenghettoApplication.DEFAULT_SCORE, SerenghettoApplication.MAP_OVERLAY_ALPHA, 0x00, 0x00, 0xFF));
                 mapBarcodeLocation.setVisibility(View.VISIBLE);
             }
             else {
