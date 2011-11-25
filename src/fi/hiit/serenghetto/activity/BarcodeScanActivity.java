@@ -274,15 +274,10 @@ public class BarcodeScanActivity extends MapActivity implements OnClickListener
 
         @Override
         protected void handleResult() {
-            //[TODO: add to local list of code when OK]
             BarcodeScanActivity.this.progress.dismiss();
-            Log.d(SerenghettoApplication.TAG, "ServerTaskPostCode.handleResult: " + response);
+
+            // Add to local list of codes when OK
             Barcode barcode = new Barcode((JSONObject)response.getBody().get("barcode"));
-            //[XXX: remove this once response is correct]
-            if (barcode.getUserId() == null) {
-                barcode.setUserId(BarcodeScanActivity.this.app.getUserId());
-            }
-            Log.d(SerenghettoApplication.TAG, "ServerTaskPostCode.handleResult: " + barcode);
             boolean localOK = BarcodeScanActivity.this.app.getBarcodeData().insertOrUpdateBarcode(barcode);
             if (localOK) {
                 Toast.makeText(BarcodeScanActivity.this, response.getMessage(), Toast.LENGTH_LONG).show();

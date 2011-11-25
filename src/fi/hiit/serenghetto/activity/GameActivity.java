@@ -91,7 +91,7 @@ public class GameActivity extends MapActivity
                 }
             }
             if (curBarcode != null && curBarcode.hasLocation()) {
-                mapGame.getOverlays().add(new MapCircleOverlay(curBarcode, 0xFF, 0x00, 0xFF, 0x00));
+                mapGame.getOverlays().add(new MapCircleOverlay(curBarcode, 0xAA, 0x00, 0xFF, 0x00));
             }
             barcodeCursor.close();
             Log.d(SerenghettoApplication.TAG, "end cursor walk..");
