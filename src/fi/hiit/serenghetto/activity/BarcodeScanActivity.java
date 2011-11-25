@@ -240,7 +240,9 @@ public class BarcodeScanActivity extends MapActivity implements OnClickListener
 
             if (bestLocationEstimate != null) {
                 textBarcodeTime.setText(String.format("%d", bestLocationEstimate.getTime()));
-                textBarcodeTimeReadable.setText(String.format("READABLE: %d", bestLocationEstimate.getTime()));
+
+                Date t = new Date(bestLocationEstimate.getTime());
+                textBarcodeTimeReadable.setText(SerenghettoApplication.OUT_DATE_FORMAT.format(t));
 
                 textBarcodeLocationLatitude.setText(String.format("%f", bestLocationEstimate.getLatitude()));
                 textBarcodeLocationLongitude.setText(String.format("%f", bestLocationEstimate.getLongitude()));

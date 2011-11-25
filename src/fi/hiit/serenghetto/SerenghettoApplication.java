@@ -1,5 +1,7 @@
 package fi.hiit.serenghetto;
 
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 import android.util.Log;
 import android.app.Application;
 import android.content.Intent;
@@ -22,9 +24,11 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
     public static final String TAG = "SERENGHETTO";
     public static final String ERROR_TAG = "SERENGHETTO:ERROR";
     public static final int MAP_OVERLAY_ALPHA = 0x20;
+    public static SimpleDateFormat OUT_DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+    public static SimpleDateFormat IN_DATE_FORMAT = new SimpleDateFormat("yyyy-mm-dd'T'HH:mm:ss'Z'");
+
 
     private static final String SERVER_BASE_URL = "http://serenghetto.herokuapp.com";
-
 
     private Location bestLocationEstimate;
     private BarcodeData barcodeData;
@@ -37,6 +41,8 @@ public class SerenghettoApplication extends Application implements OnSharedPrefe
     @Override
     public void onCreate() {
         super.onCreate();
+
+        IN_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
 
         this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
         this.editor = prefs.edit();

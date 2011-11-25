@@ -3,6 +3,8 @@ package fi.hiit.serenghetto.activity;
 import android.util.Log;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
+import java.text.ParseException;
 import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
@@ -119,7 +121,15 @@ public class BarcodeViewActivity extends MapActivity implements OnClickListener
             textBarcodeLocationLatitude.setText(String.valueOf(latitude));
             textBarcodeLocationLongitude.setText(String.valueOf(longitude));
             textBarcodeLocationAccuracy.setText(String.valueOf(barcode.getAccuracy()));
-            textBarcodeTimeReadable.setText(barcode.getTimestamp());
+
+            try {
+                Date t = SerenghettoApplication.IN_DATE_FORMAT.parse(barcode.getTimestamp());
+                textBarcodeTimeReadable.setText(SerenghettoApplication.OUT_DATE_FORMAT.format(t));
+            }
+            catch (ParseException ex) {
+                textBarcodeTimeReadable.setText(R.string.unknown_timestamp);
+            }
+
             textBarcodeScore.setText(String.valueOf(barcode.getScore()));
 
             if (barcode.hasLocation()) {
