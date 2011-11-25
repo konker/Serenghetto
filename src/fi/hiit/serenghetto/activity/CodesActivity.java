@@ -6,6 +6,7 @@ import java.util.Map;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.MenuInflater;
@@ -49,14 +50,16 @@ import fi.hiit.serenghetto.constants.IntentConstants;
 
 public class CodesActivity extends ListActivity implements OnItemClickListener, OnItemLongClickListener
 {
-    static final String[] FROM = { "_id", "code", "name", "score" };
-    static final int[] TO = { R.id.textBarcodeId, R.id.textBarcodeCode, R.id.textBarcodeName, R.id.textBarcodeScore };
+    private static final String[] FROM = { "_id", "code", "name", "score" };
+    private static final int[] TO = { R.id.textBarcodeId, R.id.textBarcodeCode, R.id.textBarcodeName, R.id.textBarcodeScore };
+    private static final String LIST_STATE = "listState";
 
     private SerenghettoApplication app;
     private ProgressDialog progress;
     private Cursor cursor;
     private BarcodesReceiver receiver;
     private IntentFilter filter;
+    private Parcelable listState;
 
     /** Called when the activity is first created. */
     @Override
@@ -66,9 +69,6 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
 
         this.app = (SerenghettoApplication) getApplication();
 
-        //listView = (ListView)findViewById(R.id.codesList);
-        //setupList();
-    
         // Create the barcodes updated receiver
         receiver = new BarcodesReceiver();
         filter = new IntentFilter(IntentConstants.NEW_BARCODES_INTENT);
@@ -96,6 +96,12 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
 
         // populate barcode list
         this.setupList();
+
+        // move to previous saved position if any
+        if (this.listState != null) {
+            getListView().onRestoreInstanceState(this.listState);
+        }
+        this.listState = null;
 
         // Register the receiver
         registerReceiver(receiver, filter, null, null);
@@ -136,6 +142,19 @@ public class CodesActivity extends ListActivity implements OnItemClickListener, 
         Log.d(SerenghettoApplication.TAG, "CodesActivity.onDestroy");
     }
     
+    @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+        this.listState = state.getParcelable(LIST_STATE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        this.listState = getListView().onSaveInstanceState();
+        state.putParcelable(LIST_STATE, this.listState);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
     	return ActivityUtil.onCreateOptionsMenu(this, menu);
